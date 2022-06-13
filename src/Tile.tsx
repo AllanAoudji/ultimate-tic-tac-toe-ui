@@ -76,12 +76,13 @@ const Tile: React.FC<TileProps> = ({
   valid = true,
 }) => {
   const {width} = useWindowDimensions();
+  const styles = React.useMemo(() => tileStyles({width}), [width]);
 
   return (
     <Pressable
       disabled={!valid || state !== TileState.Empty || selected}
       onPress={onPress}
-      style={tileStyles({width}).container}
+      style={styles.container}
       testID="tile__container--pressable">
       <StateImage state={state} />
       {selected && state === TileState.Empty && (
