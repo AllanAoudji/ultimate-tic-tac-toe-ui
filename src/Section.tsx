@@ -1,31 +1,62 @@
 import React from 'react';
 import {
   GestureResponderEvent,
+  Image,
   ImageBackground,
   StyleSheet,
   useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native';
-import {Tile as TileInterface, TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {
+  Tile as TileInterface,
+  TileState,
+  checkIfWon,
+} from 'ultimate-tic-tac-toe-algorithm';
 
 import Tile from './Tile';
 
-interface Props {
+interface SectionProps {
   currentPlayer?: TileState.Player1 | TileState.Player2;
   onPress?: (
     index: number,
   ) => ((event?: GestureResponderEvent) => void) | null | undefined;
   selectedTileIndex?: number | null;
-  tiles?: TileInterface[][];
+  tiles: TileInterface[][];
   valid?: boolean;
 }
+interface WinningImageProps {
+  state: TileState;
+}
 
-const Section: React.FC<Props> = ({
+const WinningImage: React.FC<WinningImageProps> = ({state}) => {
+  switch (state) {
+    case TileState.Empty:
+      return null;
+    case TileState.Player1:
+      return (
+        <Image
+          testID="winner-image"
+          source={require('../assets/images/X.png')}
+        />
+      );
+    case TileState.Player2:
+      return (
+        <Image
+          testID="winner-image"
+          source={require('../assets/images/O.png')}
+        />
+      );
+    default:
+      return null;
+  }
+};
+
+const Section: React.FC<SectionProps> = ({
   currentPlayer = TileState.Player1,
   onPress = () => () => {},
   selectedTileIndex = null,
-  tiles = [],
+  tiles,
   valid = true,
 }) => {
   const {width} = useWindowDimensions();
@@ -49,6 +80,7 @@ const Section: React.FC<Props> = ({
           )),
         )}
       </ImageBackground>
+      <WinningImage state={checkIfWon(tiles)[0]} />
     </View>
   );
 };

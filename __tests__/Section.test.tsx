@@ -26,13 +26,13 @@ describe('<Section/>', () => {
   });
 
   it('renders a <View />', () => {
-    const {getByTestId} = render(<Section />);
+    const {getByTestId} = render(<Section tiles={tiles} />);
     expect(getByTestId('section')).toBeTruthy();
   });
 
   it('contains a "grid" <BackgroundImage />', () => {
     const imageSourceSectionGrid = require(imageSource('sectionGrid'));
-    const {getByTestId} = render(<Section />);
+    const {getByTestId} = render(<Section tiles={tiles} />);
     expect(getByTestId('section-grid').props.source).toBe(
       imageSourceSectionGrid,
     );
@@ -84,5 +84,26 @@ describe('<Section/>', () => {
       />,
     );
     expect(getByTestId('temp-image').props.source).toBe(imgSourceO);
+  });
+
+  it('displays a "winner" <Image /> if the <Section /> is won by a player', () => {
+    tiles[0][0].state = TileState.Player1;
+    tiles[0][1].state = TileState.Player1;
+    tiles[0][2].state = TileState.Player1;
+    const {getByTestId} = render(<Section tiles={tiles} />);
+    expect(getByTestId('winner-image').props.source).toBe(imgSourceX);
+  });
+
+  it('do not displays a winner <Image /> if the <Section /> is not won by a player', () => {
+    const {queryByTestId} = render(<Section tiles={tiles} />);
+    expect(queryByTestId('winner-image')).toBeNull();
+  });
+
+  it('"winner" <Image /> should be based on the player who won the section', () => {
+    tiles[0][0].state = TileState.Player2;
+    tiles[0][1].state = TileState.Player2;
+    tiles[0][2].state = TileState.Player2;
+    const {getByTestId} = render(<Section tiles={tiles} />);
+    expect(getByTestId('winner-image').props.source).toBe(imgSourceO);
   });
 });
