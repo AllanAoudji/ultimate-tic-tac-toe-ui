@@ -3,6 +3,7 @@ import {
   GestureResponderEvent,
   Image,
   ImageBackground,
+  ImageStyle,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -38,6 +39,7 @@ const WinningImage: React.FC<WinningImageProps> = ({state}) => {
         <Image
           testID="winner-image"
           source={require('../assets/images/X.png')}
+          style={winningImageStyles.image}
         />
       );
     case TileState.Player2:
@@ -45,6 +47,7 @@ const WinningImage: React.FC<WinningImageProps> = ({state}) => {
         <Image
           testID="winner-image"
           source={require('../assets/images/O.png')}
+          style={winningImageStyles.image}
         />
       );
     default:
@@ -60,12 +63,17 @@ const Section: React.FC<SectionProps> = ({
   valid = true,
 }) => {
   const {width} = useWindowDimensions();
+  const styles = React.useMemo(
+    () => sectionStyles({width, won: checkIfWon(tiles)[0] !== TileState.Empty}),
+    [tiles, width],
+  );
+
   return (
     <View testID="section">
       <ImageBackground
         resizeMode="cover"
         source={require('../assets/images/SectionGrid.png')}
-        style={styles({width}).background}
+        style={styles.background}
         testID="section-grid">
         {tiles.map(tilesRow =>
           tilesRow.map(tile => (
@@ -80,21 +88,35 @@ const Section: React.FC<SectionProps> = ({
           )),
         )}
       </ImageBackground>
-      <WinningImage state={checkIfWon(tiles)[0]} />
+      {checkIfWon(tiles)[0] !== TileState.Empty && (
+        <View pointerEvents="none" style={styles.winningImageContainer}>
+          <WinningImage state={checkIfWon(tiles)[0]} />
+        </View>
+      )}
     </View>
   );
 };
 
-const styles = ({width}: {width: number}) =>
-  StyleSheet.create<{background: ViewStyle}>({
+const sectionStyles = ({width, won}: {width: number; won: boolean}) =>
+  StyleSheet.create<{background: ViewStyle; winningImageContainer: ViewStyle}>({
     background: {
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
       height: width / 3,
-      width: width / 3,
+      opacity: won ? 0.2 : 1,
       padding: 4,
+      width: width / 3,
+    },
+    winningImageContainer: {
+      height: '100%',
+      padding: 7,
+      position: 'absolute',
+      width: '100%',
     },
   });
+const winningImageStyles = StyleSheet.create<{image: ImageStyle}>({
+  image: {flex: 1, width: '100%'},
+});
 
 export default Section;

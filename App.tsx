@@ -18,30 +18,36 @@ import {
 import Section from './src/Section';
 
 const assets = generateAssets();
-const tiles = getSections(assets.board)[0].tiles;
-tiles[0][0].state = TileState.Player1;
-tiles[0][1].state = TileState.Player2;
-tiles[0][2].state = TileState.Player1;
-tiles[1][0].state = TileState.Player1;
-tiles[1][1].state = TileState.Player2;
-tiles[1][2].state = TileState.Player1;
-tiles[2][0].state = TileState.Player2;
-tiles[2][1].state = TileState.Player1;
-tiles[2][2].state = TileState.Player2;
+const tiles1 = getSections(assets.board)[0].tiles;
+tiles1[0][0].state = TileState.Player2;
+tiles1[0][2].state = TileState.Player2;
+tiles1[1][1].state = TileState.Player2;
+tiles1[1][2].state = TileState.Player1;
+tiles1[2][0].state = TileState.Player2;
+tiles1[2][1].state = TileState.Player1;
+const tiles2 = getSections(assets.board)[1].tiles;
+tiles2[0][0].state = TileState.Player1;
+tiles2[0][1].state = TileState.Player1;
+tiles2[0][2].state = TileState.Player1;
+const tiles3 = getSections(assets.board)[2].tiles;
+tiles3[1][0].state = TileState.Player2;
+tiles3[1][1].state = TileState.Player2;
+tiles3[1][2].state = TileState.Player2;
+const tiles4 = getSections(assets.board)[3].tiles;
 
 const App = () => {
   return (
     <View style={{flex: 1, justifyContent: 'center'}}>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        <Section tiles={tiles} />
-        <Section tiles={tiles} />
-        <Section tiles={tiles} />
-        <Section tiles={tiles} />
-        <Section tiles={tiles} />
-        <Section tiles={tiles} />
-        <Section tiles={tiles} />
-        <Section tiles={tiles} />
-        <Section tiles={tiles} />
+        <Section tiles={tiles1} />
+        <Section tiles={tiles2} />
+        <Section tiles={tiles3} />
+        <Section tiles={tiles4} />
+        <Section tiles={tiles4} />
+        <Section tiles={tiles4} />
+        <Section tiles={tiles4} />
+        <Section tiles={tiles4} />
+        <Section tiles={tiles4} />
       </View>
     </View>
   );
