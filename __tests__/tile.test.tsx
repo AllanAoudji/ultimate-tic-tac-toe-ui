@@ -73,7 +73,7 @@ describe('<Tile />', () => {
     expect(queryByTestId(TEMP_IMAGE_TEST_ID)).toBeNull();
   });
 
-  it('not renders temporary <Image /> if /state !== Empty>', () => {
+  it('not renders temporary <Image /> if /state !== Empty/', () => {
     const {queryByTestId} = render(
       <Tile selected={true} state={TileState.Player1} />,
     );
