@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import {View} from 'react-native';
+import {StyleSheet, View, ViewStyle} from 'react-native';
 import {
   generateAssets,
   getSections,
@@ -37,8 +37,8 @@ const tiles4 = getSections(assets.board)[3].tiles;
 
 const App = () => {
   return (
-    <View style={{flex: 1, justifyContent: 'center'}}>
-      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+    <View style={style.container}>
+      <View style={style.board}>
         <Section tiles={tiles1} valid={false} />
         <Section tiles={tiles2} valid={false} />
         <Section tiles={tiles3} valid={false} />
@@ -52,5 +52,16 @@ const App = () => {
     </View>
   );
 };
+
+const style = StyleSheet.create<{container: ViewStyle; board: ViewStyle}>({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  board: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+});
 
 export default App;

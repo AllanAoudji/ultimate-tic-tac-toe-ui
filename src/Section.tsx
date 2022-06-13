@@ -37,7 +37,7 @@ const WinningImage: React.FC<WinningImageProps> = ({state}) => {
     case TileState.Player1:
       return (
         <Image
-          testID="winner-image"
+          testID="section__image--winner"
           source={require('../assets/images/X.png')}
           style={winningImageStyles.image}
         />
@@ -45,7 +45,7 @@ const WinningImage: React.FC<WinningImageProps> = ({state}) => {
     case TileState.Player2:
       return (
         <Image
-          testID="winner-image"
+          testID="section__image--winner"
           source={require('../assets/images/O.png')}
           style={winningImageStyles.image}
         />
@@ -74,12 +74,12 @@ const Section: React.FC<SectionProps> = ({
   );
 
   return (
-    <View testID="section" style={styles.container}>
+    <View testID="section__container" style={styles.container}>
       <ImageBackground
         resizeMode="cover"
         source={require('../assets/images/SectionGrid.png')}
         style={styles.background}
-        testID="section-grid">
+        testID="section__image--grid">
         {tiles.map(tilesRow =>
           tilesRow.map(tile => (
             <Tile
