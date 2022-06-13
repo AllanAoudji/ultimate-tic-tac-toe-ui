@@ -6,9 +6,10 @@ import {
   Tile,
   TileState,
 } from 'ultimate-tic-tac-toe-algorithm';
-import Section from '../src/Section';
 
-const imageSource = (image: string) => `../assets/images/${image}.png`;
+import {imageSource} from './testUtils';
+
+import Section from '../src/Section';
 
 describe('<Section/>', () => {
   const imgSourceO = require(imageSource('O'));
