@@ -14,6 +14,13 @@ describe('<Section/>', () => {
   const imgSourceO = require(imageSource('O'));
   const imgSourceX = require(imageSource('X'));
   let tiles: Tile[][], handlePress: jest.Mock;
+  const playerWon = (
+    player: TileState.Player1 | TileState.Player2 = TileState.Player1,
+  ) => {
+    tiles[0][0].state = player;
+    tiles[0][1].state = player;
+    tiles[0][2].state = player;
+  };
 
   beforeEach(() => {
     handlePress = jest.fn();
@@ -87,23 +94,28 @@ describe('<Section/>', () => {
   });
 
   it('displays a "winner" <Image /> if the <Section /> is won by a player', () => {
-    tiles[0][0].state = TileState.Player1;
-    tiles[0][1].state = TileState.Player1;
-    tiles[0][2].state = TileState.Player1;
+    playerWon();
     const {getByTestId} = render(<Section tiles={tiles} />);
     expect(getByTestId('winner-image').props.source).toBe(imgSourceX);
   });
 
-  it('do not displays a winner <Image /> if the <Section /> is not won by a player', () => {
+  it('do not displays a "winner" <Image /> if the <Section /> is not won by a player', () => {
     const {queryByTestId} = render(<Section tiles={tiles} />);
     expect(queryByTestId('winner-image')).toBeNull();
   });
 
   it('"winner" <Image /> should be based on the player who won the section', () => {
-    tiles[0][0].state = TileState.Player2;
-    tiles[0][1].state = TileState.Player2;
-    tiles[0][2].state = TileState.Player2;
+    playerWon(TileState.Player2);
     const {getByTestId} = render(<Section tiles={tiles} />);
     expect(getByTestId('winner-image').props.source).toBe(imgSourceO);
+  });
+
+  it('disables each <Tile /> if the section is won', () => {
+    playerWon();
+    const {getAllByTestId} = render(
+      <Section onPress={() => handlePress} tiles={tiles} />,
+    );
+    fireEvent.press(getAllByTestId('tile')[3]);
+    expect(handlePress).not.toHaveBeenCalled();
   });
 });

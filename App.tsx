@@ -39,15 +39,15 @@ const App = () => {
   return (
     <View style={{flex: 1, justifyContent: 'center'}}>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        <Section tiles={tiles1} />
-        <Section tiles={tiles2} />
-        <Section tiles={tiles3} />
+        <Section tiles={tiles1} valid={false} />
+        <Section tiles={tiles2} valid={false} />
+        <Section tiles={tiles3} valid={false} />
+        <Section tiles={tiles4} valid={false} />
+        <Section tiles={tiles4} valid={false} />
+        <Section tiles={tiles4} valid={false} />
+        <Section tiles={tiles4} valid={false} />
         <Section tiles={tiles4} />
-        <Section tiles={tiles4} />
-        <Section tiles={tiles4} />
-        <Section tiles={tiles4} />
-        <Section tiles={tiles4} />
-        <Section tiles={tiles4} />
+        <Section tiles={tiles4} valid={false} />
       </View>
     </View>
   );

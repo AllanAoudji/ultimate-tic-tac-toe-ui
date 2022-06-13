@@ -64,12 +64,17 @@ const Section: React.FC<SectionProps> = ({
 }) => {
   const {width} = useWindowDimensions();
   const styles = React.useMemo(
-    () => sectionStyles({width, won: checkIfWon(tiles)[0] !== TileState.Empty}),
-    [tiles, width],
+    () =>
+      sectionStyles({
+        valid,
+        width,
+        won: checkIfWon(tiles)[0] !== TileState.Empty,
+      }),
+    [valid, tiles, width],
   );
 
   return (
-    <View testID="section">
+    <View testID="section" style={styles.container}>
       <ImageBackground
         resizeMode="cover"
         source={require('../assets/images/SectionGrid.png')}
@@ -83,7 +88,7 @@ const Section: React.FC<SectionProps> = ({
               key={tile.index1D}
               state={tile.state}
               selected={selectedTileIndex === tile.index1D}
-              valid={valid}
+              valid={valid && checkIfWon(tiles)[0] === TileState.Empty}
             />
           )),
         )}
@@ -97,8 +102,23 @@ const Section: React.FC<SectionProps> = ({
   );
 };
 
-const sectionStyles = ({width, won}: {width: number; won: boolean}) =>
-  StyleSheet.create<{background: ViewStyle; winningImageContainer: ViewStyle}>({
+const sectionStyles = ({
+  valid,
+  width,
+  won,
+}: {
+  valid: boolean;
+  width: number;
+  won: boolean;
+}) =>
+  StyleSheet.create<{
+    container: ViewStyle;
+    background: ViewStyle;
+    winningImageContainer: ViewStyle;
+  }>({
+    container: {
+      backgroundColor: valid ? 'transparent' : '#e5e5e5',
+    },
     background: {
       display: 'flex',
       flexDirection: 'row',
