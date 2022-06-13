@@ -10,8 +10,8 @@ const TILE_TEST_ID = 'tile';
 const imageSource = (image: string) => `../assets/images/${image}.png`;
 
 describe('<Tile />', () => {
-  const imgSourceX = require(imageSource('X'));
   const imgSourceO = require(imageSource('O'));
+  const imgSourceX = require(imageSource('X'));
   let handlePress: jest.Mock;
 
   beforeEach(() => {
@@ -25,6 +25,12 @@ describe('<Tile />', () => {
     const {getByTestId} = render(<Tile onPress={handlePress} />);
     fireEvent.press(getByTestId(TILE_TEST_ID));
     expect(handlePress).toHaveBeenCalled();
+  });
+
+  it('not call /onPress/ if /valid === false/', () => {
+    const {getByTestId} = render(<Tile onPress={handlePress} valid={false} />);
+    fireEvent.press(getByTestId(TILE_TEST_ID));
+    expect(handlePress).not.toHaveBeenCalled();
   });
 
   it('not renders an <Image /> if /state === Empty/', () => {
@@ -42,12 +48,12 @@ describe('<Tile />', () => {
     expect(getByTestId(IMAGE_TEST_ID).props.source).toBe(imgSourceO);
   });
 
-  it('not triggers /onPress/ if /state !== Empty/', () => {
+  it('not calls /onPress/ if /state !== Empty/', () => {
     const {getByTestId} = render(
       <Tile onPress={handlePress} state={TileState.Player1} />,
     );
     fireEvent.press(getByTestId(TILE_TEST_ID));
-    expect(handlePress).toHaveBeenCalledTimes(0);
+    expect(handlePress).not.toHaveBeenCalled();
   });
 
   it('renders a temporary <Image /> if /selected === true/', () => {
@@ -80,11 +86,11 @@ describe('<Tile />', () => {
     expect(queryByTestId(TEMP_IMAGE_TEST_ID)).toBeNull();
   });
 
-  it('not triggers /onPress/ if /selected === true/', () => {
+  it('not calls /onPress/ if /selected === true/', () => {
     const {getByTestId} = render(
       <Tile onPress={handlePress} selected={true} />,
     );
     fireEvent.press(getByTestId(TILE_TEST_ID));
-    expect(handlePress).toHaveBeenCalledTimes(0);
+    expect(handlePress).not.toHaveBeenCalled();
   });
 });

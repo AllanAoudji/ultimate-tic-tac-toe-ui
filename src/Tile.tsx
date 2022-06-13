@@ -11,7 +11,7 @@ import {
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 interface StateImageProps {
-  currentPlayer: TileState;
+  player: TileState;
 }
 interface TempImage {
   currentPlayer: TileState.Player1 | TileState.Player2;
@@ -21,9 +21,10 @@ interface TileProps {
   onPress?: ((event?: GestureResponderEvent) => void) | null | undefined;
   selected?: boolean;
   state?: TileState;
+  valid?: boolean;
 }
 
-const StateImage: React.FC<StateImageProps> = ({currentPlayer: state}) => {
+const StateImage: React.FC<StateImageProps> = ({player: state}) => {
   switch (state) {
     case TileState.Empty:
       return null;
@@ -72,16 +73,17 @@ const Tile: React.FC<TileProps> = ({
   onPress = () => {},
   selected = false,
   state = TileState.Empty,
+  valid = true,
 }) => {
   const {width} = useWindowDimensions();
 
   return (
     <Pressable
-      disabled={state !== TileState.Empty || selected}
+      disabled={!valid || state !== TileState.Empty || selected}
       onPress={onPress}
       style={tileStyles({width}).container}
       testID="tile">
-      <StateImage currentPlayer={state} />
+      <StateImage player={state} />
       {selected && state === TileState.Empty && (
         <TempImage currentPlayer={currentPlayer} />
       )}
@@ -105,13 +107,13 @@ const tileStyles = ({width}: {width: number}) =>
   StyleSheet.create<{container: ViewStyle}>({
     container: {
       alignItems: 'center',
-      borderColor: '#000',
-      borderWidth: 1,
       display: 'flex',
-      height: width / 9,
+      height: (width - 8 * 3) / 9,
       justifyContent: 'center',
       padding: 4,
-      width: width / 9,
+      width: (width - 8 * 3) / 9,
+      // borderWidth: 2,
+      // borderColor: 'pink',
     },
   });
 
