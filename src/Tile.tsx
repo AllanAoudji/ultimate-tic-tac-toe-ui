@@ -107,13 +107,13 @@ const tileStyles = ({width}: {width: number}) =>
   StyleSheet.create<{container: ViewStyle}>({
     container: {
       alignItems: 'center',
-      borderColor: '#000',
-      borderWidth: 1,
       display: 'flex',
-      height: width / 9,
+      height: (width - 8 * 3) / 9,
       justifyContent: 'center',
       padding: 4,
-      width: width / 9,
+      width: (width - 8 * 3) / 9,
+      // borderWidth: 2,
+      // borderColor: 'pink',
     },
   });
 
