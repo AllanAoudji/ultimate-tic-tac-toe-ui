@@ -9,10 +9,10 @@
  */
 
 import React from 'react';
-import {View} from 'react-native';
+import Tile from './src/Tile';
 
 const App = () => {
-  return <View />;
+  return <Tile />;
 };
 
 export default App;
