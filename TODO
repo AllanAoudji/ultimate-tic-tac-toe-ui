@@ -1,0 +1,8 @@
+<Button />
+Each player have one Button
+A button is active if its the turn of his player and if one tile is selected
+On press, call a function with selected tile has argument
+
+<Player />
+Each player have one Player component
+Each Player have one button
