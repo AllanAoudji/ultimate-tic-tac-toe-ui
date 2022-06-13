@@ -30,9 +30,17 @@ describe('<Section/>', () => {
     expect(getByTestId('section')).toBeTruthy();
   });
 
+  it('contains a "grid" <BackgroundImage />', () => {
+    const imageSourceSectionGrid = require(imageSource('sectionGrid'));
+    const {getByTestId} = render(<Section />);
+    expect(getByTestId('section-grid').props.source).toBe(
+      imageSourceSectionGrid,
+    );
+  });
+
   it('contains nine <Tile />', () => {
-    const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(getByTestId('section').children).toHaveLength(9);
+    const {getAllByTestId} = render(<Section tiles={tiles} />);
+    expect(getAllByTestId('tile')).toHaveLength(9);
   });
 
   it('passes /state/ on each <Tile />', () => {

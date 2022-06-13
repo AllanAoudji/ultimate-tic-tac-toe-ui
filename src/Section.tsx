@@ -1,5 +1,5 @@
 import React from 'react';
-import {GestureResponderEvent, View} from 'react-native';
+import {GestureResponderEvent, ImageBackground, View} from 'react-native';
 import {Tile as TileInterface, TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import Tile from './Tile';
@@ -34,6 +34,10 @@ const Section: React.FC<Props> = ({
         />
       )),
     )}
+    <ImageBackground
+      source={require('../assets/images/SectionGrid.png')}
+      testID="section-grid"
+    />
   </View>
 );
 
