@@ -5,6 +5,6 @@ import Board from '../src/Board';
 describe('<Board />', () => {
   it('renders a <View />', () => {
     const {queryByTestId} = render(<Board />);
-    expect(queryByTestId('board')).toBeTruthy();
+    expect(queryByTestId('board__container')).toBeTruthy();
   });
 });

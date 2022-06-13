@@ -11,12 +11,12 @@ import {imageSource} from './testUtils';
 
 import Section from '../src/Section';
 
-const IMAGE_TEST_ID = 'image';
-const SECTION_TEST_ID = 'section';
-const SECTION_GRID_TEST_ID = 'section-grid';
-const TEMP_IMAGE_TEST_ID = 'temp-image';
-const TILE = 'tile';
-const WINNER_IMAGE_TEST_ID = 'winner-image';
+const SECTION_CONTAINER_TEST_ID = 'section__container';
+const SECTION_IMAGE_GRID_TEST_ID = 'section__image--grid';
+const SECTION_IMAGE_WINNER_TEST_ID = 'section__image--winner';
+const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable';
+const TILE_IMAGE_STATE_TEST_ID = 'tile__image--state';
+const TILE_IMAGE_TEMP_TEST_ID = 'tile__image--temp';
 
 describe('<Section/>', () => {
   const imgSourceO = require(imageSource('O'));
@@ -42,29 +42,33 @@ describe('<Section/>', () => {
 
   it('renders a <View />', () => {
     const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(getByTestId(SECTION_TEST_ID)).toBeTruthy();
+    expect(getByTestId(SECTION_CONTAINER_TEST_ID)).toBeTruthy();
   });
 
   it('contains a "grid" <BackgroundImage />', () => {
     const imageSourceSectionGrid = require(imageSource('SectionGrid'));
     const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(getByTestId(SECTION_GRID_TEST_ID).props.source).toBe(
+    expect(getByTestId(SECTION_IMAGE_GRID_TEST_ID).props.source).toBe(
       imageSourceSectionGrid,
     );
   });
 
   it('contains nine <Tile />', () => {
     const {getAllByTestId} = render(<Section tiles={tiles} />);
-    expect(getAllByTestId(TILE)).toHaveLength(9);
+    expect(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)).toHaveLength(9);
   });
 
   it('passes /state/ on each <Tile />', () => {
     tiles[0][0].state = TileState.Player1;
     tiles[0][1].state = TileState.Player2;
     const {getAllByTestId} = render(<Section tiles={tiles} />);
-    expect(getAllByTestId(IMAGE_TEST_ID)).toHaveLength(2);
-    expect(getAllByTestId(IMAGE_TEST_ID)[0].props.source).toBe(imgSourceX);
-    expect(getAllByTestId(IMAGE_TEST_ID)[1].props.source).toBe(imgSourceO);
+    expect(getAllByTestId(TILE_IMAGE_STATE_TEST_ID)).toHaveLength(2);
+    expect(getAllByTestId(TILE_IMAGE_STATE_TEST_ID)[0].props.source).toBe(
+      imgSourceX,
+    );
+    expect(getAllByTestId(TILE_IMAGE_STATE_TEST_ID)[1].props.source).toBe(
+      imgSourceO,
+    );
   });
 
   it('calls /onPress/ on each <Tile /> with proper /tile.index1D/', () => {
@@ -79,7 +83,7 @@ describe('<Section/>', () => {
     const {getAllByTestId} = render(
       <Section onPress={() => handlePress} tiles={tiles} valid={false} />,
     );
-    fireEvent.press(getAllByTestId(TILE)[0]);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     expect(handlePress).not.toHaveBeenCalled();
   });
 
@@ -87,7 +91,7 @@ describe('<Section/>', () => {
     const {getAllByTestId} = render(
       <Section selectedTileIndex={2} tiles={tiles} />,
     );
-    expect(getAllByTestId(TEMP_IMAGE_TEST_ID)).toHaveLength(1);
+    expect(getAllByTestId(TILE_IMAGE_TEMP_TEST_ID)).toHaveLength(1);
   });
 
   it('passes /currentPlayer/ to <Tile />', () => {
@@ -98,24 +102,28 @@ describe('<Section/>', () => {
         tiles={tiles}
       />,
     );
-    expect(getByTestId(TEMP_IMAGE_TEST_ID).props.source).toBe(imgSourceO);
+    expect(getByTestId(TILE_IMAGE_TEMP_TEST_ID).props.source).toBe(imgSourceO);
   });
 
   it('displays a "winner" <Image /> if the <Section /> is won by a player', () => {
     playerWon();
     const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(getByTestId(WINNER_IMAGE_TEST_ID).props.source).toBe(imgSourceX);
+    expect(getByTestId(SECTION_IMAGE_WINNER_TEST_ID).props.source).toBe(
+      imgSourceX,
+    );
   });
 
   it('do not displays a "winner" <Image /> if the <Section /> is not won by a player', () => {
     const {queryByTestId} = render(<Section tiles={tiles} />);
-    expect(queryByTestId(WINNER_IMAGE_TEST_ID)).toBeNull();
+    expect(queryByTestId(SECTION_IMAGE_WINNER_TEST_ID)).toBeNull();
   });
 
   it('"winner" <Image /> should be based on the player who won the section', () => {
     playerWon(TileState.Player2);
     const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(getByTestId(WINNER_IMAGE_TEST_ID).props.source).toBe(imgSourceO);
+    expect(getByTestId(SECTION_IMAGE_WINNER_TEST_ID).props.source).toBe(
+      imgSourceO,
+    );
   });
 
   it('disables each <Tile /> if the section is won', () => {
@@ -123,7 +131,7 @@ describe('<Section/>', () => {
     const {getAllByTestId} = render(
       <Section onPress={() => handlePress} tiles={tiles} />,
     );
-    fireEvent.press(getAllByTestId(TILE)[3]);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[3]);
     expect(handlePress).not.toHaveBeenCalled();
   });
 });

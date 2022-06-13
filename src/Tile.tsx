@@ -31,7 +31,7 @@ const StateImage: React.FC<StateImageProps> = ({player: state}) => {
     case TileState.Player1:
       return (
         <Image
-          testID="image"
+          testID="tile__image--state"
           source={require('../assets/images/X.png')}
           style={imageStyles.container}
         />
@@ -39,7 +39,7 @@ const StateImage: React.FC<StateImageProps> = ({player: state}) => {
     case TileState.Player2:
       return (
         <Image
-          testID="image"
+          testID="tile__image--state"
           source={require('../assets/images/O.png')}
           style={imageStyles.container}
         />
@@ -54,7 +54,7 @@ const TempImage: React.FC<TempImage> = ({currentPlayer}) => {
     return (
       <Image
         style={[imageStyles.container, imageStyles.transparent]}
-        testID="temp-image"
+        testID="tile__image--temp"
         source={require('../assets/images/X.png')}
       />
     );
@@ -62,7 +62,7 @@ const TempImage: React.FC<TempImage> = ({currentPlayer}) => {
   return (
     <Image
       style={[imageStyles.container, imageStyles.transparent]}
-      testID="temp-image"
+      testID="tile__image--temp"
       source={require('../assets/images/O.png')}
     />
   );
@@ -82,7 +82,7 @@ const Tile: React.FC<TileProps> = ({
       disabled={!valid || state !== TileState.Empty || selected}
       onPress={onPress}
       style={tileStyles({width}).container}
-      testID="tile">
+      testID="tile__container--pressable">
       <StateImage player={state} />
       {selected && state === TileState.Empty && (
         <TempImage currentPlayer={currentPlayer} />
