@@ -11,7 +11,7 @@ import {
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 interface StateImageProps {
-  player: TileState;
+  state: TileState;
 }
 interface TempImage {
   currentPlayer: TileState.Player1 | TileState.Player2;
@@ -24,7 +24,7 @@ interface TileProps {
   valid?: boolean;
 }
 
-const StateImage: React.FC<StateImageProps> = ({player: state}) => {
+const StateImage: React.FC<StateImageProps> = ({state}) => {
   switch (state) {
     case TileState.Empty:
       return null;
@@ -83,7 +83,7 @@ const Tile: React.FC<TileProps> = ({
       onPress={onPress}
       style={tileStyles({width}).container}
       testID="tile__container--pressable">
-      <StateImage player={state} />
+      <StateImage state={state} />
       {selected && state === TileState.Empty && (
         <TempImage currentPlayer={currentPlayer} />
       )}
