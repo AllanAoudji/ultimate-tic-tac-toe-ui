@@ -1,11 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
-import {
-  generateAssets,
-  getSections,
-  Tile,
-  TileState,
-} from 'ultimate-tic-tac-toe-algorithm';
+import {getSections, Tile, TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import {imageSource} from './testUtils';
 
@@ -32,8 +27,7 @@ describe('<Section/>', () => {
 
   beforeEach(() => {
     handlePress = jest.fn();
-    const assets = generateAssets();
-    tiles = getSections(assets.board)[0].tiles;
+    tiles = getSections([])[0].tiles;
   });
 
   afterEach(() => {
@@ -94,10 +88,10 @@ describe('<Section/>', () => {
     expect(getAllByTestId(TILE_IMAGE_TEMP_TEST_ID)).toHaveLength(1);
   });
 
-  it('passes /currentPlayer/ to <Tile />', () => {
+  it('passes /activePlayer/ to <Tile />', () => {
     const {getByTestId} = render(
       <Section
-        currentPlayer={TileState.Player2}
+        activePlayer={TileState.Player2}
         selectedTileIndex={2}
         tiles={tiles}
       />,

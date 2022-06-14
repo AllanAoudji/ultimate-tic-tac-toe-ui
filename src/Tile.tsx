@@ -14,10 +14,10 @@ interface StateImageProps {
   state: TileState;
 }
 interface TempImage {
-  currentPlayer: TileState.Player1 | TileState.Player2;
+  activePlayer: TileState.Player1 | TileState.Player2;
 }
 interface TileProps {
-  currentPlayer?: TileState.Player1 | TileState.Player2;
+  activePlayer?: TileState.Player1 | TileState.Player2;
   onPress?: ((event?: GestureResponderEvent) => void) | null | undefined;
   selected?: boolean;
   state?: TileState;
@@ -49,8 +49,8 @@ const StateImage: React.FC<StateImageProps> = ({state}) => {
   }
 };
 
-const TempImage: React.FC<TempImage> = ({currentPlayer}) => {
-  if (currentPlayer === TileState.Player1) {
+const TempImage: React.FC<TempImage> = ({activePlayer}) => {
+  if (activePlayer === TileState.Player1) {
     return (
       <Image
         style={[imageStyles.container, imageStyles.transparent]}
@@ -69,7 +69,7 @@ const TempImage: React.FC<TempImage> = ({currentPlayer}) => {
 };
 
 const Tile: React.FC<TileProps> = ({
-  currentPlayer = TileState.Player1,
+  activePlayer = TileState.Player1,
   onPress = () => {},
   selected = false,
   state = TileState.Empty,
@@ -86,7 +86,7 @@ const Tile: React.FC<TileProps> = ({
       testID="tile__container--pressable">
       <StateImage state={state} />
       {selected && state === TileState.Empty && (
-        <TempImage currentPlayer={currentPlayer} />
+        <TempImage activePlayer={activePlayer} />
       )}
     </Pressable>
   );

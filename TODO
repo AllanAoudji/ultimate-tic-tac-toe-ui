@@ -6,3 +6,13 @@ On press, call a function with selected tile has argument
 <Player />
 Each player have one Player component
 Each Player have one button
+
+<WinnerFlag />
+Display the player who win the game
+Have a button used to reset the game
+
+const onPress = (tileIndex) => () => {
+  setSelectedTileIndex(tileIndex);
+}
+
+Next => style board
