@@ -6817,10 +6817,10 @@ uglify-es@^3.1.9:
     commander "~2.13.0"
     source-map "~0.6.1"
 
-ultimate-tic-tac-toe-algorithm@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/ultimate-tic-tac-toe-algorithm/-/ultimate-tic-tac-toe-algorithm-2.0.0.tgz#b02d1f01bf2343d48d4871c32c84c0f73c373813"
-  integrity sha512-sVdsgpDKZPvnwO6TvyxTnxOP53eUIxYF131FHNoXOQc9F/b+PYuFS7pWtZjkigvHpqXD0Cd2dy9YZRzGFvOatw==
+ultimate-tic-tac-toe-algorithm@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/ultimate-tic-tac-toe-algorithm/-/ultimate-tic-tac-toe-algorithm-2.0.1.tgz#b8663df46437e28ae6a7c002e011196a80917661"
+  integrity sha512-pQqCQoM3oWTA3JLoc82i/CU3r1C7zkxwmLCA5Rb/cCRyX7W6f//FpixU6/JLriQwIF3B7KaxBDf/4D4/5pn4Pw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"
