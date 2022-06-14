@@ -11,6 +11,10 @@ Each Player have one button
 Display the player who win the game
 Have a button used to reset the game
 
+<PlayButton />
+Button to change screen
+Two screen => welcolme and game screen
+
 const onPress = (tileIndex) => () => {
   setSelectedTileIndex(tileIndex);
 }
