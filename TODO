@@ -14,4 +14,4 @@ const onPress = (tileIndex) => () => {
 setSelectedTileIndex(tileIndex);
 }
 
-Next => style board
+Next => finish WinnerFlagWrapper and style it
