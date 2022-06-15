@@ -117,7 +117,7 @@ const sectionStyles = ({
     winningImageContainer: ViewStyle;
   }>({
     container: {
-      backgroundColor: valid ? 'transparent' : '#e5e5e5',
+      opacity: valid ? 1 : 0.3,
     },
     background: {
       display: 'flex',
