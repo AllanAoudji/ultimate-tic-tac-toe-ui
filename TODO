@@ -1,8 +1,4 @@
-<SurrendModal />
-yes button
-no button
-
-<Player />
+<PlayerBoard />
 Each player have one Player component
 Each Player have one button
 
