@@ -1,5 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
+import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import SurrendModalWrapper from '../src/SurrendModalWrapper';
 
@@ -39,5 +40,12 @@ describe('<SurrendModalWrapper />', () => {
     );
     fireEvent.press(getByText('no'));
     expect(onPress).toHaveBeenCalled();
+  });
+
+  it('passes /player/ to <SurrendModal />', () => {
+    const {getByText} = render(
+      <SurrendModalWrapper player={TileState.Player2} visible={true} />,
+    );
+    expect(getByText(SURREND_TEXT).props.style.color).toBe('#ed1327');
   });
 });

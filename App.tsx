@@ -18,7 +18,7 @@ const App = () => {
     <>
       <PlayerBoard disabled={true} position="TOP" player={TileState.Player2} />
       <Board history={[]} />
-      <PlayerBoard />
+      <PlayerBoard disabled={true} />
     </>
   );
 };

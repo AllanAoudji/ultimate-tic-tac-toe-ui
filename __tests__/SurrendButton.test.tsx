@@ -36,6 +36,22 @@ describe('<SurrendButton />', () => {
     ).toBe(1);
   });
 
+  it('set /borderColor: #ed1327/ if /player === Player2/', () => {
+    const {getByTestId} = render(<SurrendButton player={TileState.Player2} />);
+    expect(
+      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props.style
+        .borderColor,
+    ).toBe('#ed1327');
+  });
+
+  it('set /borderColor: #0012ff/ if /player === Player1/', () => {
+    const {getByTestId} = render(<SurrendButton />);
+    expect(
+      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props.style
+        .borderColor,
+    ).toBe('#0012ff');
+  });
+
   it('not calls /onPress/ if /disabled === true/', () => {
     const onPress = jest.fn();
     const {getByTestId} = render(

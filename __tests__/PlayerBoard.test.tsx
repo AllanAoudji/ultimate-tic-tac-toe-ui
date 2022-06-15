@@ -145,4 +145,12 @@ describe('<PlayerBoard />', () => {
       getByTestId(PLAYER_BOARD_CONTAINER_TEST_ID).props.style.transform,
     ).toEqual([{rotate: '0deg'}]);
   });
+
+  it('passes /player/ on <SurrendModalWrapper />', () => {
+    const {getByTestId, getByText} = render(
+      <PlayerBoard player={TileState.Player2} />,
+    );
+    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
+    expect(getByText(SURREND_TEXT).props.style.color).toBe('#ed1327');
+  });
 });

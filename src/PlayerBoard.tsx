@@ -1,5 +1,11 @@
 import React from 'react';
-import {GestureResponderEvent, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import PlayButton from './PlayButton';
@@ -21,11 +27,13 @@ const PlayerBoard: React.FC<Props> = ({
   player = TileState.Player1,
   position = 'BOTTOM',
 }) => {
+  const {width, height} = useWindowDimensions();
+
   const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
 
   const styles = React.useMemo(
-    () => playerBoardStyles({disabled, position}),
-    [disabled, position],
+    () => playerBoardStyles({disabled, height, position, width}),
+    [disabled, height, position, width],
   );
 
   const onPressSurrend = React.useCallback(() => setVisibleModal(true), []);
@@ -46,14 +54,17 @@ const PlayerBoard: React.FC<Props> = ({
           player={player}
         />
       </View>
-      <SurrendButton
-        disabled={visibleModal}
-        onPress={onPressSurrend}
-        player={player}
-      />
+      <View style={styles.containerSurrendButton}>
+        <SurrendButton
+          disabled={visibleModal}
+          onPress={onPressSurrend}
+          player={player}
+        />
+      </View>
       <SurrendModalWrapper
         onPressNo={onPressNo}
         onPressYes={onPressYes}
+        player={player}
         visible={visibleModal}
       />
     </View>
@@ -62,17 +73,32 @@ const PlayerBoard: React.FC<Props> = ({
 
 const playerBoardStyles = ({
   disabled,
+  height,
   position,
+  width,
 }: {
   disabled: boolean;
+  height: number;
   position: 'BOTTOM' | 'TOP';
+  width: number;
 }) =>
-  StyleSheet.create<{container: ViewStyle; containerOpacity: ViewStyle}>({
+  StyleSheet.create<{
+    container: ViewStyle;
+    containerOpacity: ViewStyle;
+    containerSurrendButton: ViewStyle;
+  }>({
     container: {
+      height: (height - width) / 2,
+      justifyContent: 'space-between',
+      paddingHorizontal: 40,
+      paddingVertical: 20,
       transform: [{rotate: position === 'TOP' ? '180deg' : '0deg'}],
     },
     containerOpacity: {
       opacity: disabled ? 0.5 : 1,
+    },
+    containerSurrendButton: {
+      alignItems: 'flex-end',
     },
   });
 
