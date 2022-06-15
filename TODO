@@ -1,8 +1,3 @@
-<PlayButton />
-Each player have one Button
-A button is active if its the turn of his player and if one tile is selected
-On press, call a function with selected tile has argument
-
 <SurrendButton />
 Each player have one Button
 Open a modal
@@ -33,7 +28,7 @@ Contain two <Player /> the <Board />
 deal with all ressources
 
 const onPress = (tileIndex) => () => {
-  setSelectedTileIndex(tileIndex);
+setSelectedTileIndex(tileIndex);
 }
 
 Next => style board
