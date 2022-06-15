@@ -123,10 +123,10 @@ const sectionStyles = ({
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
-      height: width / 3,
+      height: (width - 8) / 3,
       opacity: won ? 0.2 : 1,
       padding: 4,
-      width: width / 3,
+      width: (width - 8) / 3,
     },
     winningImageContainer: {
       height: '100%',

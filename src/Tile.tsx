@@ -109,12 +109,10 @@ const tileStyles = ({width}: {width: number}) =>
     container: {
       alignItems: 'center',
       display: 'flex',
-      height: (width - 8 * 3) / 9,
+      height: (width - 8 * 3 - 8) / 9,
       justifyContent: 'center',
       padding: 4,
-      width: (width - 8 * 3) / 9,
-      // borderWidth: 2,
-      // borderColor: 'pink',
+      width: (width - 8 * 3 - 8) / 9,
     },
   });
 

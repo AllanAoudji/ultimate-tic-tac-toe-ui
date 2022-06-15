@@ -1,7 +1,16 @@
-<Button />
+<PlayButton />
 Each player have one Button
 A button is active if its the turn of his player and if one tile is selected
 On press, call a function with selected tile has argument
+
+<SurrendButton />
+Each player have one Button
+Open a modal
+onPress((player) => () => setWinner(player))
+
+<SurrendModal />
+yes button
+no button
 
 <Player />
 Each player have one Player component
@@ -11,9 +20,17 @@ Each Player have one button
 Display the player who win the game
 Have a button used to reset the game
 
-<PlayButton />
+<PlayGameButton />
 Button to change screen
 Two screen => welcolme and game screen
+
+<OptionButton>
+quit game button
+save game button
+
+<Game />
+Contain two <Player /> the <Board />
+deal with all ressources
 
 const onPress = (tileIndex) => () => {
   setSelectedTileIndex(tileIndex);

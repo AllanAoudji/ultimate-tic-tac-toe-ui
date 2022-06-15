@@ -1,5 +1,5 @@
 import React from 'react';
-import {GestureResponderEvent, View} from 'react-native';
+import {GestureResponderEvent, StyleSheet, View} from 'react-native';
 import {
   getSections,
   getActiveSection,
@@ -20,7 +20,7 @@ const Board: React.FC<Props> = ({
   gameIsWon = false,
   history = [],
   onPress = () => () => {},
-  selectedTileIndex = 2,
+  selectedTileIndex = null,
 }) => {
   const validSection = React.useMemo(
     () => getActiveSection(history),
@@ -28,7 +28,7 @@ const Board: React.FC<Props> = ({
   );
 
   return (
-    <View testID="board__container">
+    <View style={styles.container} testID="board__container">
       {getSections(history).map((section, index) => (
         <Section
           activePlayer={getActivePlayer(history)}
@@ -45,5 +45,13 @@ const Board: React.FC<Props> = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 4,
+  },
+});
 
 export default Board;

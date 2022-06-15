@@ -9,13 +9,10 @@
  */
 
 import React from 'react';
-import {generateAssets} from 'ultimate-tic-tac-toe-algorithm';
 import Board from './src/Board';
 
-const assets = generateAssets();
-
 const App = () => {
-  return <Board board={assets.board} history={[53]} />;
+  return <Board history={[]} />;
 };
 
 export default App;
