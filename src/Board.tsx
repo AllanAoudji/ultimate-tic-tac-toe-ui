@@ -1,5 +1,10 @@
 import React from 'react';
-import {GestureResponderEvent, StyleSheet, View} from 'react-native';
+import {
+  GestureResponderEvent,
+  ImageBackground,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {
   getSections,
   getActiveSection,
@@ -28,20 +33,25 @@ const Board: React.FC<Props> = ({
   );
 
   return (
-    <View style={styles.container} testID="board__container">
-      {getSections(history).map((section, index) => (
-        <Section
-          activePlayer={getActivePlayer(history)}
-          key={section.position}
-          onPress={onPress}
-          selectedTileIndex={selectedTileIndex}
-          tiles={section.tiles}
-          valid={
-            !gameIsWon &&
-            (validSection !== null ? validSection === index : true)
-          }
-        />
-      ))}
+    <View testID="board__container">
+      <ImageBackground
+        source={require('../assets/images/boardGrid.png')}
+        style={styles.container}
+        testID="board__image--grid">
+        {getSections(history).map((section, index) => (
+          <Section
+            activePlayer={getActivePlayer(history)}
+            key={section.position}
+            onPress={onPress}
+            selectedTileIndex={selectedTileIndex}
+            tiles={section.tiles}
+            valid={
+              !gameIsWon &&
+              (validSection !== null ? validSection === index : true)
+            }
+          />
+        ))}
+      </ImageBackground>
     </View>
   );
 };

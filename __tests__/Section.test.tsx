@@ -39,7 +39,7 @@ describe('<Section/>', () => {
     expect(getByTestId(SECTION_CONTAINER_TEST_ID)).toBeTruthy();
   });
 
-  it('contains a "grid" <BackgroundImage />', () => {
+  it('renders a "grid" <BackgroundImage />', () => {
     const imageSourceSectionGrid = require(imageSource('SectionGrid'));
     const {getByTestId} = render(<Section tiles={tiles} />);
     expect(getByTestId(SECTION_IMAGE_GRID_TEST_ID).props.source).toBe(

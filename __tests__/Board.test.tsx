@@ -56,4 +56,12 @@ describe('<Board />', () => {
     fireEvent.press(getAllByTestId('tile__container--pressable')[55]);
     expect(onPress).not.toHaveBeenCalled();
   });
+
+  it('renders a "grid" <BackgroundImage />', () => {
+    const imageSourceGrid = require(imageSource('boardGrid'));
+    const {getByTestId} = render(<Board />);
+    expect(getByTestId('board__image--grid').props.source).toBe(
+      imageSourceGrid,
+    );
+  });
 });
