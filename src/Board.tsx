@@ -4,6 +4,7 @@ import {
   ImageBackground,
   StyleSheet,
   View,
+  ViewStyle,
 } from 'react-native';
 import {
   getSections,
@@ -56,7 +57,7 @@ const Board: React.FC<Props> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<{container: ViewStyle}>({
   container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
