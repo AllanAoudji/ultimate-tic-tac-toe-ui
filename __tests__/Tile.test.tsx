@@ -60,16 +60,16 @@ describe('<Tile />', () => {
   it('renders a temporary <Image /> if /selected === true/', () => {
     const imgSource = require(imageSource('X'));
     const {getByTestId} = render(
-      <Tile currentPlayer={TileState.Player1} selected={true} />,
+      <Tile activePlayer={TileState.Player1} selected={true} />,
     );
     fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
     expect(getByTestId(TILE_IMAGE_TEMP_TEST_ID).props.source).toBe(imgSource);
   });
 
-  it('temporary <Image /> should be based on the /currentPlayer/', () => {
+  it('temporary <Image /> should be based on the /activePlayer/', () => {
     const imgSource = require(imageSource('O'));
     const {getByTestId} = render(
-      <Tile currentPlayer={TileState.Player2} selected={true} />,
+      <Tile activePlayer={TileState.Player2} selected={true} />,
     );
     fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
     expect(getByTestId(TILE_IMAGE_TEMP_TEST_ID).props.source).toBe(imgSource);

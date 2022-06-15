@@ -11,20 +11,20 @@ import {
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 interface StateImageProps {
-  player: TileState;
+  state: TileState;
 }
 interface TempImage {
-  currentPlayer: TileState.Player1 | TileState.Player2;
+  activePlayer: TileState.Player1 | TileState.Player2;
 }
 interface TileProps {
-  currentPlayer?: TileState.Player1 | TileState.Player2;
+  activePlayer?: TileState.Player1 | TileState.Player2;
   onPress?: ((event?: GestureResponderEvent) => void) | null | undefined;
   selected?: boolean;
   state?: TileState;
   valid?: boolean;
 }
 
-const StateImage: React.FC<StateImageProps> = ({player: state}) => {
+const StateImage: React.FC<StateImageProps> = ({state}) => {
   switch (state) {
     case TileState.Empty:
       return null;
@@ -49,8 +49,8 @@ const StateImage: React.FC<StateImageProps> = ({player: state}) => {
   }
 };
 
-const TempImage: React.FC<TempImage> = ({currentPlayer}) => {
-  if (currentPlayer === TileState.Player1) {
+const TempImage: React.FC<TempImage> = ({activePlayer}) => {
+  if (activePlayer === TileState.Player1) {
     return (
       <Image
         style={[imageStyles.container, imageStyles.transparent]}
@@ -69,23 +69,24 @@ const TempImage: React.FC<TempImage> = ({currentPlayer}) => {
 };
 
 const Tile: React.FC<TileProps> = ({
-  currentPlayer = TileState.Player1,
+  activePlayer = TileState.Player1,
   onPress = () => {},
   selected = false,
   state = TileState.Empty,
   valid = true,
 }) => {
   const {width} = useWindowDimensions();
+  const styles = React.useMemo(() => tileStyles({width}), [width]);
 
   return (
     <Pressable
       disabled={!valid || state !== TileState.Empty || selected}
       onPress={onPress}
-      style={tileStyles({width}).container}
+      style={styles.container}
       testID="tile__container--pressable">
-      <StateImage player={state} />
+      <StateImage state={state} />
       {selected && state === TileState.Empty && (
-        <TempImage currentPlayer={currentPlayer} />
+        <TempImage activePlayer={activePlayer} />
       )}
     </Pressable>
   );
@@ -108,12 +109,10 @@ const tileStyles = ({width}: {width: number}) =>
     container: {
       alignItems: 'center',
       display: 'flex',
-      height: (width - 8 * 3) / 9,
+      height: (width - 8 * 3 - 8) / 9,
       justifyContent: 'center',
       padding: 4,
-      width: (width - 8 * 3) / 9,
-      // borderWidth: 2,
-      // borderColor: 'pink',
+      width: (width - 8 * 3 - 8) / 9,
     },
   });
 
