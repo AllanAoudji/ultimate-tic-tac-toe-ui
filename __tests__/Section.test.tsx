@@ -128,4 +128,33 @@ describe('<Section/>', () => {
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[3]);
     expect(handlePress).not.toHaveBeenCalled();
   });
+
+  it('set /opacity: 0.2/ on innerContainer <View /> if /valid === false/', () => {
+    const {getByTestId} = render(<Section tiles={tiles} valid={false} />);
+    expect(
+      getByTestId('section__container--innerContainer').props.style.opacity,
+    ).toBe(0.2);
+  });
+
+  it('set /opacity: 1/ on innerContainer <View /> if /valid === false/', () => {
+    const {getByTestId} = render(<Section tiles={tiles} />);
+    expect(
+      getByTestId('section__container--innerContainer').props.style.opacity,
+    ).toBe(1);
+  });
+
+  it('set /opacity: 0.2/ on innerContainer <View /> if <Section /> is won', () => {
+    playerWon();
+    const {getByTestId} = render(<Section tiles={tiles} />);
+    expect(
+      getByTestId('section__container--innerContainer').props.style.opacity,
+    ).toBe(0.2);
+  });
+
+  it('set /opacity: 1/ on innerContainer <View /> if <Section /> is not won', () => {
+    const {getByTestId} = render(<Section tiles={tiles} />);
+    expect(
+      getByTestId('section__container--innerContainer').props.style.opacity,
+    ).toBe(1);
+  });
 });

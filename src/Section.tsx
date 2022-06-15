@@ -74,25 +74,29 @@ const Section: React.FC<SectionProps> = ({
   );
 
   return (
-    <View testID="section__container" style={styles.container}>
-      <ImageBackground
-        resizeMode="cover"
-        source={require('../assets/images/SectionGrid.png')}
-        style={styles.background}
-        testID="section__image--grid">
-        {tiles.map(tilesRow =>
-          tilesRow.map(tile => (
-            <Tile
-              activePlayer={activePlayer}
-              onPress={onPress(tile.index1D)}
-              key={tile.index1D}
-              state={tile.state}
-              selected={selectedTileIndex === tile.index1D}
-              valid={valid && checkIfWon(tiles)[0] === TileState.Empty}
-            />
-          )),
-        )}
-      </ImageBackground>
+    <View testID="section__container">
+      <View
+        testID="section__container--innerContainer"
+        style={styles.innerContainer}>
+        <ImageBackground
+          resizeMode="cover"
+          style={styles.imageBackground}
+          source={require('../assets/images/SectionGrid.png')}
+          testID="section__image--grid">
+          {tiles.map(tilesRow =>
+            tilesRow.map(tile => (
+              <Tile
+                activePlayer={activePlayer}
+                onPress={onPress(tile.index1D)}
+                key={tile.index1D}
+                state={tile.state}
+                selected={selectedTileIndex === tile.index1D}
+                valid={valid && checkIfWon(tiles)[0] === TileState.Empty}
+              />
+            )),
+          )}
+        </ImageBackground>
+      </View>
       {checkIfWon(tiles)[0] !== TileState.Empty && (
         <View pointerEvents="none" style={styles.winningImageContainer}>
           <WinningImage state={checkIfWon(tiles)[0]} />
@@ -112,21 +116,20 @@ const sectionStyles = ({
   won: boolean;
 }) =>
   StyleSheet.create<{
-    container: ViewStyle;
-    background: ViewStyle;
+    imageBackground: ViewStyle;
+    innerContainer: ViewStyle;
     winningImageContainer: ViewStyle;
   }>({
-    container: {
-      opacity: valid ? 1 : 0.3,
-    },
-    background: {
+    imageBackground: {
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
       height: (width - 8) / 3,
-      opacity: won ? 0.2 : 1,
       padding: 4,
       width: (width - 8) / 3,
+    },
+    innerContainer: {
+      opacity: won || !valid ? 0.2 : 1,
     },
     winningImageContainer: {
       height: '100%',
