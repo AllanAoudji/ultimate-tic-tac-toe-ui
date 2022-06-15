@@ -5,9 +5,14 @@ import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 import SurrendButton from '../src/SurrendButton';
 
 describe('<SurrendButton />', () => {
+  const SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
+    'surrendButton__container--pressable';
+
   it('renders a <Pressable />', () => {
     const {queryByTestId} = render(<SurrendButton />);
-    expect(queryByTestId('surrendButton__container--pressable')).not.toBeNull();
+    expect(
+      queryByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID),
+    ).not.toBeNull();
   });
 
   it('contains <SurrendIcon />', () => {
@@ -18,16 +23,41 @@ describe('<SurrendButton />', () => {
   it('calls /onPress/', () => {
     const onPress = jest.fn();
     const {getByTestId} = render(<SurrendButton onPress={onPress} />);
-    fireEvent.press(getByTestId('surrendButton__container--pressable'));
+    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
     expect(onPress).toHaveBeenCalled();
   });
 
   it('passes /player/ to <SurrendIcon />', () => {
     const {getByTestId} = render(<SurrendButton player={TileState.Player2} />);
     expect(
-      getByTestId('surrendButton__container--pressable').findAllByProps({
+      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).findAllByProps({
         fill: '#ed1327',
       }).length,
     ).toBe(1);
+  });
+
+  it('set /borderColor: #ed1327/ if /player === Player2/', () => {
+    const {getByTestId} = render(<SurrendButton player={TileState.Player2} />);
+    expect(
+      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props.style
+        .borderColor,
+    ).toBe('#ed1327');
+  });
+
+  it('set /borderColor: #0012ff/ if /player === Player1/', () => {
+    const {getByTestId} = render(<SurrendButton />);
+    expect(
+      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props.style
+        .borderColor,
+    ).toBe('#0012ff');
+  });
+
+  it('not calls /onPress/ if /disabled === true/', () => {
+    const onPress = jest.fn();
+    const {getByTestId} = render(
+      <SurrendButton disabled={true} onPress={onPress} />,
+    );
+    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
+    expect(onPress).not.toHaveBeenCalled();
   });
 });

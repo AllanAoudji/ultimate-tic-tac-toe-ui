@@ -4,7 +4,7 @@ import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 import SurrendIcon from '../src/SurrendIcon';
 
 describe('<SurrendIcon />', () => {
-  const DEFAULT_SIZE = 40,
+  const DEFAULT_SIZE = 25,
     PLAYER_1_COLOR = '#0012ff',
     PLAYER_2_COLOR = '#ed1327',
     SURREND_ICON_CONTAINER_SVG = 'surrendIcon__container--svg';

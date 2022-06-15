@@ -9,7 +9,7 @@ interface Props {
 
 const SurrendIcon: React.FC<Props> = ({
   player = TileState.Player1,
-  size = 40,
+  size = 25,
 }) => {
   return (
     <Svg
