@@ -14,6 +14,7 @@ describe('<Game />', () => {
     PLAYER_X_COLOR = '#0012ff',
     PLAYER_X_TEST = 'player x',
     PLAYER_BOARD_CONTAINER_TEST_ID = 'playerBoard__container',
+    PLAY_TEXT = 'play',
     PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
       'playButton__container--pressable',
     SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
@@ -21,6 +22,8 @@ describe('<Game />', () => {
     SURREND_MODAL_CONTAINER_INNER_TEST_ID = 'surrendModal__container--inner',
     SURREND_MODAL_CONTAINER_TEST_ID = 'surrendModal__container',
     TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable',
+    TILE_IMAGE_STATE_TEST_ID = 'tile__image--state',
+    TILE_IMAGE_TEMP_TEST_ID = 'tile__image--temp',
     WINNER_FLAG_CONTAINER_TEST_ID = 'winnerFlag__container',
     YES_TEXT = 'yes';
 
@@ -32,7 +35,7 @@ describe('<Game />', () => {
     expect(queryAllByTestId(PLAYER_BOARD_CONTAINER_TEST_ID).length).toBe(2);
   });
 
-  it('first <PlayerBoard /> is /TOP/', () => {
+  it('renders first <PlayerBoard /> with /position === TOP/', () => {
     const {getAllByTestId} = render(<Game />);
     expect(
       getAllByTestId(PLAYER_BOARD_CONTAINER_TEST_ID)[0].props.style.transform,
@@ -49,7 +52,7 @@ describe('<Game />', () => {
     resetMockRandom();
   });
 
-  it('renders the other player 50/50', () => {
+  it('renders the other player with a 50/50 ramdom chance', () => {
     mockRandom(0.499);
     const {getAllByTestId} = render(<Game />);
     expect(
@@ -63,7 +66,7 @@ describe('<Game />', () => {
     resetMockRandom();
   });
 
-  it('disabled play <Button /> on mount', () => {
+  it(`disables "${PLAY_TEXT}" <Pressable /> on mount`, () => {
     const {getAllByTestId} = render(<Game />);
     expect(
       getAllByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0].props
@@ -75,7 +78,7 @@ describe('<Game />', () => {
     ).toBe(true);
   });
 
-  it('opens Player TOP <SurrendModal /> when <SurrendButton /> is clicked', () => {
+  it('opens player TOP <SurrendModal /> when <SurrendButton /> is pressed', () => {
     const {getAllByTestId, getByTestId, queryByTestId} = render(<Game />);
     fireEvent.press(
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
@@ -87,7 +90,7 @@ describe('<Game />', () => {
     ).toBe(PLAYER_O_COLOR);
   });
 
-  it('opens Player BOTTOM <SurrendModal /> when <SurrendButton /> is clicked', () => {
+  it('opens player BOTTOM <SurrendModal /> when <SurrendButton /> is pressed', () => {
     const {getAllByTestId, getByTestId, queryByTestId} = render(<Game />);
     fireEvent.press(
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1],
@@ -99,7 +102,7 @@ describe('<Game />', () => {
     ).toBe(PLAYER_X_COLOR);
   });
 
-  it('renders <WinnerFlag /> with /winner === Player1/ if Player2 surrend', () => {
+  it('renders <WinnerFlag /> with /winner === Player1/ if player2 surrend', () => {
     const {getAllByTestId, getByText, queryByTestId, queryByText} = render(
       <Game />,
     );
@@ -111,7 +114,7 @@ describe('<Game />', () => {
     expect(queryByText(PLAYER_X_TEST)).not.toBeNull();
   });
 
-  it('renders <WinnerFlag /> with /winner === Player2/ if Player1 surrend', () => {
+  it('renders <WinnerFlag /> with /winner === Player2/ if player1 surrend', () => {
     const {getAllByTestId, getByText, queryByTestId, queryByText} = render(
       <Game />,
     );
@@ -123,7 +126,7 @@ describe('<Game />', () => {
     expect(queryByText(PLAYER_O_TEXT)).not.toBeNull();
   });
 
-  it('set /winner === Empty/ when <WinnerFlag /> "new game" <Pressable /> is pressed', () => {
+  it(`resets /winner/ when "${NEW_GAME_TEXT}" <Pressable /> is pressed`, () => {
     const {getAllByTestId, getByText, queryByTestId} = render(<Game />);
     fireEvent.press(
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1],
@@ -133,7 +136,7 @@ describe('<Game />', () => {
     expect(queryByTestId(WINNER_FLAG_CONTAINER_TEST_ID)).toBeNull();
   });
 
-  it('randomize /players/ when <WinnerFlag /> "new game" <Pressable /> is pressed', () => {
+  it('randomized /players/ when  "new game" <Pressable /> is pressed', () => {
     const {getAllByTestId, getByText} = render(<Game />);
     mockRandom(0.499);
     fireEvent.press(
@@ -148,7 +151,7 @@ describe('<Game />', () => {
     resetMockRandom();
   });
 
-  it('disabled <SurrendButton /> if /winner !== Empty/', () => {
+  it('disables <SurrendButton /> if /winner !== Empty/', () => {
     const {getAllByTestId, getByText} = render(<Game />);
     fireEvent.press(
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1],
@@ -164,7 +167,7 @@ describe('<Game />', () => {
     ).toBe(true);
   });
 
-  it('close <SurrendModal /> when a player surrend', async () => {
+  it('closes both <SurrendModal /> when a player surrend', async () => {
     let {queryAllByTestId, getAllByTestId, getAllByText} = render(<Game />);
     fireEvent.press(
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
@@ -181,15 +184,17 @@ describe('<Game />', () => {
     expect(queryByTestId(BOARD_CONTAINER_TEST_ID)).not.toBeNull();
   });
 
-  it('if /history.length === 0/ <Board /> displays a Player1 temp <Image />', () => {
+  it('renders a player1 temp <Image /> when press on a <Tile /> if /history.length === 0/', () => {
     let IMAGE_PLAYER_X = require(imageSource('X'));
     const {getByTestId, queryAllByTestId, queryByTestId} = render(<Game />);
     fireEvent.press(queryAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
-    expect(queryByTestId('tile__image--temp')).not.toBeNull();
-    expect(getByTestId('tile__image--temp').props.source).toBe(IMAGE_PLAYER_X);
+    expect(queryByTestId(TILE_IMAGE_TEMP_TEST_ID)).not.toBeNull();
+    expect(getByTestId(TILE_IMAGE_TEMP_TEST_ID).props.source).toBe(
+      IMAGE_PLAYER_X,
+    );
   });
 
-  it('enable BOTTOM Player "play" <Pressable /> if it\'s the player turn and /selectedTileIndex !== null/', () => {
+  it(`enables BOTTOM player "${PLAY_TEXT}" <Pressable /> if it's the player turn and /selectedTileIndex !== null/`, () => {
     const {getAllByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     expect(
@@ -198,17 +203,17 @@ describe('<Game />', () => {
     ).toBe(false);
   });
 
-  it('push /selectedTileIndex/ on /history/ when press on BOTTOM Player "play" <Pressable />', () => {
+  it(`pushes /selectedTileIndex/ on /history/ when press on BOTTOM player "${PLAY_TEXT}" <Pressable />`, () => {
     let IMAGE_PLAYER_X = require(imageSource('X'));
     const {getAllByTestId, getAllByText, queryAllByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
-    fireEvent.press(getAllByText('play')[1]);
-    expect(queryAllByTestId('tile__image--state')[0].props.source).toBe(
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    expect(queryAllByTestId(TILE_IMAGE_STATE_TEST_ID)[0].props.source).toBe(
       IMAGE_PLAYER_X,
     );
   });
 
-  it('enable TOP Player "play" <Pressable /> if it\'s the player turn and /selectedTileIndex !== null/', () => {
+  it(`enables TOP player "${PLAY_TEXT}" <Pressable /> if its's the player turn and /selectedTileIndex !== null/`, () => {
     mockRandom(0.499);
     const {getAllByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
@@ -219,35 +224,35 @@ describe('<Game />', () => {
     resetMockRandom();
   });
 
-  it('push /selectedTileIndex/ on /history/ when press on TOP Player "play" <Pressable />', () => {
+  it(`pushes /selectedTileIndex/ on /history/ when press on TOP player "${PLAY_TEXT}" <Pressable />`, () => {
     mockRandom(0.499);
     let IMAGE_PLAYER_X = require(imageSource('X'));
     const {getAllByTestId, getAllByText, queryAllByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     fireEvent.press(getAllByText('play')[0]);
-    expect(queryAllByTestId('tile__image--state')[0].props.source).toBe(
+    expect(queryAllByTestId(TILE_IMAGE_STATE_TEST_ID)[0].props.source).toBe(
       IMAGE_PLAYER_X,
     );
     resetMockRandom();
   });
 
-  it('reset /history/ when press "new game"', () => {
+  it(`resets /history/ when "${NEW_GAME_TEXT}" <Pressable /> is pressed`, () => {
     const {getAllByTestId, getAllByText, getByText, queryAllByTestId} = render(
       <Game />,
     );
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
-    fireEvent.press(getAllByText('play')[1]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1]);
-    fireEvent.press(getAllByText('play')[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[0]);
     fireEvent.press(
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
     );
     fireEvent.press(getByText(YES_TEXT));
     fireEvent.press(getByText(NEW_GAME_TEXT));
-    expect(queryAllByTestId('tile__image--state').length).toBe(0);
+    expect(queryAllByTestId(TILE_IMAGE_STATE_TEST_ID).length).toBe(0);
   });
 
-  it('reset /selectedTileIndex/ when press "new game"', () => {
+  it(`resets /selectedTileIndex/ when "${NEW_GAME_TEXT}" <Pressable /> is pressed`, () => {
     const {getAllByTestId, getByText, queryAllByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     fireEvent.press(
@@ -255,68 +260,36 @@ describe('<Game />', () => {
     );
     fireEvent.press(getByText(YES_TEXT));
     fireEvent.press(getByText(NEW_GAME_TEXT));
-    expect(queryAllByTestId('tile__image--temp').length).toBe(0);
+    expect(queryAllByTestId(TILE_IMAGE_TEMP_TEST_ID).length).toBe(0);
   });
 
-  it('reset /selectedTileIndex/ when press "play"', () => {
+  it(`resets /selectedTileIndex/ when "${PLAY_TEXT}" <Pressable /> is pressed`, () => {
     const {getAllByTestId, getAllByText, queryAllByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByText('play')[0]);
-    expect(queryAllByTestId('tile__image--state').length).toBe(1);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[0]);
+    expect(queryAllByTestId(TILE_IMAGE_STATE_TEST_ID).length).toBe(1);
   });
 
   it('renders <WinnigFlag /> if game is won', () => {
     const {getAllByTestId, getAllByText, queryByTestId} = render(<Game />);
+    const playerPlay = (player: 0 | 1) => (tile: number) => {
+      fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[tile]);
+      fireEvent.press(getAllByText(PLAY_TEXT)[player]);
+    };
+    const playerBottomPlay = playerPlay(1);
+    const playerTopPlay = playerPlay(0);
 
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[3]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[27]);
-    fireEvent.press(getAllByText('play')[0]);
-
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[4]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[36]);
-    fireEvent.press(getAllByText('play')[0]);
-
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[5]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[45]);
-    fireEvent.press(getAllByText('play')[0]);
-
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[12]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[28]);
-    fireEvent.press(getAllByText('play')[0]);
-
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[13]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[37]);
-    fireEvent.press(getAllByText('play')[0]);
-
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[14]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[47]);
-    fireEvent.press(getAllByText('play')[0]);
-
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[21]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[29]);
-    fireEvent.press(getAllByText('play')[0]);
-
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[22]);
-    fireEvent.press(getAllByText('play')[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[38]);
-    fireEvent.press(getAllByText('play')[0]);
-
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[23]);
-    fireEvent.press(getAllByText('play')[1]);
+    [3, 27, 4, 36, 5, 45, 12, 28, 13, 37, 14, 47, 21, 29, 22, 38, 23].forEach(
+      (tileIndex, index) => {
+        if (index % 2) {
+          playerTopPlay(tileIndex);
+        } else {
+          playerBottomPlay(tileIndex);
+        }
+      },
+    );
 
     expect(queryByTestId(WINNER_FLAG_CONTAINER_TEST_ID)).not.toBeNull();
   });
 });
-
-// enable play button if it's player turn and selectedTileIndex !== null
-
-// Later => disabled surrendButton if winner !== Empty
-//       => find a way to trigger setWinner while winner !== Empty
