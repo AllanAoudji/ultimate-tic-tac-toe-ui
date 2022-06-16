@@ -1,17 +1,16 @@
-<PlayGameButton />
-Button to change screen
-Two screen => welcolme and game screen
-
 <OptionButton>
 quit game button
+restart game button
 save game button
 
-<Game />
-Contain two <Player /> the <Board />
-deal with all ressources
+<WinningFlag /> => <WinningModal />
+<WinningFlagWrapper /> => <WinningFlagWrapper />
 
-const onPress = (tileIndex) => () => {
-setSelectedTileIndex(tileIndex);
-}
+play() may return equality now.
+<WinningFlag /> should be able to display equality
+<Board /> should have an equality state
 
-Next => finish WinnerFlagWrapper and style it
+<Screen />
+__ SplashScreen
+__ HomeScreen
+__ BoardScreen
