@@ -11,7 +11,9 @@ describe('<WinnerFlag />', () => {
     PLAYER_O_TEXT = 'player o',
     PLAYER_X_TEXT = 'player x',
     QUIT_TEXT = 'quit',
-    WINNER_FLAG_CONTAINER = 'winnerFlag__container';
+    WINNER_FLAG_CONTAINER_TEST_ID = 'winnerFlag__container',
+    WINNER_FLAG_CONTAINER_INNER_TEST_ID = 'winnerFlag__container--inner',
+    WINNER_FLAG_SEPARATOR = 'winnerFlag__separator';
   let onPress: jest.Mock;
 
   beforeEach(() => {
@@ -24,7 +26,7 @@ describe('<WinnerFlag />', () => {
 
   it('renders a <View />', () => {
     const {queryByTestId} = render(<WinnerFlag winner={TileState.Player1} />);
-    expect(queryByTestId(WINNER_FLAG_CONTAINER)).not.toBeNull();
+    expect(queryByTestId(WINNER_FLAG_CONTAINER_TEST_ID)).not.toBeNull();
   });
 
   it('renders a "new game" <Pressable />', () => {
@@ -78,16 +80,44 @@ describe('<WinnerFlag />', () => {
     expect(getByText(PLAYER_O_TEXT).props.style.color).toBe(PLAYER_2_COLOR);
   });
 
-  it(`set /borderColor: ${PLAYER_1_COLOR}/ on "container" <View /> if /winner === Player1/`, () => {
+  it(`set /borderColor: ${PLAYER_1_COLOR}/ on "container--inner" <View /> if /winner === Player1/`, () => {
     const {getByTestId} = render(<WinnerFlag winner={TileState.Player1} />);
-    expect(getByTestId(WINNER_FLAG_CONTAINER).props.style.borderColor).toBe(
+    expect(
+      getByTestId(WINNER_FLAG_CONTAINER_INNER_TEST_ID).props.style.borderColor,
+    ).toBe(PLAYER_1_COLOR);
+  });
+
+  it(`set /borderColor: ${PLAYER_2_COLOR}/ on "container--inner" <View /> if /winner === Player2/`, () => {
+    const {getByTestId} = render(<WinnerFlag winner={TileState.Player2} />);
+    expect(
+      getByTestId(WINNER_FLAG_CONTAINER_INNER_TEST_ID).props.style.borderColor,
+    ).toBe(PLAYER_2_COLOR);
+  });
+
+  it(`set /shadowColor: ${PLAYER_1_COLOR}/ on "container--inner" <View /> if /winner === Player1/`, () => {
+    const {getByTestId} = render(<WinnerFlag winner={TileState.Player1} />);
+    expect(
+      getByTestId(WINNER_FLAG_CONTAINER_INNER_TEST_ID).props.style.shadowColor,
+    ).toBe(PLAYER_1_COLOR);
+  });
+
+  it(`set /shadowColor: ${PLAYER_2_COLOR}/ on "container--inner" <View /> if /winner === Player2/`, () => {
+    const {getByTestId} = render(<WinnerFlag winner={TileState.Player2} />);
+    expect(
+      getByTestId(WINNER_FLAG_CONTAINER_INNER_TEST_ID).props.style.shadowColor,
+    ).toBe(PLAYER_2_COLOR);
+  });
+
+  it(`set /backgroundColor: ${PLAYER_1_COLOR}/ on "separator" <View /> if /winner === Player1/`, () => {
+    const {getByTestId} = render(<WinnerFlag winner={TileState.Player1} />);
+    expect(getByTestId(WINNER_FLAG_SEPARATOR).props.style.backgroundColor).toBe(
       PLAYER_1_COLOR,
     );
   });
 
-  it(`set /borderColor: ${PLAYER_2_COLOR}/ on "container" <View /> if /winner === Player2/`, () => {
+  it(`set /backgroundColor: ${PLAYER_2_COLOR}/ on "separator" <View /> if /winner === Player2/`, () => {
     const {getByTestId} = render(<WinnerFlag winner={TileState.Player2} />);
-    expect(getByTestId(WINNER_FLAG_CONTAINER).props.style.borderColor).toBe(
+    expect(getByTestId(WINNER_FLAG_SEPARATOR).props.style.backgroundColor).toBe(
       PLAYER_2_COLOR,
     );
   });
