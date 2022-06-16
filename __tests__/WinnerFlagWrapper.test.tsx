@@ -1,4 +1,4 @@
-import {render} from '@testing-library/react-native';
+import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
@@ -18,6 +18,22 @@ describe('<WinnerFlagWrapper />', () => {
     );
     expect(queryByText('player x')).not.toBeNull();
   });
-});
 
-// Passes the two onPress to <WinnerFlag />
+  it('passes /onPressNewGame/ to <WinnerFlag />', () => {
+    const onPress = jest.fn();
+    const {getByText} = render(
+      <WinnerFlagWrapper onPressNewGame={onPress} winner={TileState.Player1} />,
+    );
+    fireEvent.press(getByText('new game'));
+    expect(onPress).toHaveBeenCalled();
+  });
+
+  it('passes /onPressQuit/ to <WinnerFlag />', () => {
+    const onPress = jest.fn();
+    const {getByText} = render(
+      <WinnerFlagWrapper onPressQuit={onPress} winner={TileState.Player1} />,
+    );
+    fireEvent.press(getByText('quit'));
+    expect(onPress).toHaveBeenCalled();
+  });
+});
