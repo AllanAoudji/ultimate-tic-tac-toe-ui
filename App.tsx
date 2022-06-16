@@ -17,9 +17,13 @@ import WinnerFlagWrapper from './src/WinnerFlagWrapper';
 const App = () => {
   return (
     <>
-      <PlayerBoard disabled={true} position="TOP" player={TileState.Player2} />
+      <PlayerBoard
+        disabledPlayButton={true}
+        position="TOP"
+        player={TileState.Player2}
+      />
       <Board history={[]} />
-      <PlayerBoard disabled={true} />
+      <PlayerBoard disabledPlayButton={true} />
       <WinnerFlagWrapper />
     </>
   );

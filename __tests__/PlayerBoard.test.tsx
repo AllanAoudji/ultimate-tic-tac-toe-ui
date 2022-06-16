@@ -92,9 +92,9 @@ describe('<PlayerBoard />', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('disables <PlayButton /> if /disabled === true/', () => {
+  it('disables <PlayButton /> if /disabledPlayButton === true/', () => {
     const {getByText} = render(
-      <PlayerBoard disabled={true} onPressPlay={onPress} />,
+      <PlayerBoard disabledPlayButton={true} onPressPlay={onPress} />,
     );
     fireEvent.press(getByText(PLAY_TEXT));
     expect(onPress).not.toHaveBeenCalled();
@@ -118,8 +118,8 @@ describe('<PlayerBoard />', () => {
     ).toBe(true);
   });
 
-  it('set /opacity: 0.5/ if /disabled === true/', () => {
-    const {getByTestId} = render(<PlayerBoard disabled={true} />);
+  it('set /opacity: 0.5/ if /disabledPlayButton === true/', () => {
+    const {getByTestId} = render(<PlayerBoard disabledPlayButton={true} />);
     expect(
       getByTestId(PLAYER_BOARD_CONTAINER_OPACITY_TEST_ID).props.style.opacity,
     ).toBe(0.5);
@@ -152,5 +152,13 @@ describe('<PlayerBoard />', () => {
     );
     fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
     expect(getByText(SURREND_TEXT).props.style.color).toBe('#ed1327');
+  });
+
+  it('disables <SurrendButton /> if /disabledSurrendButton === true/', () => {
+    const {getByTestId} = render(<PlayerBoard disabledSurrendButton={true} />);
+    expect(
+      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props
+        .accessibilityState.disabled,
+    ).toBe(true);
   });
 });
