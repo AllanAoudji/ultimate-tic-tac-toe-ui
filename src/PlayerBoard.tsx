@@ -19,6 +19,8 @@ interface Props {
   onSurrend?: () => void;
   player?: TileState.Player1 | TileState.Player2;
   position?: 'TOP' | 'BOTTOM';
+  setVisibleModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  visibleModal?: boolean;
 }
 
 const PlayerBoard: React.FC<Props> = ({
@@ -28,22 +30,28 @@ const PlayerBoard: React.FC<Props> = ({
   onSurrend = () => {},
   player = TileState.Player1,
   position = 'BOTTOM',
+  setVisibleModal = () => {},
+  visibleModal = false,
 }) => {
   const {width, height} = useWindowDimensions();
-
-  const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
 
   const styles = React.useMemo(
     () => playerBoardStyles({disabledPlayButton, height, position, width}),
     [disabledPlayButton, height, position, width],
   );
 
-  const onPressSurrend = React.useCallback(() => setVisibleModal(true), []);
+  const onPressSurrend = React.useCallback(
+    () => setVisibleModal(true),
+    [setVisibleModal],
+  );
   const onPressYes = React.useCallback(() => {
     setVisibleModal(false);
     onSurrend();
-  }, [onSurrend]);
-  const onPressNo = React.useCallback(() => setVisibleModal(false), []);
+  }, [onSurrend, setVisibleModal]);
+  const onPressNo = React.useCallback(
+    () => setVisibleModal(false),
+    [setVisibleModal],
+  );
 
   return (
     <View style={styles.container} testID="playerBoard__container">
