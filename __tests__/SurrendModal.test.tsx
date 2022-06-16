@@ -66,6 +66,22 @@ describe('<SurrendModal />', () => {
     ).toBe(PLAYER_1_COLOR);
   });
 
+  it(`set /shadowColor: ${PLAYER_1_COLOR}/ if /player === Player1/`, () => {
+    const {getByTestId} = render(<SurrendModal />);
+    expect(
+      getByTestId(SURREND_MODAL_CONTAINER_INNER_TEST_ID).props.style
+        .shadowColor,
+    ).toBe(PLAYER_1_COLOR);
+  });
+
+  it(`set /shadowColor: ${PLAYER_2_COLOR}/ if /player === Player2/`, () => {
+    const {getByTestId} = render(<SurrendModal player={TileState.Player2} />);
+    expect(
+      getByTestId(SURREND_MODAL_CONTAINER_INNER_TEST_ID).props.style
+        .shadowColor,
+    ).toBe(PLAYER_2_COLOR);
+  });
+
   it(`set /color: ${PLAYER_2_COLOR}/ on the title if /player === Player2/`, () => {
     const {getByText} = render(<SurrendModal player={TileState.Player2} />);
     expect(getByText(SURREND_TEXT).props.style.color).toBe(PLAYER_2_COLOR);
