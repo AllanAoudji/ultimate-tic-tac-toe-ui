@@ -13,7 +13,8 @@ import SurrendButton from './SurrendButton';
 import SurrendModalWrapper from './SurrendModalWrapper';
 
 interface Props {
-  disabled?: boolean;
+  disabledPlayButton?: boolean;
+  disabledSurrendButton?: boolean;
   onPressPlay?: ((event: GestureResponderEvent) => void) | null | undefined;
   onSurrend?: () => void;
   player?: TileState.Player1 | TileState.Player2;
@@ -21,7 +22,8 @@ interface Props {
 }
 
 const PlayerBoard: React.FC<Props> = ({
-  disabled = false,
+  disabledPlayButton = false,
+  disabledSurrendButton = false,
   onPressPlay = () => {},
   onSurrend = () => {},
   player = TileState.Player1,
@@ -32,8 +34,8 @@ const PlayerBoard: React.FC<Props> = ({
   const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
 
   const styles = React.useMemo(
-    () => playerBoardStyles({disabled, height, position, width}),
-    [disabled, height, position, width],
+    () => playerBoardStyles({disabledPlayButton, height, position, width}),
+    [disabledPlayButton, height, position, width],
   );
 
   const onPressSurrend = React.useCallback(() => setVisibleModal(true), []);
@@ -49,14 +51,14 @@ const PlayerBoard: React.FC<Props> = ({
         style={styles.containerOpacity}
         testID="playerBoard__container--opacity">
         <PlayButton
-          disabled={disabled || visibleModal}
+          disabled={disabledPlayButton || visibleModal}
           onPress={onPressPlay}
           player={player}
         />
       </View>
       <View style={styles.containerSurrendButton}>
         <SurrendButton
-          disabled={visibleModal}
+          disabled={disabledSurrendButton || visibleModal}
           onPress={onPressSurrend}
           player={player}
         />
@@ -72,12 +74,12 @@ const PlayerBoard: React.FC<Props> = ({
 };
 
 const playerBoardStyles = ({
-  disabled,
+  disabledPlayButton,
   height,
   position,
   width,
 }: {
-  disabled: boolean;
+  disabledPlayButton: boolean;
   height: number;
   position: 'BOTTOM' | 'TOP';
   width: number;
@@ -95,7 +97,7 @@ const playerBoardStyles = ({
       transform: [{rotate: position === 'TOP' ? '180deg' : '0deg'}],
     },
     containerOpacity: {
-      opacity: disabled ? 0.5 : 1,
+      opacity: disabledPlayButton ? 0.5 : 1,
     },
     containerSurrendButton: {
       alignItems: 'flex-end',
