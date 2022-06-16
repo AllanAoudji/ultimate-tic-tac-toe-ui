@@ -9,24 +9,10 @@
  */
 
 import React from 'react';
-import {TileState} from 'ultimate-tic-tac-toe-algorithm';
-import Board from './src/Board';
-import PlayerBoard from './src/PlayerBoard';
-import WinnerFlagWrapper from './src/WinnerFlagWrapper';
+import Game from './src/Game';
 
 const App = () => {
-  return (
-    <>
-      <PlayerBoard
-        disabledPlayButton={true}
-        position="TOP"
-        player={TileState.Player2}
-      />
-      <Board history={[]} />
-      <PlayerBoard disabledPlayButton={true} />
-      <WinnerFlagWrapper />
-    </>
-  );
+  return <Game />;
 };
 
 export default App;

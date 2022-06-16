@@ -63,31 +63,31 @@ describe('<PlayerBoard />', () => {
     ).toBe(1);
   });
 
-  it('renders <SurrendModal /> when <SurrendButton /> is pressed', () => {
-    const {getByTestId, queryByText} = render(<PlayerBoard />);
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
+  it('renders <SurrendModal /> if /visibleModal === true/', () => {
+    const {queryByText} = render(<PlayerBoard visibleModal={true} />);
     expect(queryByText(SURREND_TEXT)).not.toBeNull();
   });
 
-  it('hides <SurrendModal /> when "yes" <Button /> is pressed', () => {
-    const {getByTestId, getByText, queryByText} = render(<PlayerBoard />);
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
+  it('calls /setVisibleModal/ with /false/ when "yes" <Button /> is pressed', () => {
+    const {getByText} = render(
+      <PlayerBoard setVisibleModal={onPress} visibleModal={true} />,
+    );
     fireEvent.press(getByText(YES_TEXT));
-    expect(queryByText(SURREND_TEXT)).toBeNull();
+    expect(onPress).toHaveBeenCalledWith(false);
   });
 
-  it('hides <SurrendModal /> when "no" <Button /> is pressed', () => {
-    const {getByTestId, getByText, queryByText} = render(<PlayerBoard />);
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
+  it('calls /setVisibleModal/ with /false/ when "no" <Button /> is pressed', () => {
+    const {getByText} = render(
+      <PlayerBoard setVisibleModal={onPress} visibleModal={true} />,
+    );
     fireEvent.press(getByText(NO_TEXT));
-    expect(queryByText(SURREND_TEXT)).toBeNull();
+    expect(onPress).toHaveBeenCalledWith(false);
   });
 
   it('calls /onSurrend/ when "yes" <Button /> is Pressed', () => {
-    const {getByTestId, getByText} = render(
-      <PlayerBoard onSurrend={onPress} />,
+    const {getByText} = render(
+      <PlayerBoard onSurrend={onPress} visibleModal={true} />,
     );
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
     fireEvent.press(getByText(YES_TEXT));
     expect(onPress).toHaveBeenCalled();
   });
@@ -101,17 +101,17 @@ describe('<PlayerBoard />', () => {
   });
 
   it('disables <PlayButton /> if <SurrendModal /> is visible', () => {
-    const {getByTestId, getByText} = render(
-      <PlayerBoard onPressPlay={onPress} />,
+    const {getByText} = render(
+      <PlayerBoard onPressPlay={onPress} visibleModal={true} />,
     );
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
     fireEvent.press(getByText(PLAY_TEXT));
     expect(onPress).not.toHaveBeenCalled();
   });
 
   it('disables <SurrendButton /> if <SurrendModal /> is visible', () => {
-    const {getByTestId} = render(<PlayerBoard onPressPlay={onPress} />);
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
+    const {getByTestId} = render(
+      <PlayerBoard onPressPlay={onPress} visibleModal={true} />,
+    );
     expect(
       getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props
         .accessibilityState.disabled,
@@ -147,10 +147,9 @@ describe('<PlayerBoard />', () => {
   });
 
   it('passes /player/ on <SurrendModalWrapper />', () => {
-    const {getByTestId, getByText} = render(
-      <PlayerBoard player={TileState.Player2} />,
+    const {getByText} = render(
+      <PlayerBoard player={TileState.Player2} visibleModal={true} />,
     );
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
     expect(getByText(SURREND_TEXT).props.style.color).toBe('#ed1327');
   });
 

@@ -29,7 +29,7 @@ const SurrendModal: React.FC<Props> = ({
     [height, player, width],
   );
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="surrendModal__container">
       <View
         style={styles.innerContainer}
         testID="surrendModal__container--inner">
