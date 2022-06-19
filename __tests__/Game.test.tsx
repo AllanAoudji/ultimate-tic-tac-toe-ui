@@ -2,6 +2,8 @@ import {fireEvent, render} from '@testing-library/react-native';
 import {mockRandomForEach, mockRandom, resetMockRandom} from 'jest-mock-random';
 import React from 'react';
 
+import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
+
 import {imageSource} from './testUtils';
 
 import Game from '../src/Game';
@@ -24,7 +26,7 @@ describe('<Game />', () => {
     TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable',
     TILE_IMAGE_STATE_TEST_ID = 'tile__image--state',
     TILE_IMAGE_TEMP_TEST_ID = 'tile__image--temp',
-    WINNER_FLAG_CONTAINER_TEST_ID = 'winningModal__container',
+    WINNING_MODAL_CONTAINER_TEST_ID = 'winningModal__container',
     YES_TEXT = 'yes';
 
   // BOTTOM <PlayerBoard is always player1
@@ -102,7 +104,7 @@ describe('<Game />', () => {
     ).toBe(PLAYER_X_COLOR);
   });
 
-  it('renders <WinnerFlag /> with /winner === Player1/ if player2 surrend', () => {
+  it('renders <WinningModal /> with /winner === Player1/ if player2 surrend', () => {
     const {getAllByTestId, getByText, queryByTestId, queryByText} = render(
       <Game />,
     );
@@ -110,11 +112,11 @@ describe('<Game />', () => {
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
     );
     fireEvent.press(getByText(YES_TEXT));
-    expect(queryByTestId(WINNER_FLAG_CONTAINER_TEST_ID)).not.toBeNull();
+    expect(queryByTestId(WINNING_MODAL_CONTAINER_TEST_ID)).not.toBeNull();
     expect(queryByText(PLAYER_X_TEST)).not.toBeNull();
   });
 
-  it('renders <WinnerFlag /> with /winner === Player2/ if player1 surrend', () => {
+  it('renders <WinningModal /> with /winner === Player2/ if player1 surrend', () => {
     const {getAllByTestId, getByText, queryByTestId, queryByText} = render(
       <Game />,
     );
@@ -122,7 +124,7 @@ describe('<Game />', () => {
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1],
     );
     fireEvent.press(getByText(YES_TEXT));
-    expect(queryByTestId(WINNER_FLAG_CONTAINER_TEST_ID)).not.toBeNull();
+    expect(queryByTestId(WINNING_MODAL_CONTAINER_TEST_ID)).not.toBeNull();
     expect(queryByText(PLAYER_O_TEXT)).not.toBeNull();
   });
 
@@ -133,7 +135,7 @@ describe('<Game />', () => {
     );
     fireEvent.press(getByText(YES_TEXT));
     fireEvent.press(getByText(NEW_GAME_TEXT));
-    expect(queryByTestId(WINNER_FLAG_CONTAINER_TEST_ID)).toBeNull();
+    expect(queryByTestId(WINNING_MODAL_CONTAINER_TEST_ID)).toBeNull();
   });
 
   it('randomized /players/ when  "new game" <Pressable /> is pressed', () => {
@@ -290,6 +292,24 @@ describe('<Game />', () => {
       },
     );
 
-    expect(queryByTestId(WINNER_FLAG_CONTAINER_TEST_ID)).not.toBeNull();
+    expect(queryByTestId(WINNING_MODAL_CONTAINER_TEST_ID)).not.toBeNull();
+  });
+
+  it('displays Draw <WinningModal /> after a play', () => {
+    jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockReturnValue({
+      history: [],
+      winner: [
+        ultimateTicTactToAlgorithm.TileState.Empty,
+        ultimateTicTactToAlgorithm.WiningLine.Draw,
+      ],
+      mode: ultimateTicTactToAlgorithm.Mode.Normal,
+    });
+    const {getAllByTestId, getAllByText, queryByText} = render(<Game />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    expect(queryByText("it's a draw")).not.toBeNull();
   });
 });
+
+// TODO:
+// All winner[0] !== TileState.Empty should work with winner[0] === WinningLine.Draw

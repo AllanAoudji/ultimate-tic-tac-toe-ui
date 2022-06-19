@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  generateAssets,
   getActivePlayer,
   Mode,
   play,
@@ -12,6 +13,15 @@ import Board from './Board';
 import PlayerBoard from './PlayerBoard';
 import WinningModalWrapper from './WinningModalWrapper';
 
+const initialAssets = generateAssets();
+
+const normalizeWinner = (winner: SectionState) => {
+  if (winner[1] === WiningLine.Draw) {
+    return winner[1];
+  }
+  return winner[0];
+};
+
 const randomizePlayer: () => [
   TileState.Player1 | TileState.Player2,
   TileState.Player1 | TileState.Player2,
@@ -21,7 +31,7 @@ const randomizePlayer: () => [
     : [TileState.Player2, TileState.Player1];
 
 const Game: React.FC = () => {
-  let [history, setHistory] = React.useState<number[]>([]);
+  let [history, setHistory] = React.useState<number[]>(initialAssets.history);
   const [players, setPlayers] = React.useState<
     [
       TileState.Player1 | TileState.Player2,
@@ -35,10 +45,9 @@ const Game: React.FC = () => {
     React.useState<boolean>(false);
   const [visibleModalPlayerTop, setVisibleModalPlayerTop] =
     React.useState<boolean>(false);
-  const [winner, setWinner] = React.useState<SectionState>([
-    TileState.Empty,
-    null,
-  ]);
+  const [winner, setWinner] = React.useState<SectionState>(
+    initialAssets.winner,
+  );
 
   const onPressBoard = React.useCallback(
     (tileIndex: number) => () => {
@@ -60,7 +69,10 @@ const Game: React.FC = () => {
         winner,
       });
       setHistory(assets.history);
-      if (assets.winner[0] !== TileState.Empty) {
+      if (
+        assets.winner[0] !== TileState.Empty ||
+        assets.winner[1] === WiningLine.Draw
+      ) {
         setWinner(assets.winner);
       }
     }
@@ -116,7 +128,10 @@ const Game: React.FC = () => {
         setVisibleModal={setVisibleModalPlayerBottom}
         visibleModal={visibleModalPlayerBottom}
       />
-      <WinningModalWrapper onPressNewGame={onPressNewGame} winner={winner[0]} />
+      <WinningModalWrapper
+        onPressNewGame={onPressNewGame}
+        winner={normalizeWinner(winner)}
+      />
     </>
   );
 };
