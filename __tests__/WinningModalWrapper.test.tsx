@@ -9,7 +9,7 @@ describe('<WinningModalWrapper />', () => {
     const {queryByTestId} = render(
       <WinningModalWrapper winner={TileState.Empty} />,
     );
-    expect(queryByTestId('winnerFlag__container')).toBeNull();
+    expect(queryByTestId('winningModal__container')).toBeNull();
   });
 
   it('renders <WinningModal /> if /winner === Player/', () => {
@@ -19,7 +19,7 @@ describe('<WinningModalWrapper />', () => {
     expect(queryByText('player x')).not.toBeNull();
   });
 
-  it('passes /onPressNewGame/ to <WinnerFlag />', () => {
+  it('passes /onPressNewGame/ to <WinningModal />', () => {
     const onPress = jest.fn();
     const {getByText} = render(
       <WinningModalWrapper
@@ -31,7 +31,7 @@ describe('<WinningModalWrapper />', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('passes /onPressQuit/ to <WinnerFlag />', () => {
+  it('passes /onPressQuit/ to <WinningModal />', () => {
     const onPress = jest.fn();
     const {getByText} = render(
       <WinningModalWrapper onPressQuit={onPress} winner={TileState.Player1} />,

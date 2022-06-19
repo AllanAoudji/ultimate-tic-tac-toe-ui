@@ -28,7 +28,7 @@ const generateColor: (
 interface TitleProps {
   winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
 }
-interface WinnerFlagProps {
+interface WinningModalProps {
   onPressNewGame?: ((event: GestureResponderEvent) => void) | null | undefined;
   onPressQuit?: ((event: GestureResponderEvent) => void) | null | undefined;
   winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
@@ -54,7 +54,7 @@ const Title: React.FC<TitleProps> = ({winner}) => {
   );
 };
 
-const WinningModal: React.FC<WinnerFlagProps> = ({
+const WinningModal: React.FC<WinningModalProps> = ({
   onPressNewGame = () => {},
   onPressQuit = () => {},
   winner,
@@ -62,7 +62,7 @@ const WinningModal: React.FC<WinnerFlagProps> = ({
   const {width} = useWindowDimensions();
 
   const styles = React.useMemo(
-    () => winnerFlagStyles({width, winner}),
+    () => winningModalStyles({width, winner}),
     [width, winner],
   );
 
@@ -108,7 +108,7 @@ const titleStyles = ({
     },
   });
 
-const winnerFlagStyles = ({
+const winningModalStyles = ({
   width,
   winner,
 }: {
