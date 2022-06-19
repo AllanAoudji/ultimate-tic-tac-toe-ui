@@ -310,6 +310,3 @@ describe('<Game />', () => {
     expect(queryByText("it's a draw")).not.toBeNull();
   });
 });
-
-// TODO:
-// All winner[0] !== TileState.Empty should work with winner[0] === WinningLine.Draw
