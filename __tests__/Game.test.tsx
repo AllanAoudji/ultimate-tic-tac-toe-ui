@@ -24,7 +24,7 @@ describe('<Game />', () => {
     TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable',
     TILE_IMAGE_STATE_TEST_ID = 'tile__image--state',
     TILE_IMAGE_TEMP_TEST_ID = 'tile__image--temp',
-    WINNER_FLAG_CONTAINER_TEST_ID = 'winnerFlag__container',
+    WINNER_FLAG_CONTAINER_TEST_ID = 'winningModal__container',
     YES_TEXT = 'yes';
 
   // BOTTOM <PlayerBoard is always player1

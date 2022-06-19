@@ -2,7 +2,7 @@ import React from 'react';
 import {GestureResponderEvent} from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
-import WinnerFlag from './WinnerFlag';
+import WinningModal from './WinningModal';
 
 interface Props {
   onPressQuit?: ((event: GestureResponderEvent) => void) | null | undefined;
@@ -19,7 +19,7 @@ const WinnerFlagWrapper: React.FC<Props> = ({
     return null;
   }
   return (
-    <WinnerFlag
+    <WinningModal
       onPressNewGame={onPressNewGame}
       onPressQuit={onPressQuit}
       winner={winner}
