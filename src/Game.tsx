@@ -10,7 +10,7 @@ import {
 
 import Board from './Board';
 import PlayerBoard from './PlayerBoard';
-import WinnerFlagWrapper from './WinnerFlagWrapper';
+import WinningModalWrapper from './WinningModalWrapper';
 
 const randomizePlayer: () => [
   TileState.Player1 | TileState.Player2,
@@ -116,7 +116,7 @@ const Game: React.FC = () => {
         setVisibleModal={setVisibleModalPlayerBottom}
         visibleModal={visibleModalPlayerBottom}
       />
-      <WinnerFlagWrapper onPressNewGame={onPressNewGame} winner={winner[0]} />
+      <WinningModalWrapper onPressNewGame={onPressNewGame} winner={winner[0]} />
     </>
   );
 };

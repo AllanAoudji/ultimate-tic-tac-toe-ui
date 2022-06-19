@@ -2,19 +2,19 @@ import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
-import WinnerFlagWrapper from '../src/WinnerFlagWrapper';
+import WinningModalWrapper from '../src/WinningModalWrapper';
 
-describe('<WinnerFlagWrapper />', () => {
-  it('do not renders <WinnerFlag /> if /winner === Empty/', () => {
+describe('<WinningModalWrapper />', () => {
+  it('do not renders <WinningModal /> if /winner === Empty/', () => {
     const {queryByTestId} = render(
-      <WinnerFlagWrapper winner={TileState.Empty} />,
+      <WinningModalWrapper winner={TileState.Empty} />,
     );
     expect(queryByTestId('winnerFlag__container')).toBeNull();
   });
 
-  it('renders <WinnerFlag /> if /winner === Player/', () => {
+  it('renders <WinningModal /> if /winner === Player/', () => {
     const {queryByText} = render(
-      <WinnerFlagWrapper winner={TileState.Player1} />,
+      <WinningModalWrapper winner={TileState.Player1} />,
     );
     expect(queryByText('player x')).not.toBeNull();
   });
@@ -22,7 +22,10 @@ describe('<WinnerFlagWrapper />', () => {
   it('passes /onPressNewGame/ to <WinnerFlag />', () => {
     const onPress = jest.fn();
     const {getByText} = render(
-      <WinnerFlagWrapper onPressNewGame={onPress} winner={TileState.Player1} />,
+      <WinningModalWrapper
+        onPressNewGame={onPress}
+        winner={TileState.Player1}
+      />,
     );
     fireEvent.press(getByText('new game'));
     expect(onPress).toHaveBeenCalled();
@@ -31,7 +34,7 @@ describe('<WinnerFlagWrapper />', () => {
   it('passes /onPressQuit/ to <WinnerFlag />', () => {
     const onPress = jest.fn();
     const {getByText} = render(
-      <WinnerFlagWrapper onPressQuit={onPress} winner={TileState.Player1} />,
+      <WinningModalWrapper onPressQuit={onPress} winner={TileState.Player1} />,
     );
     fireEvent.press(getByText('quit'));
     expect(onPress).toHaveBeenCalled();
