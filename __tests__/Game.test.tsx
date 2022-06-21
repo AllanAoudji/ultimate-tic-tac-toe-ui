@@ -33,6 +33,7 @@ describe('<Game />', () => {
     PLAY_TEXT = 'play',
     PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
       'playButton__container--pressable',
+    QUIT_TEXT = 'quit',
     SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
       'surrendButton__container--pressable',
     SURREND_MODAL_CONTAINER_INNER_TEST_ID = 'surrendModal__container--inner',
@@ -45,6 +46,16 @@ describe('<Game />', () => {
 
   // BOTTOM <PlayerBoard is always player1
   mockRandomForEach([0.5]);
+
+  beforeEach(() => {
+    jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
+    jest.spyOn(ultimateTicTactToAlgorithm, 'play');
+  });
+
+  afterEach(() => {
+    jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection').mockRestore();
+    jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockRestore();
+  });
 
   it('renders two <PlayerBoard />', () => {
     const {queryAllByTestId} = render(<Game />);
@@ -355,5 +366,52 @@ describe('<Game />', () => {
     fireEvent.press(getAllByText(PLAY_TEXT)[1]);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1]);
     expect(queryByTestId(TILE_IMAGE_TEMP_TEST_ID)).toBeNull();
+  });
+
+  it('call /onPressQuit/ when "quit" <Pressable /> is pressed', () => {
+    const onPressQuit = jest.fn();
+    const {getAllByTestId, getByText} = render(
+      <Game onPressQuit={onPressQuit} />,
+    );
+    fireEvent.press(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
+    );
+    fireEvent.press(getByText(YES_TEXT));
+    fireEvent.press(getByText(QUIT_TEXT));
+    expect(onPressQuit).toHaveBeenCalled();
+  });
+
+  it('calls /play/ with /mode/', () => {
+    const {getAllByTestId, getAllByText} = render(
+      <Game mode={ultimateTicTactToAlgorithm.Mode.Continue} />,
+    );
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    expect(ultimateTicTactToAlgorithm.play).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        mode: ultimateTicTactToAlgorithm.Mode.Continue,
+      }),
+    );
+  });
+
+  it('calls /play/ with /mode === Normal/ if /mode === undefined/', async () => {
+    const {getAllByTestId, getAllByText} = render(<Game />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    await fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    expect(ultimateTicTactToAlgorithm.play).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        mode: ultimateTicTactToAlgorithm.Mode.Normal,
+      }),
+    );
+  });
+
+  it('passes /mode/ to <Board />', () => {
+    render(<Game mode={ultimateTicTactToAlgorithm.Mode.Continue} />);
+    expect(ultimateTicTactToAlgorithm.getActiveSection).toHaveBeenCalledWith(
+      expect.anything(),
+      ultimateTicTactToAlgorithm.Mode.Continue,
+    );
   });
 });

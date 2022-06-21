@@ -10,12 +10,14 @@ import {
   getSections,
   getActiveSection,
   getActivePlayer,
+  Mode,
 } from 'ultimate-tic-tac-toe-algorithm';
 import Section from './Section';
 
 interface Props {
   gameIsDone?: boolean;
   history?: number[];
+  mode?: Mode;
   onPress?: (
     index: number,
   ) => ((event?: GestureResponderEvent) => void) | null | undefined;
@@ -25,12 +27,13 @@ interface Props {
 const Board: React.FC<Props> = ({
   gameIsDone = false,
   history = [],
+  mode = Mode.Normal,
   onPress = () => () => {},
   selectedTileIndex = null,
 }) => {
   const validSection = React.useMemo(
-    () => getActiveSection(history),
-    [history],
+    () => getActiveSection(history, mode),
+    [history, mode],
   );
 
   return (
