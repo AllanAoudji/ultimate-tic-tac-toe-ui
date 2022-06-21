@@ -13,18 +13,18 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-const Home: React.FC<Props> = ({navigation}) => {
+const HomeScreen: React.FC<Props> = ({navigation}) => {
   const handlePress = React.useCallback(
     () => navigation.navigate('Game', {mode: Mode.Normal}),
     [navigation],
   );
 
   return (
-    <View testID="home__container">
+    <View testID="homeScreen__container">
       <Logo />
       <PlayGameButton onPress={handlePress} title="play normal game" />
     </View>
   );
 };
 
-export default Home;
+export default HomeScreen;

@@ -2,7 +2,7 @@ import {fireEvent, render, RenderAPI} from '@testing-library/react-native';
 import React from 'react';
 import {Mode} from 'ultimate-tic-tac-toe-algorithm';
 
-import Home from '../src/Home';
+import HomeScreen from '../src/HomeScreen';
 
 const createTestProps = (props: Object) => ({
   navigation: {
@@ -11,16 +11,16 @@ const createTestProps = (props: Object) => ({
   ...props,
 });
 
-describe('<Home />', () => {
+describe('<HomeScreen />', () => {
   let props: any, renderer: RenderAPI;
   beforeEach(() => {
     props = createTestProps({});
-    renderer = render(<Home {...props} />);
+    renderer = render(<HomeScreen {...props} />);
   });
 
   it('renders a <View />', () => {
     const {queryByTestId} = renderer;
-    expect(queryByTestId('home__container')).not.toBeNull();
+    expect(queryByTestId('homeScreen__container')).not.toBeNull();
   });
 
   it('renders a <PlayGameButton />', () => {
