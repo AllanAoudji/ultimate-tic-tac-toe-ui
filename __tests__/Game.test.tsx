@@ -8,13 +8,27 @@ import {imageSource} from './testUtils';
 
 import Game from '../src/Game';
 
+const spyPlay: (winner?: ultimateTicTactToAlgorithm.SectionState) => void = (
+  winner = [
+    ultimateTicTactToAlgorithm.TileState.Player1,
+    ultimateTicTactToAlgorithm.WiningLine.TopRow,
+  ],
+) => {
+  jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockReturnValue({
+    history: [],
+    winner,
+    mode: ultimateTicTactToAlgorithm.Mode.Normal,
+  });
+};
+
 describe('<Game />', () => {
   const BOARD_CONTAINER_TEST_ID = 'board__container',
+    IT_S_A_DRAW_TEXT = "it's a draw",
     NEW_GAME_TEXT = 'new game',
     PLAYER_O_COLOR = '#ed1327',
     PLAYER_O_TEXT = 'player o',
     PLAYER_X_COLOR = '#0012ff',
-    PLAYER_X_TEST = 'player x',
+    PLAYER_X_TEXT = 'player x',
     PLAYER_BOARD_CONTAINER_TEST_ID = 'playerBoard__container',
     PLAY_TEXT = 'play',
     PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
@@ -113,7 +127,7 @@ describe('<Game />', () => {
     );
     fireEvent.press(getByText(YES_TEXT));
     expect(queryByTestId(WINNING_MODAL_CONTAINER_TEST_ID)).not.toBeNull();
-    expect(queryByText(PLAYER_X_TEST)).not.toBeNull();
+    expect(queryByText(PLAYER_X_TEXT)).not.toBeNull();
   });
 
   it('renders <WinningModal /> with /winner === Player2/ if player1 surrend', () => {
@@ -196,7 +210,7 @@ describe('<Game />', () => {
     );
   });
 
-  it(`enables BOTTOM player "${PLAY_TEXT}" <Pressable /> if it's the player turn and /selectedTileIndex !== null/`, () => {
+  it(`enables player BOTTOM "${PLAY_TEXT}" <Pressable /> if it's the player turn and /selectedTileIndex !== null/`, () => {
     const {getAllByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     expect(
@@ -215,7 +229,7 @@ describe('<Game />', () => {
     );
   });
 
-  it(`enables TOP player "${PLAY_TEXT}" <Pressable /> if its's the player turn and /selectedTileIndex !== null/`, () => {
+  it(`enables player TOP "${PLAY_TEXT}" <Pressable /> if its's the player turn and /selectedTileIndex !== null/`, () => {
     mockRandom(0.499);
     const {getAllByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
@@ -244,8 +258,6 @@ describe('<Game />', () => {
     );
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     fireEvent.press(getAllByText(PLAY_TEXT)[1]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1]);
-    fireEvent.press(getAllByText(PLAY_TEXT)[0]);
     fireEvent.press(
       getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
     );
@@ -273,40 +285,75 @@ describe('<Game />', () => {
     expect(queryAllByTestId(TILE_IMAGE_STATE_TEST_ID).length).toBe(1);
   });
 
-  it('renders <WinnigFlag /> if game is won', () => {
-    const {getAllByTestId, getAllByText, queryByTestId} = render(<Game />);
-    const playerPlay = (player: 0 | 1) => (tile: number) => {
-      fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[tile]);
-      fireEvent.press(getAllByText(PLAY_TEXT)[player]);
-    };
-    const playerBottomPlay = playerPlay(1);
-    const playerTopPlay = playerPlay(0);
-
-    [3, 27, 4, 36, 5, 45, 12, 28, 13, 37, 14, 47, 21, 29, 22, 38, 23].forEach(
-      (tileIndex, index) => {
-        if (index % 2) {
-          playerTopPlay(tileIndex);
-        } else {
-          playerBottomPlay(tileIndex);
-        }
-      },
-    );
-
-    expect(queryByTestId(WINNING_MODAL_CONTAINER_TEST_ID)).not.toBeNull();
+  it('displays <WinnigFlag /> if game is won', () => {
+    spyPlay();
+    const {getAllByTestId, queryByText, getAllByText} = render(<Game />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    expect(queryByText(PLAYER_X_TEXT)).not.toBeNull();
   });
 
-  it('displays Draw <WinningModal /> after a play', () => {
-    jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockReturnValue({
-      history: [],
-      winner: [
-        ultimateTicTactToAlgorithm.TileState.Empty,
-        ultimateTicTactToAlgorithm.WiningLine.Draw,
-      ],
-      mode: ultimateTicTactToAlgorithm.Mode.Normal,
-    });
+  it('displays Draw <WinningModal /> if game is a draw', () => {
+    spyPlay([
+      ultimateTicTactToAlgorithm.TileState.Empty,
+      ultimateTicTactToAlgorithm.WiningLine.Draw,
+    ]);
     const {getAllByTestId, getAllByText, queryByText} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     fireEvent.press(getAllByText(PLAY_TEXT)[1]);
-    expect(queryByText("it's a draw")).not.toBeNull();
+    expect(queryByText(IT_S_A_DRAW_TEXT)).not.toBeNull();
+  });
+
+  it('disables press <Tile /> if /winner !== EMPTY/', () => {
+    spyPlay();
+    const {getAllByTestId, getAllByText, queryByTestId} = render(<Game />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1]);
+    expect(queryByTestId(TILE_IMAGE_TEMP_TEST_ID)).toBeNull();
+  });
+
+  it('closes both <SurrendModal /> when game is a draw', () => {
+    spyPlay([
+      ultimateTicTactToAlgorithm.TileState.Empty,
+      ultimateTicTactToAlgorithm.WiningLine.Draw,
+    ]);
+    const {getAllByTestId, getAllByText, queryAllByTestId} = render(<Game />);
+    fireEvent.press(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
+    );
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    expect(queryAllByTestId(SURREND_MODAL_CONTAINER_TEST_ID).length).toBe(0);
+  });
+
+  it('disabled <SurrendButton /> if game is a draw', () => {
+    spyPlay([
+      ultimateTicTactToAlgorithm.TileState.Empty,
+      ultimateTicTactToAlgorithm.WiningLine.Draw,
+    ]);
+    const {getAllByTestId, getAllByText} = render(<Game />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    expect(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+  });
+
+  it('disables press <Tile /> if game is a draw', () => {
+    spyPlay([
+      ultimateTicTactToAlgorithm.TileState.Empty,
+      ultimateTicTactToAlgorithm.WiningLine.Draw,
+    ]);
+    const {getAllByTestId, getAllByText, queryByTestId} = render(<Game />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1]);
+    expect(queryByTestId(TILE_IMAGE_TEMP_TEST_ID)).toBeNull();
   });
 });

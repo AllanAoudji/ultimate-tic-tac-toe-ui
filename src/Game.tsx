@@ -15,6 +15,9 @@ import WinningModalWrapper from './WinningModalWrapper';
 
 const initialAssets = generateAssets();
 
+const gameIsDone: (winner: SectionState) => boolean = winner =>
+  winner[0] !== TileState.Empty || winner[1] === WiningLine.Draw;
+
 const normalizeWinner = (winner: SectionState) => {
   if (winner[1] === WiningLine.Draw) {
     return winner[1];
@@ -69,10 +72,7 @@ const Game: React.FC = () => {
         winner,
       });
       setHistory(assets.history);
-      if (
-        assets.winner[0] !== TileState.Empty ||
-        assets.winner[1] === WiningLine.Draw
-      ) {
+      if (gameIsDone(assets.winner)) {
         setWinner(assets.winner);
       }
     }
@@ -80,7 +80,7 @@ const Game: React.FC = () => {
   }, [history, selectedTileIndex, winner]);
   const onSurrend = React.useCallback(
     (player: TileState.Player1 | TileState.Player2) => () => {
-      if (winner[0] === TileState.Empty) {
+      if (!gameIsDone(winner)) {
         setWinner([player, WiningLine.Surrender]);
       }
     },
@@ -88,7 +88,7 @@ const Game: React.FC = () => {
   );
 
   React.useEffect(() => {
-    if (winner[0] !== TileState.Empty) {
+    if (gameIsDone(winner)) {
       if (visibleModalPlayerBottom === true) {
         setVisibleModalPlayerBottom(false);
       }
@@ -104,7 +104,7 @@ const Game: React.FC = () => {
         disabledPlayButton={
           getActivePlayer(history) !== players[0] || selectedTileIndex === null
         }
-        disabledSurrendButton={winner[0] !== TileState.Empty}
+        disabledSurrendButton={gameIsDone(winner)}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[1])}
         player={players[0]}
@@ -113,6 +113,7 @@ const Game: React.FC = () => {
         visibleModal={visibleModalPlayerTop}
       />
       <Board
+        gameIsDone={gameIsDone(winner)}
         history={history}
         onPress={onPressBoard}
         selectedTileIndex={selectedTileIndex}
@@ -121,7 +122,7 @@ const Game: React.FC = () => {
         disabledPlayButton={
           getActivePlayer(history) !== players[1] || selectedTileIndex === null
         }
-        disabledSurrendButton={winner[0] !== TileState.Empty}
+        disabledSurrendButton={gameIsDone(winner)}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[0])}
         player={players[1]}

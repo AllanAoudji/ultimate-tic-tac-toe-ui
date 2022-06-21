@@ -1,17 +1,10 @@
-<Game />
-All (winner[0] !== TileState.Empty) should work with winner[1] === WinningLine.Draw
-
 <OptionButton>
 quit game button
 restart game button
 save game button
 
-<WinningFlag /> => <WinningModal />
-<WinningFlagWrapper /> => <WinningFlagWrapper />
-
-play() may return equality now.
-<WinningFlag /> should be able to display equality
-<Board /> should have an equality state
+<Board />
+props.gameIsWon => props.gameIsFinished
 
 <Screen />
 __ SplashScreen

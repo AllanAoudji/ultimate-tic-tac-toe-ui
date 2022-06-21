@@ -49,7 +49,7 @@ describe('<Board />', () => {
   it("sets all <Section />'s /valid/ to false if /gameIsWon === true/", () => {
     const onPress = jest.fn();
     const {getAllByTestId} = render(
-      <Board gameIsWon={true} onPress={() => onPress} />,
+      <Board gameIsDone={true} onPress={() => onPress} />,
     );
     fireEvent.press(getAllByTestId('tile__container--pressable')[0]);
     fireEvent.press(getAllByTestId('tile__container--pressable')[30]);
