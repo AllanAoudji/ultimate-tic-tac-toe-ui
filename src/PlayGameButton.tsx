@@ -13,7 +13,7 @@ interface Props {
   title: string;
 }
 
-const PlayNormalGameButton: React.FC<Props> = ({
+const PlayGameButton: React.FC<Props> = ({
   disabled = false,
   onPress = () => {},
   title,
@@ -28,7 +28,7 @@ const PlayNormalGameButton: React.FC<Props> = ({
       disabled={disabled}
       onPress={onPress}
       style={styles.container}
-      testID="playNormalGameButton__container--pressable">
+      testID="playGameButton__container--pressable">
       <Text>{title}</Text>
     </Pressable>
   );
@@ -41,4 +41,4 @@ const stylesPlayNormalGameButton = ({disabled}: {disabled: boolean}) =>
     },
   });
 
-export default PlayNormalGameButton;
+export default PlayGameButton;
