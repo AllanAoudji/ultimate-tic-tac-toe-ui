@@ -3,9 +3,6 @@ quit game button
 restart game button
 save game button
 
-<Board />
-props.gameIsWon => props.gameIsFinished
-
 <Screen />
 __ SplashScreen
 __ HomeScreen
