@@ -1,3 +1,4 @@
+import {StackActions} from '@react-navigation/native';
 import {fireEvent, render, RenderAPI} from '@testing-library/react-native';
 import {mockRandomForEach} from 'jest-mock-random';
 import React from 'react';
@@ -5,19 +6,15 @@ import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 
 import GameScreen from '../src/GameScreen';
 
-const createTestProps = (props: Object) => ({
-  navigation: {
-    navigate: jest.fn(),
-  },
-  route: {
-    params: {
-      mode: ultimateTicTactToAlgorithm.Mode.Continue,
-    },
-  },
-  ...props,
-});
-
 describe('<GameScreen />', () => {
+  const createTestProps = (props: Object) => ({
+    route: {
+      params: {
+        mode: ultimateTicTactToAlgorithm.Mode.Continue,
+      },
+    },
+    ...props,
+  });
   let props: any, renderer: RenderAPI;
 
   mockRandomForEach([0.5]);
@@ -25,10 +22,12 @@ describe('<GameScreen />', () => {
   beforeEach(() => {
     props = createTestProps({});
     renderer = render(<GameScreen {...props} />);
+    jest.spyOn(StackActions, 'replace');
     jest.spyOn(ultimateTicTactToAlgorithm, 'play');
   });
 
   afterEach(() => {
+    jest.spyOn(StackActions, 'replace').mockRestore();
     jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockRestore();
   });
 
@@ -48,7 +47,7 @@ describe('<GameScreen />', () => {
     fireEvent.press(getAllByTestId('surrendButton__container--pressable')[0]);
     fireEvent.press(getByText('yes'));
     fireEvent.press(getByText('quit'));
-    expect(props.navigation.navigate).toHaveBeenCalledWith('Home');
+    expect(StackActions.replace).toHaveBeenCalledWith('Home');
   });
 
   it('passes /route.params.mode/ to <Game />', () => {

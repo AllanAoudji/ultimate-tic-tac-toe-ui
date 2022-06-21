@@ -8,11 +8,17 @@
  * @format
  */
 
+import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import Game from './src/Game';
+
+import Navigation from './src/Navigation';
 
 const App = () => {
-  return <Game />;
+  return (
+    <NavigationContainer>
+      <Navigation />
+    </NavigationContainer>
+  );
 };
 
 export default App;
