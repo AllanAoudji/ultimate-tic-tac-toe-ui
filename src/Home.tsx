@@ -1,0 +1,27 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React from 'react';
+import {View} from 'react-native';
+import {Mode} from 'ultimate-tic-tac-toe-algorithm';
+import PlayGameButton from './PlayGameButton';
+
+type RootStackParamList = {
+  Game: {mode: Mode};
+  Home: undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+const Home: React.FC<Props> = ({navigation}) => {
+  const handlePress = React.useCallback(
+    () => navigation.navigate('Game', {mode: Mode.Normal}),
+    [navigation],
+  );
+
+  return (
+    <View testID="home__container">
+      <PlayGameButton onPress={handlePress} title="play normal game" />
+    </View>
+  );
+};
+
+export default Home;
