@@ -3,18 +3,11 @@ quit game button
 restart game button
 save game button
 
-<GameScreen />
-render <Game />
-
-<Home /> => <HomeScreen />
+<HomeScreen />
+add play continue game button
 
 <SplashScren />
 
 <Screen />
 __ HomeScreen
 __ BoardScreen
-
-Check that on press "play normal game" => <GameScreen />
-check that on press "quit" => <HomeScreen />
-
-<Board /> props.mode => getActiveSection(history, mode)

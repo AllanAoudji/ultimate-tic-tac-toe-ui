@@ -1,11 +1,20 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
+import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 
 import {imageSource} from './testUtils';
 
 import Board from '../src/Board';
 
 describe('<Board />', () => {
+  beforeEach(() => {
+    jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
+  });
+
+  afterEach(() => {
+    jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection').mockRestore();
+  });
+
   it('renders a <View />', () => {
     const {queryByTestId} = render(<Board />);
     expect(queryByTestId('board__container')).toBeTruthy();
@@ -62,6 +71,22 @@ describe('<Board />', () => {
     const {getByTestId} = render(<Board />);
     expect(getByTestId('board__image--grid').props.source).toBe(
       imageSourceGrid,
+    );
+  });
+
+  it('calls /getActiveSection/ with /mode/', () => {
+    render(<Board mode={ultimateTicTactToAlgorithm.Mode.Continue} />);
+    expect(ultimateTicTactToAlgorithm.getActiveSection).toHaveBeenCalledWith(
+      expect.anything(),
+      ultimateTicTactToAlgorithm.Mode.Continue,
+    );
+  });
+
+  it('calls /getActiveSection/ with /mode === Normal/ if /mode === undefined/', () => {
+    render(<Board />);
+    expect(ultimateTicTactToAlgorithm.getActiveSection).toHaveBeenCalledWith(
+      expect.anything(),
+      ultimateTicTactToAlgorithm.Mode.Normal,
     );
   });
 });

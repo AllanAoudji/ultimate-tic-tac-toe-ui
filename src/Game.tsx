@@ -13,6 +13,11 @@ import Board from './Board';
 import PlayerBoard from './PlayerBoard';
 import WinningModalWrapper from './WinningModalWrapper';
 
+interface Props {
+  mode?: Mode;
+  onPressQuit?: () => void;
+}
+
 const initialAssets = generateAssets();
 
 const gameIsDone: (winner: SectionState) => boolean = winner =>
@@ -33,7 +38,10 @@ const randomizePlayer: () => [
     ? [TileState.Player1, TileState.Player2]
     : [TileState.Player2, TileState.Player1];
 
-const Game: React.FC = () => {
+const Game: React.FC<Props> = ({
+  mode = Mode.Normal,
+  onPressQuit = () => {},
+}) => {
   let [history, setHistory] = React.useState<number[]>(initialAssets.history);
   const [players, setPlayers] = React.useState<
     [
@@ -68,7 +76,7 @@ const Game: React.FC = () => {
     if (selectedTileIndex !== null) {
       const assets = play(selectedTileIndex, {
         history,
-        mode: Mode.Normal,
+        mode,
         winner,
       });
       setHistory(assets.history);
@@ -77,7 +85,7 @@ const Game: React.FC = () => {
       }
     }
     setSelectedTilIndex(null);
-  }, [history, selectedTileIndex, winner]);
+  }, [history, mode, selectedTileIndex, winner]);
   const onSurrend = React.useCallback(
     (player: TileState.Player1 | TileState.Player2) => () => {
       if (!gameIsDone(winner)) {
@@ -115,6 +123,7 @@ const Game: React.FC = () => {
       <Board
         gameIsDone={gameIsDone(winner)}
         history={history}
+        mode={mode}
         onPress={onPressBoard}
         selectedTileIndex={selectedTileIndex}
       />
@@ -131,6 +140,7 @@ const Game: React.FC = () => {
       />
       <WinningModalWrapper
         onPressNewGame={onPressNewGame}
+        onPressQuit={onPressQuit}
         winner={normalizeWinner(winner)}
       />
     </>
