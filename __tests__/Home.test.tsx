@@ -42,4 +42,9 @@ describe('<Home />', () => {
       mode: Mode.Normal,
     });
   });
+
+  it('renders a <Logo />', () => {
+    const {queryByTestId} = renderer;
+    expect(queryByTestId('logo__container--svg')).not.toBeNull();
+  });
 });

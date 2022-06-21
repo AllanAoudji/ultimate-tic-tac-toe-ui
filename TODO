@@ -3,9 +3,10 @@ quit game button
 restart game button
 save game button
 
-<Home /> => <HomeScreen />
-Add logo
 <GameScreen />
+render <Game />
+
+<Home /> => <HomeScreen />
 
 <SplashScren />
 

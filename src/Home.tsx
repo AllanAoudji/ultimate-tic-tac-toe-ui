@@ -2,6 +2,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {View} from 'react-native';
 import {Mode} from 'ultimate-tic-tac-toe-algorithm';
+
+import Logo from './Logo';
 import PlayGameButton from './PlayGameButton';
 
 type RootStackParamList = {
@@ -19,6 +21,7 @@ const Home: React.FC<Props> = ({navigation}) => {
 
   return (
     <View testID="home__container">
+      <Logo />
       <PlayGameButton onPress={handlePress} title="play normal game" />
     </View>
   );
