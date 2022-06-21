@@ -12,7 +12,13 @@ const createTestProps = (props: Object) => ({
 });
 
 describe('<HomeScreen />', () => {
+  const HOME_SCREEN_CONTAINER = 'homeScreen__container',
+    PLAY_CONTINUE_GAME_TEXT = 'play continue game',
+    PLAY_GAME_BUTTON_CONTAINER_PRESSABLE =
+      'playGameButton__container--pressable',
+    PLAY_NORMAL_GAME_TEXT = 'play normal game';
   let props: any, renderer: RenderAPI;
+
   beforeEach(() => {
     props = createTestProps({});
     renderer = render(<HomeScreen {...props} />);
@@ -20,26 +26,39 @@ describe('<HomeScreen />', () => {
 
   it('renders a <View />', () => {
     const {queryByTestId} = renderer;
-    expect(queryByTestId('homeScreen__container')).not.toBeNull();
+    expect(queryByTestId(HOME_SCREEN_CONTAINER)).not.toBeNull();
   });
 
-  it('renders a <PlayGameButton />', () => {
-    const {queryByTestId} = renderer;
-    expect(
-      queryByTestId('playGameButton__container--pressable'),
-    ).not.toBeNull();
+  it('renders two <PlayGameButton />', () => {
+    const {queryAllByTestId} = renderer;
+    expect(queryAllByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE)).toHaveLength(
+      2,
+    );
   });
 
-  it('renders <PlayGameButton /> with /title === "play normal game"/', () => {
+  it(`renders a <PlayGameButton /> with /title === ${PLAY_NORMAL_GAME_TEXT}/`, () => {
     const {queryByText} = renderer;
-    expect(queryByText('play normal game')).not.toBeNull();
+    expect(queryByText(PLAY_NORMAL_GAME_TEXT)).not.toBeNull();
   });
 
-  it('calls /navigation.navigate/ on press <PlayGameButton />', () => {
+  it(`calls /navigation.navigate/ with /mode === Normal/ when press on "${PLAY_NORMAL_GAME_TEXT}" <PlayGameButton />`, () => {
     const {getByText} = renderer;
-    fireEvent.press(getByText('play normal game'));
+    fireEvent.press(getByText(PLAY_NORMAL_GAME_TEXT));
     expect(props.navigation.navigate).toHaveBeenCalledWith('Game', {
       mode: Mode.Normal,
+    });
+  });
+
+  it(`renders a <PlayGameButton /> with /title === "${PLAY_CONTINUE_GAME_TEXT}"/`, () => {
+    const {queryByText} = renderer;
+    expect(queryByText(PLAY_CONTINUE_GAME_TEXT)).not.toBeNull();
+  });
+
+  it(`calls /navigation.navigate/ with /mode === Continue/ when press on "${PLAY_CONTINUE_GAME_TEXT}" <PlayGameButton />`, () => {
+    const {getByText} = renderer;
+    fireEvent.press(getByText(PLAY_CONTINUE_GAME_TEXT));
+    expect(props.navigation.navigate).toHaveBeenCalledWith('Game', {
+      mode: Mode.Continue,
     });
   });
 
