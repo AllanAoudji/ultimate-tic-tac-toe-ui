@@ -5,6 +5,32 @@ save game button
 
 <SplashScren />
 
+<QuitGameModal />
+<QuitGameModalWrapper />
+useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if(visible) {
+          setVisible(false)
+        } else {
+          setVisible(true)
+        }
+        return true
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [visible])
+
+<Section />
+Need to be rework for Mode.Continue =
+__ Instead of <WinningImage />, use <WinningLine />
+__ valid should change
+=> false if valid={valid}
+need 8 images line
+sectionStyle({won}) => always false
+
 <Screen />
-__ HomeScreen
-__ BoardScreen
+Navigation need to replace and not push
