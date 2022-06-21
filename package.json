@@ -41,10 +41,6 @@
     "@types/react": "^17"
   },
   "jest": {
-    "preset": "react-native",
-    "testMatch": [
-      "**/?(*.)+(spec|test).[tj]s?(x)"
-    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -52,6 +48,16 @@
       "jsx",
       "json",
       "node"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "./__tests__/jest-setup.ts"
+    ],
+    "testMatch": [
+      "**/?(*.)+(spec|test).[tj]s?(x)"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation)"
     ]
   }
 }
