@@ -45,10 +45,61 @@ describe('<PlayGameButton />', () => {
     ).toBe(0.5);
   });
 
-  it('set /opacity: 1/ if /disabled === false/', () => {
+  it('sets /opacity: 1/ if /disabled === false/', () => {
     const {getByTestId} = render(<PlayGameButton title={TITLE_TEXT} />);
     expect(
       getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE).props.style.opacity,
     ).toBe(1);
+  });
+
+  it('sets /backgroundColor: #eb34e8/ if /backgroundColor === #eb34e8/', () => {
+    const backgroundColor = '#eb34e8';
+    const {getByTestId} = render(
+      <PlayGameButton backgroundColor={backgroundColor} title={TITLE_TEXT} />,
+    );
+    expect(
+      getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE).props.style
+        .backgroundColor,
+    ).toBe(backgroundColor);
+  });
+
+  it('sets /backgroundColor: #3af043/ if /backgroundColor === #3af043/', () => {
+    const backgroundColor = '#3af043';
+    const {getByTestId} = render(
+      <PlayGameButton backgroundColor={backgroundColor} title={TITLE_TEXT} />,
+    );
+    expect(
+      getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE).props.style
+        .backgroundColor,
+    ).toBe(backgroundColor);
+  });
+
+  it('sets /backgroundColor: #0012ff/ if /backgroundColor === undefined/', () => {
+    const {getByTestId} = render(<PlayGameButton title={TITLE_TEXT} />);
+    expect(
+      getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE).props.style
+        .backgroundColor,
+    ).toBe('#0012ff');
+  });
+
+  it('sets /color: #eb34e8/ if /color === #eb34e8/', () => {
+    const color = '#eb34e8';
+    const {getByText} = render(
+      <PlayGameButton color={color} title={TITLE_TEXT} />,
+    );
+    expect(getByText(TITLE_TEXT).props.style.color).toBe(color);
+  });
+
+  it('sets /color: #3af043/ if /color === #3af043/', () => {
+    const color = '#3af043';
+    const {getByText} = render(
+      <PlayGameButton color={color} title={TITLE_TEXT} />,
+    );
+    expect(getByText(TITLE_TEXT).props.style.color).toBe(color);
+  });
+
+  it('sets /color: #fff/ if /color === undefined/', () => {
+    const {getByText} = render(<PlayGameButton title={TITLE_TEXT} />);
+    expect(getByText(TITLE_TEXT).props.style.color).toBe('#fff');
   });
 });
