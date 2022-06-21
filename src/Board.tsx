@@ -14,7 +14,7 @@ import {
 import Section from './Section';
 
 interface Props {
-  gameIsWon?: boolean;
+  gameIsDone?: boolean;
   history?: number[];
   onPress?: (
     index: number,
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const Board: React.FC<Props> = ({
-  gameIsWon = false,
+  gameIsDone = false,
   history = [],
   onPress = () => () => {},
   selectedTileIndex = null,
@@ -47,7 +47,7 @@ const Board: React.FC<Props> = ({
             selectedTileIndex={selectedTileIndex}
             tiles={section.tiles}
             valid={
-              !gameIsWon &&
+              !gameIsDone &&
               (validSection !== null ? validSection === index : true)
             }
           />

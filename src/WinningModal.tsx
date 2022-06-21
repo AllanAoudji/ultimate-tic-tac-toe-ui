@@ -9,15 +9,52 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {TileState, WiningLine} from 'ultimate-tic-tac-toe-algorithm';
 
-interface Props {
+const generateColor: (
+  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw,
+) => string = winner => {
+  switch (winner) {
+    case TileState.Player1:
+      return '#0012ff';
+    case TileState.Player2:
+      return '#ed1327';
+    case WiningLine.Draw:
+    default:
+      return '#333333';
+  }
+};
+
+interface TitleProps {
+  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
+}
+interface WinningModalProps {
   onPressNewGame?: ((event: GestureResponderEvent) => void) | null | undefined;
   onPressQuit?: ((event: GestureResponderEvent) => void) | null | undefined;
-  winner: TileState.Player1 | TileState.Player2;
+  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
 }
 
-const WinnerFlag: React.FC<Props> = ({
+const Title: React.FC<TitleProps> = ({winner}) => {
+  const styles = React.useMemo(() => titleStyles({winner}), [winner]);
+
+  if (winner === WiningLine.Draw) {
+    return (
+      <Text style={[styles.winnerText, styles.winnerTextPlayer]}>
+        it's a draw
+      </Text>
+    );
+  }
+  return (
+    <Text style={styles.winnerText}>
+      <Text style={styles.winnerTextPlayer}>
+        player {winner === TileState.Player1 ? 'x' : 'o'}
+      </Text>{' '}
+      won the game
+    </Text>
+  );
+};
+
+const WinningModal: React.FC<WinningModalProps> = ({
   onPressNewGame = () => {},
   onPressQuit = () => {},
   winner,
@@ -25,20 +62,17 @@ const WinnerFlag: React.FC<Props> = ({
   const {width} = useWindowDimensions();
 
   const styles = React.useMemo(
-    () => winnerFlagStyles({width, winner}),
+    () => winningModalStyles({width, winner}),
     [width, winner],
   );
 
   return (
-    <View style={styles.container} testID="winnerFlag__container">
-      <View style={styles.innerContainer} testID="winnerFlag__container--inner">
-        <Text style={styles.winnerText}>
-          <Text style={styles.winnerTextPlayer}>
-            player {winner === TileState.Player1 ? 'x' : 'o'}
-          </Text>{' '}
-          won the game
-        </Text>
-        <View style={styles.separator} testID="winnerFlag__separator" />
+    <View style={styles.container} testID="winningModal__container">
+      <View
+        style={styles.innerContainer}
+        testID="winningModal__container--inner">
+        <Title winner={winner} />
+        <View style={styles.separator} testID="winningModal__separator" />
         <View style={styles.buttonsContainer}>
           <Pressable onPress={onPressNewGame} style={styles.button}>
             <Text style={styles.buttonText}>new game</Text>
@@ -54,12 +88,32 @@ const WinnerFlag: React.FC<Props> = ({
   );
 };
 
-const winnerFlagStyles = ({
+const titleStyles = ({
+  winner,
+}: {
+  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
+}) =>
+  StyleSheet.create<{
+    winnerTextPlayer: TextStyle;
+    winnerText: TextStyle;
+  }>({
+    winnerText: {
+      color: '#000',
+      fontSize: 27,
+      fontWeight: 'bold',
+    },
+    winnerTextPlayer: {
+      color: generateColor(winner),
+      textTransform: 'capitalize',
+    },
+  });
+
+const winningModalStyles = ({
   width,
   winner,
 }: {
   width: number;
-  winner: TileState.Player1 | TileState.Player2;
+  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
 }) =>
   StyleSheet.create<{
     button: ViewStyle;
@@ -69,8 +123,6 @@ const winnerFlagStyles = ({
     container: ViewStyle;
     innerContainer: ViewStyle;
     separator: ViewStyle;
-    winnerTextPlayer: TextStyle;
-    winnerText: TextStyle;
   }>({
     button: {
       paddingVertical: 10,
@@ -99,14 +151,14 @@ const winnerFlagStyles = ({
     innerContainer: {
       alignItems: 'center',
       backgroundColor: '#fff',
-      borderColor: winner === TileState.Player1 ? '#0012ff' : '#ed1327',
+      borderColor: generateColor(winner),
       borderRadius: 13,
       borderWidth: 5,
       elevation: 19,
       paddingBottom: 15,
       paddingHorizontal: 30,
       paddingTop: 25,
-      shadowColor: winner === TileState.Player1 ? '#0012ff' : '#ed1327',
+      shadowColor: generateColor(winner),
       shadowOffset: {
         width: 0,
         height: 9,
@@ -116,22 +168,13 @@ const winnerFlagStyles = ({
       width: width - 20,
     },
     separator: {
-      backgroundColor: winner === TileState.Player1 ? '#0012ff' : '#ed1327',
+      backgroundColor: generateColor(winner),
       borderRadius: 2,
       height: 4,
       marginBottom: 28,
       marginTop: 24,
       width: '30%',
     },
-    winnerText: {
-      color: '#000',
-      fontSize: 27,
-      fontWeight: 'bold',
-    },
-    winnerTextPlayer: {
-      color: winner === TileState.Player1 ? '#0012ff' : '#ed1327',
-      textTransform: 'capitalize',
-    },
   });
 
-export default WinnerFlag;
+export default WinningModal;
