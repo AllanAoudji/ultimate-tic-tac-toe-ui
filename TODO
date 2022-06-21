@@ -3,9 +3,6 @@ quit game button
 restart game button
 save game button
 
-<HomeScreen />
-add play continue game button
-
 <SplashScren />
 
 <Screen />
