@@ -15,7 +15,7 @@ describe('<WinningModal />', () => {
     QUIT_TEXT = 'quit',
     WINNING_MODAL_CONTAINER_TEST_ID = 'winningModal__container',
     WINNING_MODAL_CONTAINER_INNER_TEST_ID = 'winningModal__container--inner',
-    WINNING_MODAL_SEPARATOR = 'winningModal__separator';
+    WINNING_MODAL_SEPARATOR_TEST_ID = 'winningModal__separator';
   let onPress: jest.Mock;
 
   beforeEach(() => {
@@ -31,12 +31,12 @@ describe('<WinningModal />', () => {
     expect(queryByTestId(WINNING_MODAL_CONTAINER_TEST_ID)).not.toBeNull();
   });
 
-  it('renders a "new game" <Pressable />', () => {
+  it(`renders a "${NEW_GAME_TEXT}" <Pressable />`, () => {
     const {queryByText} = render(<WinningModal winner={TileState.Player1} />);
     expect(queryByText(NEW_GAME_TEXT)).not.toBeNull();
   });
 
-  it('calls /onPressNewGame/ when "new game" is pressed', () => {
+  it(`calls /onPressNewGame/ when "${NEW_GAME_TEXT}" is pressed`, () => {
     const {getByText} = render(
       <WinningModal onPressNewGame={onPress} winner={TileState.Player1} />,
     );
@@ -44,12 +44,12 @@ describe('<WinningModal />', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('renders a "quit" <Pressable />', () => {
+  it(`renders a "${QUIT_TEXT}" <Pressable />`, () => {
     const {queryByText} = render(<WinningModal winner={TileState.Player1} />);
     expect(queryByText(QUIT_TEXT)).not.toBeNull();
   });
 
-  it('calls /onPressQuit/ when "quit" is pressed', () => {
+  it(`calls /onPressQuit/ when "${QUIT_TEXT}" is pressed`, () => {
     const {getByText} = render(
       <WinningModal onPressQuit={onPress} winner={TileState.Player1} />,
     );
@@ -72,6 +72,30 @@ describe('<WinningModal />', () => {
     expect(queryByText('won the game')).not.toBeNull();
   });
 
+  it(`disabled "${QUIT_TEXT}" <Pressable /> if /disabled === true/`, () => {
+    const {getByText} = render(
+      <WinningModal
+        disabled={true}
+        onPressQuit={onPress}
+        winner={TileState.Player1}
+      />,
+    );
+    fireEvent.press(getByText(QUIT_TEXT));
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it(`disabled "${NEW_GAME_TEXT}" <Pressable /> if /disabled === true/`, () => {
+    const {getByText} = render(
+      <WinningModal
+        disabled={true}
+        onPressNewGame={onPress}
+        winner={TileState.Player1}
+      />,
+    );
+    fireEvent.press(getByText(NEW_GAME_TEXT));
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
   it(`set /color: ${PLAYER_1_COLOR}/ on winner <Text /> if /winner === Player1/`, () => {
     const {getByText} = render(<WinningModal winner={TileState.Player1} />);
     expect(getByText(PLAYER_X_TEXT).props.style.color).toBe(PLAYER_1_COLOR);
@@ -82,7 +106,7 @@ describe('<WinningModal />', () => {
     expect(getByText(PLAYER_O_TEXT).props.style.color).toBe(PLAYER_2_COLOR);
   });
 
-  it(`sets /borderColor: ${PLAYER_1_COLOR}/ on "container--inner" <View /> if /winner === Player1/`, () => {
+  it(`sets /borderColor: ${PLAYER_1_COLOR}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player1/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player1} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
@@ -90,7 +114,7 @@ describe('<WinningModal />', () => {
     ).toBe(PLAYER_1_COLOR);
   });
 
-  it(`sets /borderColor: ${PLAYER_2_COLOR}/ on "container--inner" <View /> if /winner === Player2/`, () => {
+  it(`sets /borderColor: ${PLAYER_2_COLOR}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player2/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player2} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
@@ -98,7 +122,7 @@ describe('<WinningModal />', () => {
     ).toBe(PLAYER_2_COLOR);
   });
 
-  it(`sets /shadowColor: ${PLAYER_1_COLOR}/ on "container--inner" <View /> if /winner === Player1/`, () => {
+  it(`sets /shadowColor: ${PLAYER_1_COLOR}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player1/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player1} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
@@ -106,7 +130,7 @@ describe('<WinningModal />', () => {
     ).toBe(PLAYER_1_COLOR);
   });
 
-  it(`sets /shadowColor: ${PLAYER_2_COLOR}/ on "container--inner" <View /> if /winner === Player2/`, () => {
+  it(`sets /shadowColor: ${PLAYER_2_COLOR}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player2/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player2} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
@@ -114,17 +138,17 @@ describe('<WinningModal />', () => {
     ).toBe(PLAYER_2_COLOR);
   });
 
-  it(`sets /backgroundColor: ${PLAYER_1_COLOR}/ on "separator" <View /> if /winner === Player1/`, () => {
+  it(`sets /backgroundColor: ${PLAYER_1_COLOR}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" <View /> if /winner === Player1/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player1} />);
     expect(
-      getByTestId(WINNING_MODAL_SEPARATOR).props.style.backgroundColor,
+      getByTestId(WINNING_MODAL_SEPARATOR_TEST_ID).props.style.backgroundColor,
     ).toBe(PLAYER_1_COLOR);
   });
 
-  it(`sets /backgroundColor: ${PLAYER_2_COLOR}/ on "separator" <View /> if /winner === Player2/`, () => {
+  it(`sets /backgroundColor: ${PLAYER_2_COLOR}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" <View /> if /winner === Player2/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player2} />);
     expect(
-      getByTestId(WINNING_MODAL_SEPARATOR).props.style.backgroundColor,
+      getByTestId(WINNING_MODAL_SEPARATOR_TEST_ID).props.style.backgroundColor,
     ).toBe(PLAYER_2_COLOR);
   });
 
@@ -149,10 +173,10 @@ describe('<WinningModal />', () => {
     ).toBe(DRAW_COLOR);
   });
 
-  it(`sets /backgroundColor: ${DRAW_COLOR}/ on separator if it's a draw`, () => {
+  it(`sets /backgroundColor: ${DRAW_COLOR}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" if it's a draw`, () => {
     const {getByTestId} = render(<WinningModal winner={WiningLine.Draw} />);
     expect(
-      getByTestId(WINNING_MODAL_SEPARATOR).props.style.backgroundColor,
+      getByTestId(WINNING_MODAL_SEPARATOR_TEST_ID).props.style.backgroundColor,
     ).toBe(DRAW_COLOR);
   });
 

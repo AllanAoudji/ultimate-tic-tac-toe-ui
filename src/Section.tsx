@@ -19,6 +19,7 @@ import Tile from './Tile';
 
 interface SectionProps {
   activePlayer?: TileState.Player1 | TileState.Player2;
+  disabled?: boolean;
   onPress?: (
     index: number,
   ) => ((event?: GestureResponderEvent) => void) | null | undefined;
@@ -57,6 +58,7 @@ const WinningImage: React.FC<WinningImageProps> = ({state}) => {
 
 const Section: React.FC<SectionProps> = ({
   activePlayer = TileState.Player1,
+  disabled = false,
   onPress = () => () => {},
   selectedTileIndex = null,
   tiles,
@@ -87,6 +89,7 @@ const Section: React.FC<SectionProps> = ({
             tilesRow.map(tile => (
               <Tile
                 activePlayer={activePlayer}
+                disabled={disabled}
                 onPress={onPress(tile.index1D)}
                 key={tile.index1D}
                 state={tile.state}

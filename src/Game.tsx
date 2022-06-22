@@ -14,13 +14,15 @@ import PlayerBoard from './PlayerBoard';
 import WinningModalWrapper from './WinningModalWrapper';
 
 interface Props {
+  disabled?: boolean;
+  setGameIsDone?: React.Dispatch<React.SetStateAction<boolean>>;
   mode?: Mode;
   onPressQuit?: () => void;
 }
 
 const initialAssets = generateAssets();
 
-const gameIsDone: (winner: SectionState) => boolean = winner =>
+const normalizeGameIsDone: (winner: SectionState) => boolean = winner =>
   winner[0] !== TileState.Empty || winner[1] === WiningLine.Draw;
 
 const normalizeWinner = (winner: SectionState) => {
@@ -39,19 +41,21 @@ const randomizePlayer: () => [
     : [TileState.Player2, TileState.Player1];
 
 const Game: React.FC<Props> = ({
+  disabled = false,
+  setGameIsDone,
   mode = Mode.Normal,
   onPressQuit = () => {},
 }) => {
-  let [history, setHistory] = React.useState<number[]>(initialAssets.history);
+  const [history, setHistory] = React.useState<number[]>(initialAssets.history);
   const [players, setPlayers] = React.useState<
     [
       TileState.Player1 | TileState.Player2,
       TileState.Player1 | TileState.Player2,
     ]
   >(randomizePlayer());
-  let [selectedTileIndex, setSelectedTilIndex] = React.useState<number | null>(
-    null,
-  );
+  const [selectedTileIndex, setSelectedTilIndex] = React.useState<
+    number | null
+  >(null);
   const [visibleModalPlayerBottom, setVisibleModalPlayerBottom] =
     React.useState<boolean>(false);
   const [visibleModalPlayerTop, setVisibleModalPlayerTop] =
@@ -68,9 +72,6 @@ const Game: React.FC<Props> = ({
   );
   const onPressNewGame = React.useCallback(() => {
     setHistory([]);
-    setPlayers(randomizePlayer());
-    setSelectedTilIndex(null);
-    setWinner([TileState.Empty, null]);
   }, []);
   const onPressPlay = React.useCallback(() => {
     if (selectedTileIndex !== null) {
@@ -80,7 +81,7 @@ const Game: React.FC<Props> = ({
         winner,
       });
       setHistory(assets.history);
-      if (gameIsDone(assets.winner)) {
+      if (normalizeGameIsDone(assets.winner)) {
         setWinner(assets.winner);
       }
     }
@@ -88,7 +89,7 @@ const Game: React.FC<Props> = ({
   }, [history, mode, selectedTileIndex, winner]);
   const onSurrend = React.useCallback(
     (player: TileState.Player1 | TileState.Player2) => () => {
-      if (!gameIsDone(winner)) {
+      if (!normalizeGameIsDone(winner)) {
         setWinner([player, WiningLine.Surrender]);
       }
     },
@@ -96,23 +97,42 @@ const Game: React.FC<Props> = ({
   );
 
   React.useEffect(() => {
-    if (gameIsDone(winner)) {
-      if (visibleModalPlayerBottom === true) {
+    if (normalizeGameIsDone(winner) || disabled) {
+      if (visibleModalPlayerBottom) {
         setVisibleModalPlayerBottom(false);
       }
-      if (visibleModalPlayerTop === true) {
+      if (visibleModalPlayerTop) {
         setVisibleModalPlayerTop(false);
       }
     }
-  }, [visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
+  }, [disabled, visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
+  React.useEffect(() => {
+    if (history.length === 0) {
+      if (setGameIsDone) {
+        setGameIsDone(false);
+      }
+      setPlayers(randomizePlayer());
+      setSelectedTilIndex(null);
+      setWinner([TileState.Empty, null]);
+    }
+  }, [history, setGameIsDone]);
+  React.useEffect(() => {
+    if (normalizeGameIsDone(winner)) {
+      if (setGameIsDone) {
+        setGameIsDone(true);
+      }
+    }
+  }, [setGameIsDone, winner]);
 
   return (
     <>
       <PlayerBoard
         disabledPlayButton={
-          getActivePlayer(history) !== players[0] || selectedTileIndex === null
+          getActivePlayer(history) !== players[0] ||
+          selectedTileIndex === null ||
+          disabled
         }
-        disabledSurrendButton={gameIsDone(winner)}
+        disabledSurrendButton={normalizeGameIsDone(winner) || disabled}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[1])}
         player={players[0]}
@@ -121,7 +141,8 @@ const Game: React.FC<Props> = ({
         visibleModal={visibleModalPlayerTop}
       />
       <Board
-        gameIsDone={gameIsDone(winner)}
+        disabled={disabled}
+        gameIsDone={normalizeGameIsDone(winner)}
         history={history}
         mode={mode}
         onPress={onPressBoard}
@@ -129,9 +150,11 @@ const Game: React.FC<Props> = ({
       />
       <PlayerBoard
         disabledPlayButton={
-          getActivePlayer(history) !== players[1] || selectedTileIndex === null
+          getActivePlayer(history) !== players[1] ||
+          selectedTileIndex === null ||
+          disabled
         }
-        disabledSurrendButton={gameIsDone(winner)}
+        disabledSurrendButton={normalizeGameIsDone(winner) || disabled}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[0])}
         player={players[1]}
@@ -148,3 +171,6 @@ const Game: React.FC<Props> = ({
 };
 
 export default Game;
+
+// WinningModalWrapper should be in parent
+// React.useEffect(() => {if(gameIsDone) setGameIsDone(true)}, [winner]) // should reset all states

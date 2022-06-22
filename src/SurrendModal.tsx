@@ -12,12 +12,14 @@ import {
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 interface Props {
+  disabled?: boolean;
   onPressNo?: ((event: GestureResponderEvent) => void) | null | undefined;
   onPressYes?: ((event: GestureResponderEvent) => void) | null | undefined;
   player?: TileState.Player1 | TileState.Player2;
 }
 
 const SurrendModal: React.FC<Props> = ({
+  disabled = false,
   onPressNo = () => {},
   onPressYes = () => {},
   player = TileState.Player1,
@@ -36,12 +38,14 @@ const SurrendModal: React.FC<Props> = ({
         <Text style={styles.modalText}>Surrend?</Text>
         <View style={styles.buttonContainer}>
           <Pressable
+            disabled={disabled}
             onPress={onPressYes}
             style={[styles.button, styles.buttonYes]}
             testID="surrendModal__button--yes">
             <Text style={[styles.buttonText, styles.buttonTextYes]}>yes</Text>
           </Pressable>
           <Pressable
+            disabled={disabled}
             onPress={onPressNo}
             style={[styles.button, styles.buttonNo]}
             testID="surrendModal__button--no">

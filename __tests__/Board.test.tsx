@@ -7,6 +7,7 @@ import {imageSource} from './testUtils';
 import Board from '../src/Board';
 
 describe('<Board />', () => {
+  const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable';
   beforeEach(() => {
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
   });
@@ -39,7 +40,7 @@ describe('<Board />', () => {
     const {getAllByTestId} = render(
       <Board history={[1]} onPress={() => onPress} />,
     );
-    fireEvent.press(getAllByTestId('tile__container--pressable')[0]);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     expect(onPress).not.toHaveBeenCalled();
   });
 
@@ -60,9 +61,9 @@ describe('<Board />', () => {
     const {getAllByTestId} = render(
       <Board gameIsDone={true} onPress={() => onPress} />,
     );
-    fireEvent.press(getAllByTestId('tile__container--pressable')[0]);
-    fireEvent.press(getAllByTestId('tile__container--pressable')[30]);
-    fireEvent.press(getAllByTestId('tile__container--pressable')[55]);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[30]);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[55]);
     expect(onPress).not.toHaveBeenCalled();
   });
 
@@ -88,5 +89,21 @@ describe('<Board />', () => {
       expect.anything(),
       ultimateTicTactToAlgorithm.Mode.Normal,
     );
+  });
+
+  it('disables each <Tile /> if /disabled === true/', () => {
+    const {getAllByTestId} = render(<Board disabled={true} />);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[80].props
+        .accessibilityState.disabled,
+    ).toBe(true);
   });
 });

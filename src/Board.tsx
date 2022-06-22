@@ -15,6 +15,7 @@ import {
 import Section from './Section';
 
 interface Props {
+  disabled?: boolean;
   gameIsDone?: boolean;
   history?: number[];
   mode?: Mode;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 const Board: React.FC<Props> = ({
+  disabled = false,
   gameIsDone = false,
   history = [],
   mode = Mode.Normal,
@@ -45,6 +47,7 @@ const Board: React.FC<Props> = ({
         {getSections(history).map((section, index) => (
           <Section
             activePlayer={getActivePlayer(history)}
+            disabled={disabled}
             key={section.position}
             onPress={onPress}
             selectedTileIndex={selectedTileIndex}

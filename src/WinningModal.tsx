@@ -11,6 +11,16 @@ import {
 } from 'react-native';
 import {TileState, WiningLine} from 'ultimate-tic-tac-toe-algorithm';
 
+interface TitleProps {
+  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
+}
+interface WinningModalProps {
+  disabled?: boolean;
+  onPressNewGame?: ((event: GestureResponderEvent) => void) | null | undefined;
+  onPressQuit?: ((event: GestureResponderEvent) => void) | null | undefined;
+  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
+}
+
 const generateColor: (
   winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw,
 ) => string = winner => {
@@ -24,15 +34,6 @@ const generateColor: (
       return '#333333';
   }
 };
-
-interface TitleProps {
-  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
-}
-interface WinningModalProps {
-  onPressNewGame?: ((event: GestureResponderEvent) => void) | null | undefined;
-  onPressQuit?: ((event: GestureResponderEvent) => void) | null | undefined;
-  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
-}
 
 const Title: React.FC<TitleProps> = ({winner}) => {
   const styles = React.useMemo(() => titleStyles({winner}), [winner]);
@@ -55,6 +56,7 @@ const Title: React.FC<TitleProps> = ({winner}) => {
 };
 
 const WinningModal: React.FC<WinningModalProps> = ({
+  disabled = false,
   onPressNewGame = () => {},
   onPressQuit = () => {},
   winner,
@@ -74,10 +76,14 @@ const WinningModal: React.FC<WinningModalProps> = ({
         <Title winner={winner} />
         <View style={styles.separator} testID="winningModal__separator" />
         <View style={styles.buttonsContainer}>
-          <Pressable onPress={onPressNewGame} style={styles.button}>
+          <Pressable
+            disabled={disabled}
+            onPress={onPressNewGame}
+            style={styles.button}>
             <Text style={styles.buttonText}>new game</Text>
           </Pressable>
           <Pressable
+            disabled={disabled}
             onPress={onPressQuit}
             style={[styles.button, styles.buttonRight]}>
             <Text style={styles.buttonText}>quit</Text>
