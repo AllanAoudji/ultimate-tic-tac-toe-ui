@@ -94,4 +94,12 @@ describe('<Tile />', () => {
     fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
     expect(handlePress).not.toHaveBeenCalled();
   });
+
+  it('disables <Tile /> if /disabled === true', () => {
+    const {getByTestId} = render(<Tile disabled={true} />);
+    expect(
+      getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID).props.accessibilityState
+        .disabled,
+    ).toBe(true);
+  });
 });

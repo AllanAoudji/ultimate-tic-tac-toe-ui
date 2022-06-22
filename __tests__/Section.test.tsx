@@ -157,4 +157,20 @@ describe('<Section/>', () => {
       getByTestId('section__container--innerContainer').props.style.opacity,
     ).toBe(1);
   });
+
+  it('disables each <Tile /> if /disabled === true/', () => {
+    const {getAllByTestId} = render(<Section disabled={true} tiles={tiles} />);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[2].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+  });
 });

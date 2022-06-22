@@ -7,6 +7,7 @@ import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 import {imageSource} from './testUtils';
 
 import Game from '../src/Game';
+import {act} from 'react-test-renderer';
 
 const spyPlay: (winner?: ultimateTicTactToAlgorithm.SectionState) => void = (
   winner = [
@@ -413,5 +414,79 @@ describe('<Game />', () => {
       expect.anything(),
       ultimateTicTactToAlgorithm.Mode.Continue,
     );
+  });
+
+  it('disables BOTTOM <PlayButton /> if /disabled === true/', () => {
+    const {getAllByTestId} = render(<Game disabled={true} />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    expect(
+      getAllByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+  });
+
+  it('disables TOP <PlayButton /> if /disabled === true/', () => {
+    mockRandom(0.49);
+    const {getAllByTestId} = render(<Game disabled={true} />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    expect(
+      getAllByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+    resetMockRandom();
+  });
+
+  it('disables BOTTOM <SurrendButton /> if /disabled === true/', () => {
+    const {getAllByTestId} = render(<Game disabled={true} />);
+    expect(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+  });
+
+  it('disables TOP <SurrendButton /> if /disabled === true/', () => {
+    const {getAllByTestId} = render(<Game disabled={true} />);
+    expect(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+  });
+
+  it('hides BOTTOM <SurrendModal /> if /disabled === true/', () => {
+    const {getAllByTestId, queryByTestId, rerender} = render(<Game />);
+    act(() => {
+      fireEvent.press(
+        getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1],
+      );
+    });
+    rerender(<Game disabled={true} />);
+    expect(queryByTestId(SURREND_MODAL_CONTAINER_TEST_ID)).toBeNull();
+  });
+
+  it('hides TOP <SurrendModal /> if /disabled === true/', () => {
+    const {getAllByTestId, queryByTestId, rerender} = render(<Game />);
+    act(() => {
+      fireEvent.press(
+        getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
+      );
+    });
+    rerender(<Game disabled={true} />);
+    expect(queryByTestId(SURREND_MODAL_CONTAINER_TEST_ID)).toBeNull();
+  });
+
+  it('disables <Board /> if /disabled == true', () => {
+    const {getAllByTestId} = render(<Game disabled={true} />);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[2].props
+        .accessibilityState.disabled,
+    ).toBe(true);
   });
 });

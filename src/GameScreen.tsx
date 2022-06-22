@@ -2,6 +2,7 @@ import {StackActions, useFocusEffect} from '@react-navigation/native';
 import React from 'react';
 import {BackHandler} from 'react-native';
 import {View} from 'react-native';
+
 import Game from './Game';
 import QuitGameModalWrapper from './QuitGameModalWrapper';
 

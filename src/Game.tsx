@@ -14,6 +14,7 @@ import PlayerBoard from './PlayerBoard';
 import WinningModalWrapper from './WinningModalWrapper';
 
 interface Props {
+  disabled?: boolean;
   mode?: Mode;
   onPressQuit?: () => void;
 }
@@ -39,6 +40,7 @@ const randomizePlayer: () => [
     : [TileState.Player2, TileState.Player1];
 
 const Game: React.FC<Props> = ({
+  disabled = false,
   mode = Mode.Normal,
   onPressQuit = () => {},
 }) => {
@@ -93,15 +95,15 @@ const Game: React.FC<Props> = ({
   );
 
   React.useEffect(() => {
-    if (gameIsDone(winner)) {
-      if (visibleModalPlayerBottom === true) {
+    if (gameIsDone(winner) || disabled) {
+      if (visibleModalPlayerBottom) {
         setVisibleModalPlayerBottom(false);
       }
-      if (visibleModalPlayerTop === true) {
+      if (visibleModalPlayerTop) {
         setVisibleModalPlayerTop(false);
       }
     }
-  }, [visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
+  }, [disabled, visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
   React.useEffect(() => {
     if (history.length === 0) {
       setPlayers(randomizePlayer());
@@ -114,9 +116,11 @@ const Game: React.FC<Props> = ({
     <>
       <PlayerBoard
         disabledPlayButton={
-          getActivePlayer(history) !== players[0] || selectedTileIndex === null
+          getActivePlayer(history) !== players[0] ||
+          selectedTileIndex === null ||
+          disabled
         }
-        disabledSurrendButton={gameIsDone(winner)}
+        disabledSurrendButton={gameIsDone(winner) || disabled}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[1])}
         player={players[0]}
@@ -125,6 +129,7 @@ const Game: React.FC<Props> = ({
         visibleModal={visibleModalPlayerTop}
       />
       <Board
+        disabled={disabled}
         gameIsDone={gameIsDone(winner)}
         history={history}
         mode={mode}
@@ -133,9 +138,11 @@ const Game: React.FC<Props> = ({
       />
       <PlayerBoard
         disabledPlayButton={
-          getActivePlayer(history) !== players[1] || selectedTileIndex === null
+          getActivePlayer(history) !== players[1] ||
+          selectedTileIndex === null ||
+          disabled
         }
-        disabledSurrendButton={gameIsDone(winner)}
+        disabledSurrendButton={gameIsDone(winner) || disabled}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[0])}
         player={players[1]}
@@ -153,10 +160,7 @@ const Game: React.FC<Props> = ({
 
 export default Game;
 
-// props.idle =>
-// ... PlayerBoard
-// disabledPlayButton
-// disableSurrendButton
+// props.disabled =>
 // visibleModalPlayer = false
 // ... disabled Board => Section => Tile
 // ... WinningModal

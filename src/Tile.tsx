@@ -18,6 +18,7 @@ interface TempImage {
 }
 interface TileProps {
   activePlayer?: TileState.Player1 | TileState.Player2;
+  disabled?: boolean;
   onPress?: ((event?: GestureResponderEvent) => void) | null | undefined;
   selected?: boolean;
   state?: TileState;
@@ -70,6 +71,7 @@ const TempImage: React.FC<TempImage> = ({activePlayer}) => {
 
 const Tile: React.FC<TileProps> = ({
   activePlayer = TileState.Player1,
+  disabled = false,
   onPress = () => {},
   selected = false,
   state = TileState.Empty,
@@ -80,7 +82,7 @@ const Tile: React.FC<TileProps> = ({
 
   return (
     <Pressable
-      disabled={!valid || state !== TileState.Empty || selected}
+      disabled={!valid || state !== TileState.Empty || selected || disabled}
       onPress={onPress}
       style={styles.container}
       testID="tile__container--pressable">
