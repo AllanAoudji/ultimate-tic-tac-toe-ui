@@ -15,7 +15,7 @@ const spyPlay: (winner?: ultimateTicTactToAlgorithm.SectionState) => void = (
   ],
 ) => {
   jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockReturnValue({
-    history: [],
+    history: [80],
     winner,
     mode: ultimateTicTactToAlgorithm.Mode.Normal,
   });

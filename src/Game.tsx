@@ -68,9 +68,6 @@ const Game: React.FC<Props> = ({
   );
   const onPressNewGame = React.useCallback(() => {
     setHistory([]);
-    setPlayers(randomizePlayer());
-    setSelectedTilIndex(null);
-    setWinner([TileState.Empty, null]);
   }, []);
   const onPressPlay = React.useCallback(() => {
     if (selectedTileIndex !== null) {
@@ -105,6 +102,13 @@ const Game: React.FC<Props> = ({
       }
     }
   }, [visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
+  React.useEffect(() => {
+    if (history.length === 0) {
+      setPlayers(randomizePlayer());
+      setSelectedTilIndex(null);
+      setWinner([TileState.Empty, null]);
+    }
+  }, [history]);
 
   return (
     <>
@@ -148,3 +152,14 @@ const Game: React.FC<Props> = ({
 };
 
 export default Game;
+
+// props.idle =>
+// ... PlayerBoard
+// disabledPlayButton
+// disableSurrendButton
+// visibleModalPlayer = false
+// ... disabled Board => Section => Tile
+// ... WinningModal
+
+// WinningModalWrapper should be in parent
+// React.useEffect(() => {...}, [history]) // should reset all states
