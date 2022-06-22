@@ -63,4 +63,28 @@ describe('<QuitGameModal />', () => {
     fireEvent.press(getByText(YES_TEXT));
     expect(onPress).toHaveBeenCalled();
   });
+
+  it(`disables ${NO_TEXT} <Pressable /> if /disabled === true`, () => {
+    const {getByText} = render(
+      <QuitGameModal disabled={true} onPressNo={onPress} />,
+    );
+    fireEvent.press(getByText(NO_TEXT));
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it(`disables ${YES_TEXT} <Pressable /> if /disabled === true/`, () => {
+    const {getByText} = render(
+      <QuitGameModal disabled={true} onPressYes={onPress} />,
+    );
+    fireEvent.press(getByText(YES_TEXT));
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it('disables <Pressable /> background if /disabled === true/', () => {
+    const {getByTestId} = render(
+      <QuitGameModal disabled={true} onPressNo={onPress} />,
+    );
+    fireEvent.press(getByTestId(QUIT_GAME_BACKGROUND_PRESSABLE_TEST_ID));
+    expect(onPress).not.toHaveBeenCalled();
+  });
 });
