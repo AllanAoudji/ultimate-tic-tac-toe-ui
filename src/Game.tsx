@@ -15,13 +15,14 @@ import WinningModalWrapper from './WinningModalWrapper';
 
 interface Props {
   disabled?: boolean;
+  gameIsDone?: () => void;
   mode?: Mode;
   onPressQuit?: () => void;
 }
 
 const initialAssets = generateAssets();
 
-const gameIsDone: (winner: SectionState) => boolean = winner =>
+const normalizeGameIsDone: (winner: SectionState) => boolean = winner =>
   winner[0] !== TileState.Empty || winner[1] === WiningLine.Draw;
 
 const normalizeWinner = (winner: SectionState) => {
@@ -41,6 +42,7 @@ const randomizePlayer: () => [
 
 const Game: React.FC<Props> = ({
   disabled = false,
+  gameIsDone = () => {},
   mode = Mode.Normal,
   onPressQuit = () => {},
 }) => {
@@ -79,7 +81,7 @@ const Game: React.FC<Props> = ({
         winner,
       });
       setHistory(assets.history);
-      if (gameIsDone(assets.winner)) {
+      if (normalizeGameIsDone(assets.winner)) {
         setWinner(assets.winner);
       }
     }
@@ -87,7 +89,7 @@ const Game: React.FC<Props> = ({
   }, [history, mode, selectedTileIndex, winner]);
   const onSurrend = React.useCallback(
     (player: TileState.Player1 | TileState.Player2) => () => {
-      if (!gameIsDone(winner)) {
+      if (!normalizeGameIsDone(winner)) {
         setWinner([player, WiningLine.Surrender]);
       }
     },
@@ -95,7 +97,7 @@ const Game: React.FC<Props> = ({
   );
 
   React.useEffect(() => {
-    if (gameIsDone(winner) || disabled) {
+    if (normalizeGameIsDone(winner) || disabled) {
       if (visibleModalPlayerBottom) {
         setVisibleModalPlayerBottom(false);
       }
@@ -111,6 +113,11 @@ const Game: React.FC<Props> = ({
       setWinner([TileState.Empty, null]);
     }
   }, [history]);
+  React.useEffect(() => {
+    if (normalizeGameIsDone(winner)) {
+      gameIsDone();
+    }
+  }, [gameIsDone, winner]);
 
   return (
     <>
@@ -120,7 +127,7 @@ const Game: React.FC<Props> = ({
           selectedTileIndex === null ||
           disabled
         }
-        disabledSurrendButton={gameIsDone(winner) || disabled}
+        disabledSurrendButton={normalizeGameIsDone(winner) || disabled}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[1])}
         player={players[0]}
@@ -130,7 +137,7 @@ const Game: React.FC<Props> = ({
       />
       <Board
         disabled={disabled}
-        gameIsDone={gameIsDone(winner)}
+        gameIsDone={normalizeGameIsDone(winner)}
         history={history}
         mode={mode}
         onPress={onPressBoard}
@@ -142,7 +149,7 @@ const Game: React.FC<Props> = ({
           selectedTileIndex === null ||
           disabled
         }
-        disabledSurrendButton={gameIsDone(winner) || disabled}
+        disabledSurrendButton={normalizeGameIsDone(winner) || disabled}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[0])}
         player={players[1]}
