@@ -492,12 +492,24 @@ describe('<Game />', () => {
 
   it('calls /setGameIsDone/ when game is finished (win/surrend/draw)', () => {
     spyPlay();
-    const gameIsDone = jest.fn();
+    const setGameIsDone = jest.fn();
     const {getAllByTestId, getAllByText} = render(
-      <Game gameIsDone={gameIsDone} />,
+      <Game setGameIsDone={setGameIsDone} />,
     );
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
     fireEvent.press(getAllByText(PLAY_TEXT)[1]);
-    expect(gameIsDone).toHaveBeenCalled();
+    expect(setGameIsDone).toHaveBeenCalledWith(true);
+  });
+
+  it(`calls /setGameIsDone/ when ${NEW_GAME_TEXT} <Pressable /> start`, () => {
+    const setGameIsDone = jest.fn();
+    const {getAllByTestId, getByText} = render(
+      <Game setGameIsDone={setGameIsDone} />,
+    );
+    fireEvent.press(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
+    );
+    fireEvent.press(getByText(YES_TEXT));
+    expect(setGameIsDone).toHaveBeenCalledWith(false);
   });
 });

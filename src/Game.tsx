@@ -15,7 +15,7 @@ import WinningModalWrapper from './WinningModalWrapper';
 
 interface Props {
   disabled?: boolean;
-  gameIsDone?: () => void;
+  setGameIsDone?: React.Dispatch<React.SetStateAction<boolean>>;
   mode?: Mode;
   onPressQuit?: () => void;
 }
@@ -42,7 +42,7 @@ const randomizePlayer: () => [
 
 const Game: React.FC<Props> = ({
   disabled = false,
-  gameIsDone = () => {},
+  setGameIsDone,
   mode = Mode.Normal,
   onPressQuit = () => {},
 }) => {
@@ -108,16 +108,21 @@ const Game: React.FC<Props> = ({
   }, [disabled, visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
   React.useEffect(() => {
     if (history.length === 0) {
+      if (setGameIsDone) {
+        setGameIsDone(false);
+      }
       setPlayers(randomizePlayer());
       setSelectedTilIndex(null);
       setWinner([TileState.Empty, null]);
     }
-  }, [history]);
+  }, [history, setGameIsDone]);
   React.useEffect(() => {
     if (normalizeGameIsDone(winner)) {
-      gameIsDone();
+      if (setGameIsDone) {
+        setGameIsDone(true);
+      }
     }
-  }, [gameIsDone, winner]);
+  }, [setGameIsDone, winner]);
 
   return (
     <>

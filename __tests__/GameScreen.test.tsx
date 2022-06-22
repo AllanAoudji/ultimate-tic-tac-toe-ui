@@ -123,7 +123,7 @@ describe('<GameScreen />', () => {
     act(() => {
       helperTriggerListeners('hardwareBackPress');
     });
-    expect(BackHandler.addEventListener).toHaveBeenCalled();
+
     expect(queryByTestId('quitGameModal__container')).not.toBeNull();
   });
 
@@ -151,5 +151,23 @@ describe('<GameScreen />', () => {
       </NavigationContext.Provider>,
     );
     expect(BackHandler.removeEventListener).toHaveBeenCalled();
+  });
+
+  it('return /BackHandler.addEventListener/ callback() === false if game is won', () => {
+    const {getAllByTestId, getByText} = renderer();
+    act(() => {
+      fireEvent.press(getAllByTestId('surrendButton__container--pressable')[0]);
+    });
+    act(() => {
+      fireEvent.press(getByText('yes'));
+    });
+    act(() => {
+      helperTriggerListeners('hardwareBackPress');
+    });
+    act(() => {
+      const {calls} = (BackHandler.addEventListener as jest.Mock).mock;
+      const returnedCallBackFunction = calls[calls.length - 1][1]();
+      expect(returnedCallBackFunction).toBe(false);
+    });
   });
 });

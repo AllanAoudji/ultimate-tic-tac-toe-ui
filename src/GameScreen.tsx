@@ -9,6 +9,7 @@ import QuitGameModalWrapper from './QuitGameModalWrapper';
 const GameScreen: React.FC<Screen.RootStack.GameNavigationProps> = ({
   route,
 }) => {
+  const [gameIsDone, setGameIsDone] = React.useState<boolean>(false);
   const [quitGameModalVisible, setQuitGameModalVisible] =
     React.useState<boolean>(false);
 
@@ -19,23 +20,30 @@ const GameScreen: React.FC<Screen.RootStack.GameNavigationProps> = ({
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        if (quitGameModalVisible) {
-          setQuitGameModalVisible(false);
-        } else {
-          setQuitGameModalVisible(true);
+        if (!gameIsDone) {
+          if (quitGameModalVisible) {
+            setQuitGameModalVisible(false);
+          } else {
+            setQuitGameModalVisible(true);
+          }
+          return true;
         }
-        return true;
+        return false;
       };
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
       return () => {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
       };
-    }, [quitGameModalVisible]),
+    }, [gameIsDone, quitGameModalVisible]),
   );
 
   return (
     <View testID="gameScreen__container">
-      <Game mode={route.params.mode} onPressQuit={onPressQuit} />
+      <Game
+        setGameIsDone={setGameIsDone}
+        mode={route.params.mode}
+        onPressQuit={onPressQuit}
+      />
       <QuitGameModalWrapper visible={quitGameModalVisible} />
     </View>
   );
