@@ -1,4 +1,4 @@
-import {NavigationContext, StackActions} from '@react-navigation/native';
+import {NavigationContext} from '@react-navigation/native';
 import {fireEvent, render, RenderAPI} from '@testing-library/react-native';
 import {mockRandomForEach} from 'jest-mock-random';
 import React from 'react';
@@ -21,6 +21,9 @@ describe('<GameScreen />', () => {
           mode: ultimateTicTactToAlgorithm.Mode.Continue,
         },
       },
+      navigation: {
+        pop: jest.fn(),
+      },
       ...props,
     }),
     navContext = (isFocused: boolean) => ({
@@ -37,7 +40,6 @@ describe('<GameScreen />', () => {
 
   beforeEach(() => {
     mockCallbacks = {};
-    jest.spyOn(StackActions, 'replace');
     jest.spyOn(ultimateTicTactToAlgorithm, 'play');
     jest
       .spyOn(BackHandler, 'addEventListener')
@@ -81,7 +83,6 @@ describe('<GameScreen />', () => {
   });
 
   afterEach(() => {
-    jest.spyOn(StackActions, 'replace').mockRestore();
     jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockRestore();
     jest.spyOn(BackHandler, 'addEventListener').mockRestore();
     jest.spyOn(BackHandler, 'removeEventListener').mockRestore();
@@ -98,12 +99,12 @@ describe('<GameScreen />', () => {
     expect(queryAllByTestId('playerBoard__container')).toHaveLength(2);
   });
 
-  it('calls navigation.navigate when "quit" <Pressable /> is pressed', () => {
+  it('calls navigation.pop when "quit" <Pressable /> is pressed', () => {
     const {getAllByTestId, getByText} = renderer();
     fireEvent.press(getAllByTestId('surrendButton__container--pressable')[0]);
     fireEvent.press(getByText('yes'));
     fireEvent.press(getByText('quit'));
-    expect(StackActions.replace).toHaveBeenCalledWith('Home');
+    expect(props.navigation.pop).toHaveBeenCalled();
   });
 
   it('passes /route.params.mode/ to <Game />', () => {
@@ -169,5 +170,42 @@ describe('<GameScreen />', () => {
       const returnedCallBackFunction = calls[calls.length - 1][1]();
       expect(returnedCallBackFunction).toBe(false);
     });
+  });
+
+  it('disables <Game /> if <QuitModal /> is visible', () => {
+    const {getAllByTestId} = renderer();
+    act(() => {
+      helperTriggerListeners('hardwareBackPress');
+    });
+    expect(
+      getAllByTestId('tile__container--pressable')[0].props.accessibilityState
+        .disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId('surrendButton__container--pressable')[0].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+  });
+
+  it('calls navigation.pop when <QuitGameModal /> "yes" <Pressable /> is pressed', () => {
+    const {getByText} = renderer();
+    act(() => {
+      helperTriggerListeners('hardwareBackPress');
+    });
+    act(() => {
+      fireEvent.press(getByText('yes'));
+    });
+    expect(props.navigation.pop).toHaveBeenCalled();
+  });
+
+  it('closes <QuitGameModal /> when "no" <Pressable /> is pressed', () => {
+    const {getByText, queryByTestId} = renderer();
+    act(() => {
+      helperTriggerListeners('hardwareBackPress');
+    });
+    act(() => {
+      fireEvent.press(getByText('no'));
+    });
+    expect(queryByTestId('quitGameModal__container')).toBeNull();
   });
 });

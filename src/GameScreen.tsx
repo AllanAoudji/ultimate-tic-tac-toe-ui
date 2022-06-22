@@ -1,4 +1,4 @@
-import {StackActions, useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
 import {BackHandler} from 'react-native';
 import {View} from 'react-native';
@@ -8,14 +8,18 @@ import QuitGameModalWrapper from './QuitGameModalWrapper';
 
 const GameScreen: React.FC<Screen.RootStack.GameNavigationProps> = ({
   route,
+  navigation,
 }) => {
   const [gameIsDone, setGameIsDone] = React.useState<boolean>(false);
   const [quitGameModalVisible, setQuitGameModalVisible] =
     React.useState<boolean>(false);
 
-  const onPressQuit = React.useCallback(() => {
-    StackActions.replace('Home');
+  const onPressNo = React.useCallback(() => {
+    setQuitGameModalVisible(false);
   }, []);
+  const onQuit = React.useCallback(() => {
+    navigation.pop();
+  }, [navigation]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -39,12 +43,17 @@ const GameScreen: React.FC<Screen.RootStack.GameNavigationProps> = ({
 
   return (
     <View testID="gameScreen__container">
+      <QuitGameModalWrapper
+        onPressNo={onPressNo}
+        onPressYes={onQuit}
+        visible={quitGameModalVisible}
+      />
       <Game
+        disabled={quitGameModalVisible}
         setGameIsDone={setGameIsDone}
         mode={route.params.mode}
-        onPressQuit={onPressQuit}
+        onPressQuit={onQuit}
       />
-      <QuitGameModalWrapper visible={quitGameModalVisible} />
     </View>
   );
 };
