@@ -120,22 +120,15 @@ describe('<PlayerBoard />', () => {
     ).toBe(true);
   });
 
-  it('disabled "no" <Pressable /> from <SurrendModal /> if /disabledNoButton === true/', () => {
+  it('disabled <Pressable /> from <SurrendModal /> if /disabledSurrendModal === true/', () => {
     const {getByTestId} = render(
-      <PlayerBoard disabledNoButton={true} visibleModal={true} />,
+      <PlayerBoard disabledSurrendModal={true} visibleModal={true} />,
     );
     fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
     expect(
       getByTestId(SURRENDER_MODAL_BUTTON_NO_TEST_ID).props.accessibilityState
         .disabled,
     ).toBe(true);
-  });
-
-  it('disabled "yes" <Pressable /> from <SurrendModal /> if /disabledYesButton === true/', () => {
-    const {getByTestId} = render(
-      <PlayerBoard disabledYesButton={true} visibleModal={true} />,
-    );
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
     expect(
       getByTestId(SURRENDER_MODAL_BUTTON_YES_TEST_ID).props.accessibilityState
         .disabled,

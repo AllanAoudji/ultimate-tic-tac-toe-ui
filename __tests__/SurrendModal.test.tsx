@@ -50,16 +50,16 @@ describe('<SurrendModal />', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it(`disables ${NO_TEXT} <Pressable /> if /disabledNoButton === true/`, () => {
-    const {getByTestId} = render(<SurrendModal disabledNoButton={true} />);
+  it(`disables ${NO_TEXT} <Pressable /> if /disabled === true/`, () => {
+    const {getByTestId} = render(<SurrendModal disabled={true} />);
     expect(
       getByTestId(SURREND_MODAL_BUTTON_NO_TEST_ID).props.accessibilityState
         .disabled,
     ).toBe(true);
   });
 
-  it(`disables ${YES_TEXT} <Pressable /> if /disabledYesButton === true/`, () => {
-    const {getByTestId} = render(<SurrendModal disabledYesButton={true} />);
+  it(`disables ${YES_TEXT} <Pressable /> if /disabled === true/`, () => {
+    const {getByTestId} = render(<SurrendModal disabled={true} />);
     expect(
       getByTestId(SURREND_MODAL_BUTTON_YES_TEST_ID).props.accessibilityState
         .disabled,
