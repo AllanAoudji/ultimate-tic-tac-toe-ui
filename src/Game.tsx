@@ -44,16 +44,16 @@ const Game: React.FC<Props> = ({
   mode = Mode.Normal,
   onPressQuit = () => {},
 }) => {
-  let [history, setHistory] = React.useState<number[]>(initialAssets.history);
+  const [history, setHistory] = React.useState<number[]>(initialAssets.history);
   const [players, setPlayers] = React.useState<
     [
       TileState.Player1 | TileState.Player2,
       TileState.Player1 | TileState.Player2,
     ]
   >(randomizePlayer());
-  let [selectedTileIndex, setSelectedTilIndex] = React.useState<number | null>(
-    null,
-  );
+  const [selectedTileIndex, setSelectedTilIndex] = React.useState<
+    number | null
+  >(null);
   const [visibleModalPlayerBottom, setVisibleModalPlayerBottom] =
     React.useState<boolean>(false);
   const [visibleModalPlayerTop, setVisibleModalPlayerTop] =
@@ -160,10 +160,5 @@ const Game: React.FC<Props> = ({
 
 export default Game;
 
-// props.disabled =>
-// visibleModalPlayer = false
-// ... disabled Board => Section => Tile
-// ... WinningModal
-
 // WinningModalWrapper should be in parent
-// React.useEffect(() => {...}, [history]) // should reset all states
+// React.useEffect(() => {if(gameIsDone) setGameIsDone(true)}, [winner]) // should reset all states

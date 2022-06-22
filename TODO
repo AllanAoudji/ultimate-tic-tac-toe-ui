@@ -13,8 +13,4 @@ __ valid should change
 need 8 images line
 sectionStyle({won}) => always false
 
-<Screen />
-Navigation need to replace and not push
-
-<Game />
-game have "let" state (replace it by const)
+branch => feature-theming
