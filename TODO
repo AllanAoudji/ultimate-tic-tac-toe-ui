@@ -6,11 +6,9 @@ save game button
 <SplashScren />
 
 <Section />
-Need to be rework for Mode.Continue =
-__ Instead of <WinningImage />, use <WinningLine />
-__ valid should change
-=> false if valid={valid}
-need 8 images line
-sectionStyle({won}) => always false
+1. Add 8 * 2 "line" images, for each player and for each WinningLine
+2. If mode === Mode.Continue, do not set opacity: 0.2
+3. If mode === Mode.Continue, do not display <WiningImage />
+4. If mode === Mode.Continue, display <WinningLineImage /> if <Section /> is won
 
 branch => feature-theming
