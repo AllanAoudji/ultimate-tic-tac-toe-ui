@@ -34,3 +34,81 @@ sectionStyle({won}) => always false
 
 <Screen />
 Navigation need to replace and not push
+
+<Game />
+game have "let" state (replace it by const)
+
+
+
+//
+// Trigger BackPress press
+//
+// helperTriggerListeners('hardwareBackPress');
+
+//
+// render with useFocusEffect
+//
+// const actualNav = jest.requireActual('@react-navigation/native');
+// const navContext = (isFocused: boolean) => ({
+//   ...actualNav.navigation,
+//   navigate: () => {},
+//   dangerouslyGetState: () => {},
+//   setOptions: () => {},
+//   addListener: () => () => {},
+//   isFocused: () => isFocused,
+// });
+// const {} = render(
+//   <NavigationContext.Provider value={navContext(true)}>
+//     <Component />
+//   </NavigationContext.Provider>,
+// );
+
+//
+// BackPress mocking implementation
+//
+// let mockCallbacks: {[index: string]: (() => void)[]} = {};
+// const helperTriggerListeners = (eventName: string) => {
+//   (mockCallbacks[eventName] || []).forEach(callback => callback());
+// };
+// jest.mock('react-native', () => {
+//   return {
+//     BackHandler: {
+//       addEventListener: jest
+//         .fn()
+//         .mockImplementation((eventName: string, callback: () => void) => {
+//           mockCallbacks[eventName] = mockCallbacks[eventName] || [];
+//           mockCallbacks[eventName].push(callback);
+//         }),
+//       removeEventListener: jest
+//         .fn()
+//         .mockImplementation((eventName: string, callback: () => void) => {
+//           const indexOf = (mockCallbacks[eventName] || []).indexOf(callback);
+//           if (indexOf !== -1) {
+//             mockCallbacks[eventName] = mockCallbacks[eventName].splice(
+//               indexOf,
+//               1,
+//             );
+//           }
+//         }),
+//     },
+//   };
+// });
+// beforeEach(() => {
+//   mockCallbacks = {};
+//   (BackHandler.addEventListener as jest.Mock).mockClear();
+//   (BackHandler.removeEventListener as jest.Mock).mockClear();
+// });
+
+//
+// Correct way to implement BackHandler
+//
+// useFocusEffect(
+//   React.useCallback(() => {
+//     const onBackPress = () => {
+//       return true;
+//     };
+//     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+//     return () =>
+//       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+//   }, []),
+// );
