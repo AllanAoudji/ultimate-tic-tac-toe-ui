@@ -13,8 +13,10 @@ import SurrendButton from './SurrendButton';
 import SurrendModalWrapper from './SurrendModalWrapper';
 
 interface Props {
+  disabledNoButton?: boolean;
   disabledPlayButton?: boolean;
   disabledSurrendButton?: boolean;
+  disabledYesButton?: boolean;
   onPressPlay?: ((event: GestureResponderEvent) => void) | null | undefined;
   onSurrend?: () => void;
   player?: TileState.Player1 | TileState.Player2;
@@ -24,8 +26,10 @@ interface Props {
 }
 
 const PlayerBoard: React.FC<Props> = ({
+  disabledNoButton = false,
   disabledPlayButton = false,
   disabledSurrendButton = false,
+  disabledYesButton = false,
   onPressPlay = () => {},
   onSurrend = () => {},
   player = TileState.Player1,
@@ -72,6 +76,8 @@ const PlayerBoard: React.FC<Props> = ({
         />
       </View>
       <SurrendModalWrapper
+        disabledNoButton={disabledNoButton}
+        disabledYesButton={disabledYesButton}
         onPressNo={onPressNo}
         onPressYes={onPressYes}
         player={player}

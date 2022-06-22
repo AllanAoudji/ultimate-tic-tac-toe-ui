@@ -12,6 +12,8 @@ describe('<PlayerBoard />', () => {
     PLAYER_BOARD_CONTAINER_OPACITY_TEST_ID = 'playerBoard__container--opacity',
     SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
       'surrendButton__container--pressable',
+    SURRENDER_MODAL_BUTTON_NO_TEST_ID = 'surrendModal__button--no',
+    SURRENDER_MODAL_BUTTON_YES_TEST_ID = 'surrendModal__button--yes',
     SURREND_TEXT = 'Surrend?',
     YES_TEXT = 'yes';
   let onPress: jest.Mock;
@@ -115,6 +117,28 @@ describe('<PlayerBoard />', () => {
     expect(
       getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props
         .accessibilityState.disabled,
+    ).toBe(true);
+  });
+
+  it('disabled "no" <Pressable /> from <SurrendModal /> if /disabledNoButton === true/', () => {
+    const {getByTestId} = render(
+      <PlayerBoard disabledNoButton={true} visibleModal={true} />,
+    );
+    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
+    expect(
+      getByTestId(SURRENDER_MODAL_BUTTON_NO_TEST_ID).props.accessibilityState
+        .disabled,
+    ).toBe(true);
+  });
+
+  it('disabled "yes" <Pressable /> from <SurrendModal /> if /disabledYesButton === true/', () => {
+    const {getByTestId} = render(
+      <PlayerBoard disabledYesButton={true} visibleModal={true} />,
+    );
+    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
+    expect(
+      getByTestId(SURRENDER_MODAL_BUTTON_YES_TEST_ID).props.accessibilityState
+        .disabled,
     ).toBe(true);
   });
 

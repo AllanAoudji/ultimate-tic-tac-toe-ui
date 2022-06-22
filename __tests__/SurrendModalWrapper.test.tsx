@@ -48,4 +48,23 @@ describe('<SurrendModalWrapper />', () => {
     );
     expect(getByText(SURREND_TEXT).props.style.color).toBe('#ed1327');
   });
+
+  it('passes /disabledNoButton/ to <SurrendModal />', () => {
+    const {getByTestId} = render(
+      <SurrendModalWrapper disabledNoButton={true} visible={true} />,
+    );
+    expect(
+      getByTestId('surrendModal__button--no').props.accessibilityState.disabled,
+    ).toBe(true);
+  });
+
+  it('passes /disabledYesButton/ to <SurrendModal />', () => {
+    const {getByTestId} = render(
+      <SurrendModalWrapper disabledYesButton={true} visible={true} />,
+    );
+    expect(
+      getByTestId('surrendModal__button--yes').props.accessibilityState
+        .disabled,
+    ).toBe(true);
+  });
 });
