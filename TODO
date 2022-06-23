@@ -12,3 +12,9 @@ save game button
 4. If mode === Mode.Continue, display <WinningLineImage /> if <Section /> is won
 
 branch => feature-theming
+
+Section opacity : 0.2 if section is full
+Board should pass mode to Section
+valid issue when mode === Continue
+
+Board hide surrend modal current player when tile is pressed

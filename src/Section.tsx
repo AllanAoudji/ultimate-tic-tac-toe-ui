@@ -149,9 +149,8 @@ const Section: React.FC<SectionProps> = ({
   const styles = React.useMemo(
     () =>
       sectionStyles({
-        valid,
         width,
-        won: mode === Mode.Normal ? sectionIsWon(tiles) : false,
+        invalid: !valid || (mode === Mode.Normal ? sectionIsWon(tiles) : false),
       }),
     [mode, tiles, valid, width],
   );
@@ -188,15 +187,7 @@ const Section: React.FC<SectionProps> = ({
   );
 };
 
-const sectionStyles = ({
-  valid,
-  width,
-  won,
-}: {
-  valid: boolean;
-  width: number;
-  won: boolean;
-}) =>
+const sectionStyles = ({invalid, width}: {invalid: boolean; width: number}) =>
   StyleSheet.create<{
     imageBackground: ViewStyle;
     innerContainer: ViewStyle;
@@ -210,7 +201,7 @@ const sectionStyles = ({
       width: (width - 8) / 3,
     },
     innerContainer: {
-      opacity: won || !valid ? 0.2 : 1,
+      opacity: invalid ? 0.2 : 1,
     },
   });
 const winnerImageStyles = StyleSheet.create<{
