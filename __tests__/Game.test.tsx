@@ -512,4 +512,26 @@ describe('<Game />', () => {
     fireEvent.press(getByText(YES_TEXT));
     expect(setGameIsDone).toHaveBeenCalledWith(false);
   });
+
+  it('closes Player BOTTOM <SurrendModal /> if Player BOTTOM presses a <Tile />', () => {
+    const {getAllByTestId, queryByTestId} = render(<Game />);
+    fireEvent.press(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1],
+    );
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    expect(queryByTestId(SURREND_MODAL_CONTAINER_TEST_ID)).toBeNull();
+  });
+
+  it('closes Player TOP <SurrendModal /> if Playyer TOP presses a <Tile />', () => {
+    const {getAllByTestId, queryByTestId} = render(<Game />);
+    fireEvent.press(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0],
+    );
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1]);
+    expect(queryByTestId(SURREND_MODAL_CONTAINER_TEST_ID)).not.toBeNull();
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1]);
+    fireEvent.press(getAllByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    expect(queryByTestId(SURREND_MODAL_CONTAINER_TEST_ID)).toBeNull();
+  });
 });

@@ -67,8 +67,14 @@ const Game: React.FC<Props> = ({
   const onPressBoard = React.useCallback(
     (tileIndex: number) => () => {
       setSelectedTilIndex(tileIndex);
+      if (getActivePlayer(history) === players[0] && visibleModalPlayerTop) {
+        setVisibleModalPlayerTop(false);
+      }
+      if (getActivePlayer(history) === players[1] && visibleModalPlayerBottom) {
+        setVisibleModalPlayerBottom(false);
+      }
     },
-    [],
+    [history, players, visibleModalPlayerBottom, visibleModalPlayerTop],
   );
   const onPressNewGame = React.useCallback(() => {
     setHistory([]);
@@ -171,6 +177,3 @@ const Game: React.FC<Props> = ({
 };
 
 export default Game;
-
-// WinningModalWrapper should be in parent
-// React.useEffect(() => {if(gameIsDone) setGameIsDone(true)}, [winner]) // should reset all states
