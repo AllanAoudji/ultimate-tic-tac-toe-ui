@@ -3,6 +3,7 @@ import {
   GestureResponderEvent,
   Image,
   ImageBackground,
+  ImageSourcePropType,
   ImageStyle,
   StyleSheet,
   useWindowDimensions,
@@ -13,13 +14,23 @@ import {
   Tile as TileInterface,
   TileState,
   checkIfWon,
+  Mode,
+  SectionState,
+  WiningLine,
 } from 'ultimate-tic-tac-toe-algorithm';
 
 import Tile from './Tile';
 
+interface LineImageProps {
+  state: SectionState;
+}
+interface PlayerImageProps {
+  state: SectionState;
+}
 interface SectionProps {
   activePlayer?: TileState.Player1 | TileState.Player2;
   disabled?: boolean;
+  mode?: Mode;
   onPress?: (
     index: number,
   ) => ((event?: GestureResponderEvent) => void) | null | undefined;
@@ -28,37 +39,107 @@ interface SectionProps {
   valid?: boolean;
 }
 interface WinningImageProps {
-  state: TileState;
+  mode: Mode;
+  state: SectionState;
 }
 
-const WinningImage: React.FC<WinningImageProps> = ({state}) => {
-  switch (state) {
-    case TileState.Empty:
-      return null;
-    case TileState.Player1:
-      return (
-        <Image
-          testID="section__image--winner"
-          source={require('../assets/images/X.png')}
-          style={winningImageStyles.image}
-        />
-      );
-    case TileState.Player2:
-      return (
-        <Image
-          testID="section__image--winner"
-          source={require('../assets/images/O.png')}
-          style={winningImageStyles.image}
-        />
-      );
+const sectionIsWon = (tiles: TileInterface[][]) =>
+  checkIfWon(tiles)[0] !== TileState.Empty;
+
+const LineImage: React.FC<LineImageProps> = ({state}) => {
+  let source: ImageSourcePropType | undefined;
+  switch (state[1]) {
+    case WiningLine.TopRow:
+      source =
+        state[0] === TileState.Player1
+          ? require('../assets/images/LinePlayerXTop.png')
+          : require('../assets/images/LinePlayerOTop.png');
+      break;
+    case WiningLine.MiddleRow:
+      source =
+        state[0] === TileState.Player1
+          ? require('../assets/images/LinePlayerXMiddleHorizontal.png')
+          : require('../assets/images/LinePlayerOMiddleHorizontal.png');
+      break;
+    case WiningLine.BottomRow:
+      source =
+        state[0] === TileState.Player1
+          ? require('../assets/images/LinePlayerXBottom.png')
+          : require('../assets/images/LinePlayerOBottom.png');
+      break;
+    case WiningLine.LeftColumn:
+      source =
+        state[0] === TileState.Player1
+          ? require('../assets/images/LinePlayerXLeft.png')
+          : require('../assets/images/LinePlayerOLeft.png');
+      break;
+    case WiningLine.MiddleColumn:
+      source =
+        state[0] === TileState.Player1
+          ? require('../assets/images/LinePlayerXMiddleVertical.png')
+          : require('../assets/images/LinePlayerOMiddleVertical.png');
+      break;
+    case WiningLine.RightColumn:
+      source =
+        state[0] === TileState.Player1
+          ? require('../assets/images/LinePlayerXRight.png')
+          : require('../assets/images/LinePlayerORight.png');
+      break;
+    case WiningLine.TopLeftBottomRightDiagonal:
+      source =
+        state[0] === TileState.Player1
+          ? require('../assets/images/LinePlayerXTopLeftBottomRight.png')
+          : require('../assets/images/LinePlayerOTopLeftBottomRight.png');
+      break;
+    case WiningLine.TopRightBottomLeftDiagonal:
+      source =
+        state[0] === TileState.Player1
+          ? require('../assets/images/LinePlayerXTopRightBottomLeft.png')
+          : require('../assets/images/LinePlayerOTopRightBottomLeft.png');
+      break;
     default:
-      return null;
+      break;
   }
+  if (source) {
+    return (
+      <Image
+        source={source}
+        style={winnerImageStyles.image}
+        testID="section__image--line"
+      />
+    );
+  }
+  return null;
 };
+
+const PlayerImage: React.FC<PlayerImageProps> = ({state}) => {
+  const source =
+    state[0] === TileState.Player1
+      ? require('../assets/images/X.png')
+      : require('../assets/images/O.png');
+  return (
+    <Image
+      source={source}
+      style={winnerImageStyles.image}
+      testID="section__image--player"
+    />
+  );
+};
+
+const WinningImage: React.FC<WinningImageProps> = ({mode, state}) => (
+  <View pointerEvents="none" style={winnerImageStyles.container}>
+    {mode === Mode.Normal ? (
+      <PlayerImage state={state} />
+    ) : (
+      <LineImage state={state} />
+    )}
+  </View>
+);
 
 const Section: React.FC<SectionProps> = ({
   activePlayer = TileState.Player1,
   disabled = false,
+  mode = Mode.Normal,
   onPress = () => () => {},
   selectedTileIndex = null,
   tiles,
@@ -70,16 +151,14 @@ const Section: React.FC<SectionProps> = ({
       sectionStyles({
         valid,
         width,
-        won: checkIfWon(tiles)[0] !== TileState.Empty,
+        won: mode === Mode.Normal ? sectionIsWon(tiles) : false,
       }),
-    [valid, tiles, width],
+    [mode, tiles, valid, width],
   );
 
   return (
     <View testID="section__container">
-      <View
-        testID="section__container--innerContainer"
-        style={styles.innerContainer}>
+      <View testID="section__container--inner" style={styles.innerContainer}>
         <ImageBackground
           resizeMode="cover"
           style={styles.imageBackground}
@@ -94,16 +173,16 @@ const Section: React.FC<SectionProps> = ({
                 key={tile.index1D}
                 state={tile.state}
                 selected={selectedTileIndex === tile.index1D}
-                valid={valid && checkIfWon(tiles)[0] === TileState.Empty}
+                valid={
+                  valid && (mode === Mode.Normal ? !sectionIsWon(tiles) : true)
+                }
               />
             )),
           )}
         </ImageBackground>
       </View>
-      {checkIfWon(tiles)[0] !== TileState.Empty && (
-        <View pointerEvents="none" style={styles.winningImageContainer}>
-          <WinningImage state={checkIfWon(tiles)[0]} />
-        </View>
+      {sectionIsWon(tiles) && (
+        <WinningImage mode={mode} state={checkIfWon(tiles)} />
       )}
     </View>
   );
@@ -121,7 +200,6 @@ const sectionStyles = ({
   StyleSheet.create<{
     imageBackground: ViewStyle;
     innerContainer: ViewStyle;
-    winningImageContainer: ViewStyle;
   }>({
     imageBackground: {
       display: 'flex',
@@ -134,14 +212,17 @@ const sectionStyles = ({
     innerContainer: {
       opacity: won || !valid ? 0.2 : 1,
     },
-    winningImageContainer: {
-      height: '100%',
-      padding: 7,
-      position: 'absolute',
-      width: '100%',
-    },
   });
-const winningImageStyles = StyleSheet.create<{image: ImageStyle}>({
+const winnerImageStyles = StyleSheet.create<{
+  container: ViewStyle;
+  image: ImageStyle;
+}>({
+  container: {
+    height: '100%',
+    padding: 7,
+    position: 'absolute',
+    width: '100%',
+  },
   image: {flex: 1, width: '100%'},
 });
 
