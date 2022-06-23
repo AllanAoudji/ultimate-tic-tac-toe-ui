@@ -55,60 +55,6 @@ describe('<Section/>', () => {
       'LinePlayerXTopRightBottomLeft',
     ));
   let tiles: Tile[][], handlePress: jest.Mock;
-  const playerWon = (
-    options: {
-      player?: TileState.Player1 | TileState.Player2;
-      winningLine?: WinningLine;
-    } = {
-      player: TileState.Player1,
-      winningLine: WinningLine.TopRow,
-    },
-  ) => {
-    const player = options?.player || TileState.Player1;
-    switch (options.winningLine) {
-      case WinningLine.BottomRow:
-        tiles[2][0].state = player;
-        tiles[2][1].state = player;
-        tiles[2][2].state = player;
-        break;
-      case WinningLine.LeftColumn:
-        tiles[0][0].state = player;
-        tiles[1][0].state = player;
-        tiles[2][0].state = player;
-        break;
-      case WinningLine.MiddleColumn:
-        tiles[0][1].state = player;
-        tiles[1][1].state = player;
-        tiles[2][1].state = player;
-        break;
-      case WinningLine.MiddleRow:
-        tiles[1][0].state = player;
-        tiles[1][1].state = player;
-        tiles[1][2].state = player;
-        break;
-      case WinningLine.RightColumn:
-        tiles[0][2].state = player;
-        tiles[1][2].state = player;
-        tiles[2][2].state = player;
-        break;
-      case WinningLine.TopLeftBottomRightDiagonal:
-        tiles[0][0].state = player;
-        tiles[1][1].state = player;
-        tiles[2][2].state = player;
-        break;
-      case WinningLine.TopRow:
-      default:
-        tiles[0][0].state = player;
-        tiles[0][1].state = player;
-        tiles[0][2].state = player;
-        break;
-      case WinningLine.TopRightBottomLeftDiagonal:
-        tiles[0][2].state = player;
-        tiles[1][1].state = player;
-        tiles[2][0].state = player;
-        break;
-    }
-  };
 
   beforeEach(() => {
     handlePress = jest.fn();
@@ -185,8 +131,12 @@ describe('<Section/>', () => {
   });
 
   it('displays a <PlayerImage /> if the <Section /> is won by a player', () => {
-    playerWon();
-    const {getByTestId} = render(<Section tiles={tiles} />);
+    const {getByTestId} = render(
+      <Section
+        sectionState={[TileState.Player1, WinningLine.BottomRow]}
+        tiles={tiles}
+      />,
+    );
     expect(getByTestId(SECTION_IMAGE_PLAYER_TEST_ID).props.source).toBe(
       imgSourceX,
     );
@@ -198,17 +148,24 @@ describe('<Section/>', () => {
   });
 
   it('<PlayerImage /> should be based on the player who won the section', () => {
-    playerWon({player: TileState.Player2});
-    const {getByTestId} = render(<Section tiles={tiles} />);
+    const {getByTestId} = render(
+      <Section
+        sectionState={[TileState.Player2, WinningLine.BottomRow]}
+        tiles={tiles}
+      />,
+    );
     expect(getByTestId(SECTION_IMAGE_PLAYER_TEST_ID).props.source).toBe(
       imgSourceO,
     );
   });
 
   it('disables each <Tile /> if the section is won', () => {
-    playerWon();
     const {getAllByTestId} = render(
-      <Section onPress={() => handlePress} tiles={tiles} />,
+      <Section
+        onPress={() => handlePress}
+        sectionState={[TileState.Player1, WinningLine.BottomRow]}
+        tiles={tiles}
+      />,
     );
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[3]);
     expect(handlePress).not.toHaveBeenCalled();
@@ -229,8 +186,12 @@ describe('<Section/>', () => {
   });
 
   it('set /opacity: 0.2/ on innerContainer <View /> if <Section /> is won', () => {
-    playerWon();
-    const {getByTestId} = render(<Section tiles={tiles} />);
+    const {getByTestId} = render(
+      <Section
+        sectionState={[TileState.Player1, WinningLine.BottomRow]}
+        tiles={tiles}
+      />,
+    );
     expect(
       getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
     ).toBe(0.2);
@@ -244,16 +205,12 @@ describe('<Section/>', () => {
   });
 
   it('sets /opacity: 0.2/ on innerContainer <View /> if <Section /> is full (but not won)', () => {
-    tiles[0][0].state = TileState.Player1;
-    tiles[0][1].state = TileState.Player2;
-    tiles[0][2].state = TileState.Player2;
-    tiles[1][0].state = TileState.Player2;
-    tiles[1][1].state = TileState.Player2;
-    tiles[1][2].state = TileState.Player1;
-    tiles[2][0].state = TileState.Player1;
-    tiles[2][1].state = TileState.Player1;
-    tiles[2][2].state = TileState.Player2;
-    const {getByTestId} = render(<Section tiles={tiles} />);
+    const {getByTestId} = render(
+      <Section
+        sectionState={[TileState.Empty, WinningLine.Draw]}
+        tiles={tiles}
+      />,
+    );
     expect(
       getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
     ).toBe(0.2);
@@ -276,17 +233,23 @@ describe('<Section/>', () => {
   });
 
   it('do not renders <PlayerImage /> if <Section /> is won and /mode === Continue/', () => {
-    playerWon();
     const {queryByTestId} = render(
-      <Section mode={Mode.Continue} tiles={tiles} />,
+      <Section
+        mode={Mode.Continue}
+        sectionState={[TileState.Player1, WinningLine.BottomRow]}
+        tiles={tiles}
+      />,
     );
     expect(queryByTestId(SECTION_IMAGE_PLAYER_TEST_ID)).toBeNull();
   });
 
   it('do not reduce the opacity if <Section /> is won and /mode === Continue/', () => {
-    playerWon();
     const {getByTestId} = render(
-      <Section mode={Mode.Continue} tiles={tiles} />,
+      <Section
+        mode={Mode.Continue}
+        sectionState={[TileState.Player1, WinningLine.BottomRow]}
+        tiles={tiles}
+      />,
     );
     expect(
       getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
@@ -294,11 +257,11 @@ describe('<Section/>', () => {
   });
 
   it('<Tiles /> should be valid if <Section /> is won and /mode === Continue/', () => {
-    playerWon();
     const {getAllByTestId} = render(
       <Section
         mode={Mode.Continue}
         onPress={() => handlePress}
+        sectionState={[TileState.Player1, WinningLine.BottomRow]}
         tiles={tiles}
       />,
     );
@@ -308,17 +271,23 @@ describe('<Section/>', () => {
 
   describe('renders a <LineImage />', () => {
     it('if section is won and /mode === Continue/', () => {
-      playerWon();
       const {queryByTestId} = render(
-        <Section mode={Mode.Continue} tiles={tiles} />,
+        <Section
+          mode={Mode.Continue}
+          sectionState={[TileState.Player1, WinningLine.BottomRow]}
+          tiles={tiles}
+        />,
       );
       expect(queryByTestId('section__image--line')).not.toBeNull();
     });
     describe('with Player X and', () => {
       it('Top', () => {
-        playerWon();
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player1, WinningLine.TopRow]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceXTop,
@@ -326,9 +295,12 @@ describe('<Section/>', () => {
       });
 
       it('MiddleHoritontal', () => {
-        playerWon({winningLine: WinningLine.MiddleRow});
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player1, WinningLine.MiddleRow]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceXMiddleHorizontal,
@@ -336,9 +308,12 @@ describe('<Section/>', () => {
       });
 
       it('Bottom', () => {
-        playerWon({winningLine: WinningLine.BottomRow});
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player1, WinningLine.BottomRow]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceXBottom,
@@ -346,9 +321,12 @@ describe('<Section/>', () => {
       });
 
       it('Left', () => {
-        playerWon({winningLine: WinningLine.LeftColumn});
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player1, WinningLine.LeftColumn]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceXLeft,
@@ -356,9 +334,12 @@ describe('<Section/>', () => {
       });
 
       it('MiddleVertical', () => {
-        playerWon({winningLine: WinningLine.MiddleColumn});
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player1, WinningLine.MiddleColumn]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceXMiddleVertical,
@@ -366,9 +347,12 @@ describe('<Section/>', () => {
       });
 
       it('Right', () => {
-        playerWon({winningLine: WinningLine.RightColumn});
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player1, WinningLine.RightColumn]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceXRight,
@@ -376,9 +360,15 @@ describe('<Section/>', () => {
       });
 
       it('TopLeftBottomRight', () => {
-        playerWon({winningLine: WinningLine.TopLeftBottomRightDiagonal});
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[
+              TileState.Player1,
+              WinningLine.TopLeftBottomRightDiagonal,
+            ]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceXTopLeftBottomRight,
@@ -386,9 +376,15 @@ describe('<Section/>', () => {
       });
 
       it('TopRightBottomLeft', () => {
-        playerWon({winningLine: WinningLine.TopRightBottomLeftDiagonal});
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[
+              TileState.Player1,
+              WinningLine.TopRightBottomLeftDiagonal,
+            ]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceXTopRightBottomLeft,
@@ -398,9 +394,12 @@ describe('<Section/>', () => {
 
     describe('with Player O and', () => {
       it('Top', () => {
-        playerWon({player: TileState.Player2});
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player2, WinningLine.TopRow]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceOTop,
@@ -408,12 +407,12 @@ describe('<Section/>', () => {
       });
 
       it('MiddleHoritontal', () => {
-        playerWon({
-          player: TileState.Player2,
-          winningLine: WinningLine.MiddleRow,
-        });
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player2, WinningLine.MiddleRow]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceOMiddleHorizontal,
@@ -421,12 +420,12 @@ describe('<Section/>', () => {
       });
 
       it('Bottom', () => {
-        playerWon({
-          player: TileState.Player2,
-          winningLine: WinningLine.BottomRow,
-        });
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player2, WinningLine.BottomRow]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceOBottom,
@@ -434,12 +433,12 @@ describe('<Section/>', () => {
       });
 
       it('Left', () => {
-        playerWon({
-          player: TileState.Player2,
-          winningLine: WinningLine.LeftColumn,
-        });
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player2, WinningLine.LeftColumn]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceOLeft,
@@ -447,12 +446,12 @@ describe('<Section/>', () => {
       });
 
       it('MiddleVertical', () => {
-        playerWon({
-          player: TileState.Player2,
-          winningLine: WinningLine.MiddleColumn,
-        });
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player2, WinningLine.MiddleColumn]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceOMiddleVertical,
@@ -460,12 +459,12 @@ describe('<Section/>', () => {
       });
 
       it('Right', () => {
-        playerWon({
-          player: TileState.Player2,
-          winningLine: WinningLine.RightColumn,
-        });
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[TileState.Player2, WinningLine.RightColumn]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceORight,
@@ -473,12 +472,15 @@ describe('<Section/>', () => {
       });
 
       it('TopLeftBottomRight', () => {
-        playerWon({
-          player: TileState.Player2,
-          winningLine: WinningLine.TopLeftBottomRightDiagonal,
-        });
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[
+              TileState.Player2,
+              WinningLine.TopLeftBottomRightDiagonal,
+            ]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceOTopLeftBottomRight,
@@ -486,12 +488,15 @@ describe('<Section/>', () => {
       });
 
       it('TopRightBottomLeft', () => {
-        playerWon({
-          player: TileState.Player2,
-          winningLine: WinningLine.TopRightBottomLeftDiagonal,
-        });
         const {getByTestId} = render(
-          <Section mode={Mode.Continue} tiles={tiles} />,
+          <Section
+            mode={Mode.Continue}
+            sectionState={[
+              TileState.Player2,
+              WinningLine.TopRightBottomLeftDiagonal,
+            ]}
+            tiles={tiles}
+          />,
         );
         expect(getByTestId('section__image--line').props.source).toBe(
           imgSourceOTopRightBottomLeft,

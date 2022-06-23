@@ -13,11 +13,9 @@ import {
 import {
   Tile as TileInterface,
   TileState,
-  checkIfWon,
   Mode,
   SectionState,
   WinningLine,
-  checkIfSectionIsFull,
 } from 'ultimate-tic-tac-toe-algorithm';
 
 import Tile from './Tile';
@@ -35,6 +33,7 @@ interface SectionProps {
   onPress?: (
     index: number,
   ) => ((event?: GestureResponderEvent) => void) | null | undefined;
+  sectionState?: SectionState;
   selectedTileIndex?: number | null;
   tiles: TileInterface[][];
   valid?: boolean;
@@ -43,9 +42,6 @@ interface WinningImageProps {
   mode: Mode;
   state: SectionState;
 }
-
-const sectionIsWon = (tiles: TileInterface[][]) =>
-  checkIfWon(tiles)[0] !== TileState.Empty;
 
 const LineImage: React.FC<LineImageProps> = ({state}) => {
   let source: ImageSourcePropType | undefined;
@@ -142,6 +138,7 @@ const Section: React.FC<SectionProps> = ({
   disabled = false,
   mode = Mode.Normal,
   onPress = () => () => {},
+  sectionState = [TileState.Empty, null],
   selectedTileIndex = null,
   tiles,
   valid = true,
@@ -152,11 +149,13 @@ const Section: React.FC<SectionProps> = ({
       sectionStyles({
         width,
         invalid:
-          checkIfSectionIsFull(tiles) ||
-          (mode === Mode.Normal ? sectionIsWon(tiles) : false) ||
+          sectionState[1] === WinningLine.Draw ||
+          (mode === Mode.Normal
+            ? sectionState[0] !== TileState.Empty
+            : false) ||
           !valid,
       }),
-    [mode, tiles, valid, width],
+    [mode, sectionState, valid, width],
   );
 
   return (
@@ -177,15 +176,18 @@ const Section: React.FC<SectionProps> = ({
                 state={tile.state}
                 selected={selectedTileIndex === tile.index1D}
                 valid={
-                  valid && (mode === Mode.Normal ? !sectionIsWon(tiles) : true)
+                  valid &&
+                  (mode === Mode.Normal
+                    ? sectionState[0] === TileState.Empty
+                    : true)
                 }
               />
             )),
           )}
         </ImageBackground>
       </View>
-      {sectionIsWon(tiles) && (
-        <WinningImage mode={mode} state={checkIfWon(tiles)} />
+      {sectionState[0] !== TileState.Empty && (
+        <WinningImage mode={mode} state={sectionState} />
       )}
     </View>
   );
