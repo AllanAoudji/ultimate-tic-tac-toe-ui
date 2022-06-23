@@ -106,4 +106,28 @@ describe('<Board />', () => {
         .accessibilityState.disabled,
     ).toBe(true);
   });
+
+  it('passes /mode/ to each <Section />', () => {
+    const {container} = render(
+      <Board mode={ultimateTicTactToAlgorithm.Mode.Normal} />,
+    );
+    expect(
+      container.findAllByProps({
+        mode: ultimateTicTactToAlgorithm.Mode.Normal,
+        activePlayer: ultimateTicTactToAlgorithm.TileState.Player1,
+      }),
+    ).toHaveLength(9);
+  });
+
+  it('passes the other /mode/ to each <Section />', () => {
+    const {container} = render(
+      <Board mode={ultimateTicTactToAlgorithm.Mode.Continue} />,
+    );
+    expect(
+      container.findAllByProps({
+        mode: ultimateTicTactToAlgorithm.Mode.Continue,
+        activePlayer: ultimateTicTactToAlgorithm.TileState.Player1,
+      }),
+    ).toHaveLength(9);
+  });
 });

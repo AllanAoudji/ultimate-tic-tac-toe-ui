@@ -49,6 +49,7 @@ const Board: React.FC<Props> = ({
             activePlayer={getActivePlayer(history)}
             disabled={disabled}
             key={section.position}
+            mode={mode}
             onPress={onPress}
             selectedTileIndex={selectedTileIndex}
             tiles={section.tiles}

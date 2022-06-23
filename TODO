@@ -7,6 +7,4 @@ save game button
 
 branch => feature-theming
 
-Board should pass mode to Section
-
 Board hide surrend modal current player when tile is pressed
