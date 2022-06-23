@@ -6,3 +6,10 @@ save game button
 <SplashScren />
 
 branch => feature-theming
+
+on Mode === continue
+the Game doesn't keep in track the player who won the section
+Need to have a state sectionStates with on mount, 9 [Empty, null]
+If a <Section /> is won after a move, update sectionState
+play() should check if game is won with sectionStates
+<Section /> should update its state (won, won by player X/O, draw) with sectionState[x]
