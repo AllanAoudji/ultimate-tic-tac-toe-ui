@@ -16,6 +16,7 @@ import {
   Mode,
   SectionState,
   WinningLine,
+  checkIfSectionIsFull,
 } from 'ultimate-tic-tac-toe-algorithm';
 
 import Tile from './Tile';
@@ -149,13 +150,13 @@ const Section: React.FC<SectionProps> = ({
       sectionStyles({
         width,
         invalid:
-          sectionState[1] === WinningLine.Draw ||
+          checkIfSectionIsFull(tiles) ||
           (mode === Mode.Normal
             ? sectionState[0] !== TileState.Empty
             : false) ||
           !valid,
       }),
-    [mode, sectionState, valid, width],
+    [mode, sectionState, tiles, valid, width],
   );
 
   return (

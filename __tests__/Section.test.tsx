@@ -204,11 +204,14 @@ describe('<Section/>', () => {
     ).toBe(1);
   });
 
-  it('sets /opacity: 0.2/ on innerContainer <View /> if <Section /> is full (but not won)', () => {
+  it('sets /opacity: 0.2/ on innerContainer <View /> if <Section /> is full', () => {
+    const fullSection = tiles.map(tile =>
+      tile.map(t => ({...t, state: TileState.Player1})),
+    );
     const {getByTestId} = render(
       <Section
         sectionState={[TileState.Empty, WinningLine.Draw]}
-        tiles={tiles}
+        tiles={fullSection}
       />,
     );
     expect(
