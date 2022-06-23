@@ -46,7 +46,7 @@ describe('<Section/>', () => {
     imgSourceXMiddleVertical = require(imageSource(
       'LinePlayerXMiddleVertical',
     )),
-    imgSourceXRight = require(imageSource('linePlayerXRight')),
+    imgSourceXRight = require(imageSource('LinePlayerXRight')),
     imgSourceXTop = require(imageSource('LinePlayerXTop')),
     imgSourceXTopLeftBottomRight = require(imageSource(
       'LinePlayerXTopLeftBottomRight',
