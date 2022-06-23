@@ -5,7 +5,7 @@ import {
   Mode,
   Tile,
   TileState,
-  WiningLine,
+  WinningLine,
 } from 'ultimate-tic-tac-toe-algorithm';
 
 import {imageSource} from './testUtils';
@@ -58,51 +58,51 @@ describe('<Section/>', () => {
   const playerWon = (
     options: {
       player?: TileState.Player1 | TileState.Player2;
-      winningLine?: WiningLine;
+      winningLine?: WinningLine;
     } = {
       player: TileState.Player1,
-      winningLine: WiningLine.TopRow,
+      winningLine: WinningLine.TopRow,
     },
   ) => {
     const player = options?.player || TileState.Player1;
     switch (options.winningLine) {
-      case WiningLine.BottomRow:
+      case WinningLine.BottomRow:
         tiles[2][0].state = player;
         tiles[2][1].state = player;
         tiles[2][2].state = player;
         break;
-      case WiningLine.LeftColumn:
+      case WinningLine.LeftColumn:
         tiles[0][0].state = player;
         tiles[1][0].state = player;
         tiles[2][0].state = player;
         break;
-      case WiningLine.MiddleColumn:
+      case WinningLine.MiddleColumn:
         tiles[0][1].state = player;
         tiles[1][1].state = player;
         tiles[2][1].state = player;
         break;
-      case WiningLine.MiddleRow:
+      case WinningLine.MiddleRow:
         tiles[1][0].state = player;
         tiles[1][1].state = player;
         tiles[1][2].state = player;
         break;
-      case WiningLine.RightColumn:
+      case WinningLine.RightColumn:
         tiles[0][2].state = player;
         tiles[1][2].state = player;
         tiles[2][2].state = player;
         break;
-      case WiningLine.TopLeftBottomRightDiagonal:
+      case WinningLine.TopLeftBottomRightDiagonal:
         tiles[0][0].state = player;
         tiles[1][1].state = player;
         tiles[2][2].state = player;
         break;
-      case WiningLine.TopRow:
+      case WinningLine.TopRow:
       default:
         tiles[0][0].state = player;
         tiles[0][1].state = player;
         tiles[0][2].state = player;
         break;
-      case WiningLine.TopRightBottomLeftDiagonal:
+      case WinningLine.TopRightBottomLeftDiagonal:
         tiles[0][2].state = player;
         tiles[1][1].state = player;
         tiles[2][0].state = player;
@@ -310,7 +310,7 @@ describe('<Section/>', () => {
       });
 
       it('MiddleHoritontal', () => {
-        playerWon({winningLine: WiningLine.MiddleRow});
+        playerWon({winningLine: WinningLine.MiddleRow});
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
         );
@@ -320,7 +320,7 @@ describe('<Section/>', () => {
       });
 
       it('Bottom', () => {
-        playerWon({winningLine: WiningLine.BottomRow});
+        playerWon({winningLine: WinningLine.BottomRow});
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
         );
@@ -330,7 +330,7 @@ describe('<Section/>', () => {
       });
 
       it('Left', () => {
-        playerWon({winningLine: WiningLine.LeftColumn});
+        playerWon({winningLine: WinningLine.LeftColumn});
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
         );
@@ -340,7 +340,7 @@ describe('<Section/>', () => {
       });
 
       it('MiddleVertical', () => {
-        playerWon({winningLine: WiningLine.MiddleColumn});
+        playerWon({winningLine: WinningLine.MiddleColumn});
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
         );
@@ -350,7 +350,7 @@ describe('<Section/>', () => {
       });
 
       it('Right', () => {
-        playerWon({winningLine: WiningLine.RightColumn});
+        playerWon({winningLine: WinningLine.RightColumn});
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
         );
@@ -360,7 +360,7 @@ describe('<Section/>', () => {
       });
 
       it('TopLeftBottomRight', () => {
-        playerWon({winningLine: WiningLine.TopLeftBottomRightDiagonal});
+        playerWon({winningLine: WinningLine.TopLeftBottomRightDiagonal});
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
         );
@@ -370,7 +370,7 @@ describe('<Section/>', () => {
       });
 
       it('TopRightBottomLeft', () => {
-        playerWon({winningLine: WiningLine.TopRightBottomLeftDiagonal});
+        playerWon({winningLine: WinningLine.TopRightBottomLeftDiagonal});
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
         );
@@ -394,7 +394,7 @@ describe('<Section/>', () => {
       it('MiddleHoritontal', () => {
         playerWon({
           player: TileState.Player2,
-          winningLine: WiningLine.MiddleRow,
+          winningLine: WinningLine.MiddleRow,
         });
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
@@ -407,7 +407,7 @@ describe('<Section/>', () => {
       it('Bottom', () => {
         playerWon({
           player: TileState.Player2,
-          winningLine: WiningLine.BottomRow,
+          winningLine: WinningLine.BottomRow,
         });
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
@@ -420,7 +420,7 @@ describe('<Section/>', () => {
       it('Left', () => {
         playerWon({
           player: TileState.Player2,
-          winningLine: WiningLine.LeftColumn,
+          winningLine: WinningLine.LeftColumn,
         });
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
@@ -433,7 +433,7 @@ describe('<Section/>', () => {
       it('MiddleVertical', () => {
         playerWon({
           player: TileState.Player2,
-          winningLine: WiningLine.MiddleColumn,
+          winningLine: WinningLine.MiddleColumn,
         });
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
@@ -446,7 +446,7 @@ describe('<Section/>', () => {
       it('Right', () => {
         playerWon({
           player: TileState.Player2,
-          winningLine: WiningLine.RightColumn,
+          winningLine: WinningLine.RightColumn,
         });
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
@@ -459,7 +459,7 @@ describe('<Section/>', () => {
       it('TopLeftBottomRight', () => {
         playerWon({
           player: TileState.Player2,
-          winningLine: WiningLine.TopLeftBottomRightDiagonal,
+          winningLine: WinningLine.TopLeftBottomRightDiagonal,
         });
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,
@@ -472,7 +472,7 @@ describe('<Section/>', () => {
       it('TopRightBottomLeft', () => {
         playerWon({
           player: TileState.Player2,
-          winningLine: WiningLine.TopRightBottomLeftDiagonal,
+          winningLine: WinningLine.TopRightBottomLeftDiagonal,
         });
         const {getByTestId} = render(
           <Section mode={Mode.Continue} tiles={tiles} />,

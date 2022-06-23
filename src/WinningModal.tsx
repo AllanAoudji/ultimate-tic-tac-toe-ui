@@ -9,27 +9,27 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {TileState, WiningLine} from 'ultimate-tic-tac-toe-algorithm';
+import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
 
 interface TitleProps {
-  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
+  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
 }
 interface WinningModalProps {
   disabled?: boolean;
   onPressNewGame?: ((event: GestureResponderEvent) => void) | null | undefined;
   onPressQuit?: ((event: GestureResponderEvent) => void) | null | undefined;
-  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
+  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
 }
 
 const generateColor: (
-  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw,
+  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw,
 ) => string = winner => {
   switch (winner) {
     case TileState.Player1:
       return '#0012ff';
     case TileState.Player2:
       return '#ed1327';
-    case WiningLine.Draw:
+    case WinningLine.Draw:
     default:
       return '#333333';
   }
@@ -38,7 +38,7 @@ const generateColor: (
 const Title: React.FC<TitleProps> = ({winner}) => {
   const styles = React.useMemo(() => titleStyles({winner}), [winner]);
 
-  if (winner === WiningLine.Draw) {
+  if (winner === WinningLine.Draw) {
     return (
       <Text style={[styles.winnerText, styles.winnerTextPlayer]}>
         it's a draw
@@ -97,7 +97,7 @@ const WinningModal: React.FC<WinningModalProps> = ({
 const titleStyles = ({
   winner,
 }: {
-  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
+  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
 }) =>
   StyleSheet.create<{
     winnerTextPlayer: TextStyle;
@@ -119,7 +119,7 @@ const winningModalStyles = ({
   winner,
 }: {
   width: number;
-  winner: TileState.Player1 | TileState.Player2 | WiningLine.Draw;
+  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
 }) =>
   StyleSheet.create<{
     button: ViewStyle;

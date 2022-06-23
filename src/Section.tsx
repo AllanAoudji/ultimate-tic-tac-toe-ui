@@ -16,7 +16,7 @@ import {
   checkIfWon,
   Mode,
   SectionState,
-  WiningLine,
+  WinningLine,
 } from 'ultimate-tic-tac-toe-algorithm';
 
 import Tile from './Tile';
@@ -49,49 +49,49 @@ const sectionIsWon = (tiles: TileInterface[][]) =>
 const LineImage: React.FC<LineImageProps> = ({state}) => {
   let source: ImageSourcePropType | undefined;
   switch (state[1]) {
-    case WiningLine.TopRow:
+    case WinningLine.TopRow:
       source =
         state[0] === TileState.Player1
           ? require('../assets/images/LinePlayerXTop.png')
           : require('../assets/images/LinePlayerOTop.png');
       break;
-    case WiningLine.MiddleRow:
+    case WinningLine.MiddleRow:
       source =
         state[0] === TileState.Player1
           ? require('../assets/images/LinePlayerXMiddleHorizontal.png')
           : require('../assets/images/LinePlayerOMiddleHorizontal.png');
       break;
-    case WiningLine.BottomRow:
+    case WinningLine.BottomRow:
       source =
         state[0] === TileState.Player1
           ? require('../assets/images/LinePlayerXBottom.png')
           : require('../assets/images/LinePlayerOBottom.png');
       break;
-    case WiningLine.LeftColumn:
+    case WinningLine.LeftColumn:
       source =
         state[0] === TileState.Player1
           ? require('../assets/images/LinePlayerXLeft.png')
           : require('../assets/images/LinePlayerOLeft.png');
       break;
-    case WiningLine.MiddleColumn:
+    case WinningLine.MiddleColumn:
       source =
         state[0] === TileState.Player1
           ? require('../assets/images/LinePlayerXMiddleVertical.png')
           : require('../assets/images/LinePlayerOMiddleVertical.png');
       break;
-    case WiningLine.RightColumn:
+    case WinningLine.RightColumn:
       source =
         state[0] === TileState.Player1
           ? require('../assets/images/LinePlayerXRight.png')
           : require('../assets/images/LinePlayerORight.png');
       break;
-    case WiningLine.TopLeftBottomRightDiagonal:
+    case WinningLine.TopLeftBottomRightDiagonal:
       source =
         state[0] === TileState.Player1
           ? require('../assets/images/LinePlayerXTopLeftBottomRight.png')
           : require('../assets/images/LinePlayerOTopLeftBottomRight.png');
       break;
-    case WiningLine.TopRightBottomLeftDiagonal:
+    case WinningLine.TopRightBottomLeftDiagonal:
       source =
         state[0] === TileState.Player1
           ? require('../assets/images/LinePlayerXTopRightBottomLeft.png')

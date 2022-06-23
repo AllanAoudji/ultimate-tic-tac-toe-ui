@@ -12,7 +12,7 @@ import {act} from 'react-test-renderer';
 const spyPlay: (winner?: ultimateTicTactToAlgorithm.SectionState) => void = (
   winner = [
     ultimateTicTactToAlgorithm.TileState.Player1,
-    ultimateTicTactToAlgorithm.WiningLine.TopRow,
+    ultimateTicTactToAlgorithm.WinningLine.TopRow,
   ],
 ) => {
   jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockReturnValue({
@@ -308,7 +308,7 @@ describe('<Game />', () => {
   it('displays Draw <WinningModal /> if game is a draw', () => {
     spyPlay([
       ultimateTicTactToAlgorithm.TileState.Empty,
-      ultimateTicTactToAlgorithm.WiningLine.Draw,
+      ultimateTicTactToAlgorithm.WinningLine.Draw,
     ]);
     const {getAllByTestId, getAllByText, queryByText} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
@@ -328,7 +328,7 @@ describe('<Game />', () => {
   it('closes both <SurrendModal /> when game is a draw', () => {
     spyPlay([
       ultimateTicTactToAlgorithm.TileState.Empty,
-      ultimateTicTactToAlgorithm.WiningLine.Draw,
+      ultimateTicTactToAlgorithm.WinningLine.Draw,
     ]);
     const {getAllByTestId, getAllByText, queryAllByTestId} = render(<Game />);
     fireEvent.press(
@@ -342,7 +342,7 @@ describe('<Game />', () => {
   it('disabled <SurrendButton /> if game is a draw', () => {
     spyPlay([
       ultimateTicTactToAlgorithm.TileState.Empty,
-      ultimateTicTactToAlgorithm.WiningLine.Draw,
+      ultimateTicTactToAlgorithm.WinningLine.Draw,
     ]);
     const {getAllByTestId, getAllByText} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
@@ -360,7 +360,7 @@ describe('<Game />', () => {
   it('disables press <Tile /> if game is a draw', () => {
     spyPlay([
       ultimateTicTactToAlgorithm.TileState.Empty,
-      ultimateTicTactToAlgorithm.WiningLine.Draw,
+      ultimateTicTactToAlgorithm.WinningLine.Draw,
     ]);
     const {getAllByTestId, getAllByText, queryByTestId} = render(<Game />);
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
