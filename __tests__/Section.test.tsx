@@ -29,7 +29,7 @@ describe('<Section/>', () => {
     imgSourceOMiddleVertical = require(imageSource(
       'LinePlayerOMiddleVertical',
     )),
-    imgSourceORight = require(imageSource('linePlayerORight')),
+    imgSourceORight = require(imageSource('LinePlayerORight')),
     imgSourceOTop = require(imageSource('LinePlayerOTop')),
     imgSourceOTopLeftBottomRight = require(imageSource(
       'LinePlayerOTopLeftBottomRight',
