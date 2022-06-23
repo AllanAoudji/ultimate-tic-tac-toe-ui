@@ -5,12 +5,8 @@ save game button
 
 <SplashScren />
 
-<Section />
-Need to be rework for Mode.Continue =
-__ Instead of <WinningImage />, use <WinningLine />
-__ valid should change
-=> false if valid={valid}
-need 8 images line
-sectionStyle({won}) => always false
-
 branch => feature-theming
+
+Board should pass mode to Section
+
+Board hide surrend modal current player when tile is pressed

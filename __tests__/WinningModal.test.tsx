@@ -1,6 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
-import {TileState, WiningLine} from 'ultimate-tic-tac-toe-algorithm';
+import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
 
 import WinningModal from '../src/WinningModal';
 
@@ -153,12 +153,12 @@ describe('<WinningModal />', () => {
   });
 
   it('displays a draw', () => {
-    const {queryByText} = render(<WinningModal winner={WiningLine.Draw} />);
+    const {queryByText} = render(<WinningModal winner={WinningLine.Draw} />);
     expect(queryByText(DRAW_TEXT)).not.toBeNull();
   });
 
   it(`sets /borderColor: ${DRAW_COLOR}/ on innerContainer if it's a draw`, () => {
-    const {getByTestId} = render(<WinningModal winner={WiningLine.Draw} />);
+    const {getByTestId} = render(<WinningModal winner={WinningLine.Draw} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
         .borderColor,
@@ -166,7 +166,7 @@ describe('<WinningModal />', () => {
   });
 
   it(`sets /shadowColor: ${DRAW_COLOR}/ on innerContainer if it's a draw`, () => {
-    const {getByTestId} = render(<WinningModal winner={WiningLine.Draw} />);
+    const {getByTestId} = render(<WinningModal winner={WinningLine.Draw} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
         .shadowColor,
@@ -174,14 +174,14 @@ describe('<WinningModal />', () => {
   });
 
   it(`sets /backgroundColor: ${DRAW_COLOR}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" if it's a draw`, () => {
-    const {getByTestId} = render(<WinningModal winner={WiningLine.Draw} />);
+    const {getByTestId} = render(<WinningModal winner={WinningLine.Draw} />);
     expect(
       getByTestId(WINNING_MODAL_SEPARATOR_TEST_ID).props.style.backgroundColor,
     ).toBe(DRAW_COLOR);
   });
 
   it(`sets /color: ${DRAW_COLOR}/ on winner <Text /> if it's a draw`, () => {
-    const {getByText} = render(<WinningModal winner={WiningLine.Draw} />);
+    const {getByText} = render(<WinningModal winner={WinningLine.Draw} />);
     expect(getByText(DRAW_TEXT).props.style).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

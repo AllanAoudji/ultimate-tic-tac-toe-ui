@@ -6,7 +6,7 @@ import {
   play,
   SectionState,
   TileState,
-  WiningLine,
+  WinningLine,
 } from 'ultimate-tic-tac-toe-algorithm';
 
 import Board from './Board';
@@ -23,10 +23,10 @@ interface Props {
 const initialAssets = generateAssets();
 
 const normalizeGameIsDone: (winner: SectionState) => boolean = winner =>
-  winner[0] !== TileState.Empty || winner[1] === WiningLine.Draw;
+  winner[0] !== TileState.Empty || winner[1] === WinningLine.Draw;
 
 const normalizeWinner = (winner: SectionState) => {
-  if (winner[1] === WiningLine.Draw) {
+  if (winner[1] === WinningLine.Draw) {
     return winner[1];
   }
   return winner[0];
@@ -90,7 +90,7 @@ const Game: React.FC<Props> = ({
   const onSurrend = React.useCallback(
     (player: TileState.Player1 | TileState.Player2) => () => {
       if (!normalizeGameIsDone(winner)) {
-        setWinner([player, WiningLine.Surrender]);
+        setWinner([player, WinningLine.Surrender]);
       }
     },
     [winner],
