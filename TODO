@@ -5,16 +5,8 @@ save game button
 
 <SplashScren />
 
-<Section />
-1. Add 8 * 2 "line" images, for each player and for each WinningLine
-2. If mode === Mode.Continue, do not set opacity: 0.2
-3. If mode === Mode.Continue, do not display <WiningImage />
-4. If mode === Mode.Continue, display <WinningLineImage /> if <Section /> is won
-
 branch => feature-theming
 
-Section opacity : 0.2 if section is full
 Board should pass mode to Section
-valid issue when mode === Continue
 
 Board hide surrend modal current player when tile is pressed
