@@ -53,6 +53,9 @@ const Game: React.FC<Props> = ({
       TileState.Player1 | TileState.Player2,
     ]
   >(randomizePlayer());
+  const [sectionStates, setSectionStates] = React.useState<SectionState[]>(
+    initialAssets.sectionStates,
+  );
   const [selectedTileIndex, setSelectedTilIndex] = React.useState<
     number | null
   >(null);
@@ -84,15 +87,17 @@ const Game: React.FC<Props> = ({
       const assets = play(selectedTileIndex, {
         history,
         mode,
+        sectionStates,
         winner,
       });
       setHistory(assets.history);
+      setSectionStates(assets.sectionStates);
       if (normalizeGameIsDone(assets.winner)) {
         setWinner(assets.winner);
       }
     }
     setSelectedTilIndex(null);
-  }, [history, mode, selectedTileIndex, winner]);
+  }, [history, mode, sectionStates, selectedTileIndex, winner]);
   const onSurrend = React.useCallback(
     (player: TileState.Player1 | TileState.Player2) => () => {
       if (!normalizeGameIsDone(winner)) {
@@ -151,6 +156,7 @@ const Game: React.FC<Props> = ({
         gameIsDone={normalizeGameIsDone(winner)}
         history={history}
         mode={mode}
+        sectionStates={sectionStates}
         onPress={onPressBoard}
         selectedTileIndex={selectedTileIndex}
       />
