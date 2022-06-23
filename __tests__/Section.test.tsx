@@ -243,6 +243,22 @@ describe('<Section/>', () => {
     ).toBe(1);
   });
 
+  it('sets /opacity: 0.2/ on innerContainer <View /> if <Section /> is full (but not won)', () => {
+    tiles[0][0].state = TileState.Player1;
+    tiles[0][1].state = TileState.Player2;
+    tiles[0][2].state = TileState.Player2;
+    tiles[1][0].state = TileState.Player2;
+    tiles[1][1].state = TileState.Player2;
+    tiles[1][2].state = TileState.Player1;
+    tiles[2][0].state = TileState.Player1;
+    tiles[2][1].state = TileState.Player1;
+    tiles[2][2].state = TileState.Player2;
+    const {getByTestId} = render(<Section tiles={tiles} />);
+    expect(
+      getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
+    ).toBe(0.2);
+  });
+
   it('disables each <Tile /> if /disabled === true/', () => {
     const {getAllByTestId} = render(<Section disabled={true} tiles={tiles} />);
     expect(
