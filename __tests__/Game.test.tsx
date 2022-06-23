@@ -17,8 +17,12 @@ const spyPlay: (winner?: ultimateTicTactToAlgorithm.SectionState) => void = (
 ) => {
   jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockReturnValue({
     history: [80],
-    winner,
     mode: ultimateTicTactToAlgorithm.Mode.Normal,
+    sectionStates: new Array(9).fill([
+      ultimateTicTactToAlgorithm.TileState.Empty,
+      null,
+    ]),
+    winner,
   });
 };
 
@@ -35,6 +39,7 @@ describe('<Game />', () => {
     PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
       'playButton__container--pressable',
     QUIT_TEXT = 'quit',
+    SECTION_IMAGE_PLAYER = 'section__image--player',
     SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
       'surrendButton__container--pressable',
     SURREND_MODAL_CONTAINER_INNER_TEST_ID = 'surrendModal__container--inner',
@@ -533,5 +538,44 @@ describe('<Game />', () => {
     fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1]);
     fireEvent.press(getAllByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[0]);
     expect(queryByTestId(SURREND_MODAL_CONTAINER_TEST_ID)).toBeNull();
+  });
+
+  it('passes /sectionStates/ to board', () => {
+    jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockReturnValue({
+      history: [80],
+      mode: ultimateTicTactToAlgorithm.Mode.Normal,
+      sectionStates: new Array(9).fill([
+        ultimateTicTactToAlgorithm.TileState.Player1,
+        ultimateTicTactToAlgorithm.WinningLine.BottomRow,
+      ]),
+      winner: [ultimateTicTactToAlgorithm.TileState.Empty, null],
+    });
+    const {getAllByTestId, getAllByText, queryAllByTestId} = render(<Game />);
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    expect(queryAllByTestId(SECTION_IMAGE_PLAYER)).toHaveLength(9);
+  });
+
+  it('resets /sectionStates/ to board', () => {
+    jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockReturnValue({
+      history: [80],
+      mode: ultimateTicTactToAlgorithm.Mode.Normal,
+      sectionStates: new Array(9).fill([
+        ultimateTicTactToAlgorithm.TileState.Player1,
+        ultimateTicTactToAlgorithm.WinningLine.BottomRow,
+      ]),
+      winner: [ultimateTicTactToAlgorithm.TileState.Empty, null],
+    });
+    const {getAllByTestId, getAllByText, getByText, queryAllByTestId} = render(
+      <Game />,
+    );
+    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    fireEvent.press(getAllByText(PLAY_TEXT)[1]);
+    fireEvent.press(
+      getAllByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID)[1],
+    );
+    fireEvent.press(getByText(YES_TEXT));
+    fireEvent.press(getByText(NEW_GAME_TEXT));
+    expect(queryAllByTestId(SECTION_IMAGE_PLAYER)).toHaveLength(0);
   });
 });

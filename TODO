@@ -6,3 +6,5 @@ save game button
 <SplashScren />
 
 branch => feature-theming
+
+refactor Game.test.tsx and Section.test.tsx

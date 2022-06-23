@@ -2,6 +2,7 @@ import React from 'react';
 import {
   generateAssets,
   getActivePlayer,
+  getTileIndexPositionAndSection,
   Mode,
   play,
   SectionState,
@@ -21,6 +22,12 @@ interface Props {
 }
 
 const initialAssets = generateAssets();
+
+const arrayEquals = (a: any, b: any) =>
+  Array.isArray(a) &&
+  Array.isArray(b) &&
+  a.length === b.length &&
+  a.every((val, index) => val === b[index]);
 
 const normalizeGameIsDone: (winner: SectionState) => boolean = winner =>
   winner[0] !== TileState.Empty || winner[1] === WinningLine.Draw;
@@ -91,7 +98,10 @@ const Game: React.FC<Props> = ({
         winner,
       });
       setHistory(assets.history);
-      setSectionStates(assets.sectionStates);
+      const {section} = getTileIndexPositionAndSection(selectedTileIndex);
+      if (!arrayEquals(sectionStates[section], assets.sectionStates[section])) {
+        setSectionStates(assets.sectionStates);
+      }
       if (normalizeGameIsDone(assets.winner)) {
         setWinner(assets.winner);
       }
@@ -123,6 +133,7 @@ const Game: React.FC<Props> = ({
         setGameIsDone(false);
       }
       setPlayers(randomizePlayer());
+      setSectionStates(initialAssets.sectionStates);
       setSelectedTilIndex(null);
       setWinner([TileState.Empty, null]);
     }
