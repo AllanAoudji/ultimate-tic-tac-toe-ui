@@ -1,4 +1,10 @@
+import {ReactTestInstance} from 'react-test-renderer';
 import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
+
+const getDisabled = (instance: ReactTestInstance) =>
+  instance.props.accessibilityState.disabled;
+const getSource = (instance: ReactTestInstance) => instance.props.source;
+const getStyle = (instance: ReactTestInstance) => instance.props.style;
 
 const imageSource = (image: string) => `../assets/images/${image}.png`;
 
@@ -89,4 +95,4 @@ const spyPlay: () => {
   };
 };
 
-export {imageSource, spyPlay};
+export {getDisabled, getSource, getStyle, imageSource, spyPlay};

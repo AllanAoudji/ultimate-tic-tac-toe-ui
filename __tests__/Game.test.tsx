@@ -1,10 +1,15 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import {mockRandom, resetMockRandom} from 'jest-mock-random';
 import React from 'react';
-import {ReactTestInstance} from 'react-test-renderer';
 import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 
-import {imageSource, spyPlay} from './testUtils';
+import {
+  getDisabled,
+  getSource,
+  getStyle,
+  imageSource,
+  spyPlay,
+} from './testUtils';
 
 import Game from '../src/Game';
 
@@ -72,14 +77,11 @@ const renderer = (
   const queryTileImageState = () => queryAllByTestId('tile__image--state');
   const queryWinningModal = () => queryByTestId('winningModal__container');
 
-  const playerO = require(imageSource('O'));
-  const playerX = require(imageSource('X'));
-
   return {
     assets: {
       images: {
-        playerO,
-        playerX,
+        playerO: require(imageSource('O')),
+        playerX: require(imageSource('X')),
       },
     },
     container: {
@@ -105,10 +107,6 @@ const renderer = (
         winningModal: queryWinningModal,
       },
     },
-    getDisabled: (instance: ReactTestInstance) =>
-      instance.props.accessibilityState.disabled,
-    getSource: (instance: ReactTestInstance) => instance.props.source,
-    getStyle: (instance: ReactTestInstance) => instance.props.style,
     players: {
       get: {
         board: getBoards,
@@ -232,21 +230,21 @@ describe('<Game />', () => {
   });
 
   it('renders first <PlayerBoard /> with /position === TOP/', () => {
-    const {getStyle, playerTop} = renderer();
+    const {playerTop} = renderer();
     expect(getStyle(playerTop.get.board()).transform).toEqual([
       {rotate: '180deg'},
     ]);
   });
 
   it('choses player randomly', () => {
-    const {getStyle, playerTop} = renderer();
+    const {playerTop} = renderer();
     expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
       PLAYER_O_COLOR,
     );
   });
 
   it('renders the other player with a 50/50 ramdom chance', () => {
-    const {getStyle, playerBottom, playerTop} = renderer({
+    const {playerBottom, playerTop} = renderer({
       firstPlayer: 'TOP',
     });
     expect(getStyle(playerBottom.get.playButton()).backgroundColor).toBe(
@@ -258,7 +256,7 @@ describe('<Game />', () => {
   });
 
   it(`disables each "${PLAY_TEXT}" <Pressable /> on mount`, () => {
-    const {getDisabled, playerBottom, playerTop} = renderer();
+    const {playerBottom, playerTop} = renderer();
     expect(getDisabled(playerTop.get.playButton())).toBe(true);
     expect(getDisabled(playerBottom.get.playButton())).toBe(true);
   });
@@ -269,7 +267,7 @@ describe('<Game />', () => {
   });
 
   it('renders a player1 temp <Image /> when press on a <Tile /> if /history.length === 0/', () => {
-    const {assets, container, getSource, players} = renderer();
+    const {assets, container, players} = renderer();
     players.press.tile();
     expect(container.query.tileTempImage()).not.toBeNull();
     expect(getSource(container.get.tileTempImage())).toBe(
@@ -278,13 +276,13 @@ describe('<Game />', () => {
   });
 
   it(`enables player BOTTOM "${PLAY_TEXT}" <Pressable /> if it's the player turn and /selectedTileIndex !== null/`, () => {
-    const {getDisabled, playerBottom, players} = renderer();
+    const {playerBottom, players} = renderer();
     players.press.tile();
     expect(getDisabled(playerBottom.get.playButton())).toBe(false);
   });
 
   it(`enables player TOP "${PLAY_TEXT}" <Pressable /> if its's the player turn and /selectedTileIndex !== null/`, () => {
-    const {getDisabled, playerTop, players} = renderer({firstPlayer: 'TOP'});
+    const {playerTop, players} = renderer({firstPlayer: 'TOP'});
     players.press.tile();
     expect(getDisabled(playerTop.get.playButton())).toBe(false);
   });
@@ -357,7 +355,7 @@ describe('<Game />', () => {
 
   describe('opens <SurrendModal />', () => {
     it('of the TOP player when <SurrendButton /> is pressed', () => {
-      const {getStyle, playerTop, players} = renderer();
+      const {playerTop, players} = renderer();
       playerTop.press.surrendButton();
       expect(players.query.surrendModal()).not.toBeNull();
       expect(
@@ -366,7 +364,7 @@ describe('<Game />', () => {
     });
 
     it('of the BOTTOM player when <SurrendButton /> is pressed', () => {
-      const {getStyle, playerBottom, players} = renderer();
+      const {playerBottom, players} = renderer();
       playerBottom.press.surrendButton();
       expect(players.query.surrendModal()).not.toBeNull();
       expect(
@@ -383,7 +381,7 @@ describe('<Game />', () => {
     });
 
     it('randomize /players/', () => {
-      const {getStyle, playerBottom, playerTop, setFirstPlayer} = renderer();
+      const {playerBottom, playerTop, setFirstPlayer} = renderer();
       setFirstPlayer('BOTTOM');
       playerBottom.press.newGameAfterSurrend();
       expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
@@ -433,7 +431,7 @@ describe('<Game />', () => {
     });
 
     it('disabled <SurrendButton />', () => {
-      const {getDisabled, playerBottom, playerTop} = renderer();
+      const {playerBottom, playerTop} = renderer();
       playerBottom.press.play();
       expect(getDisabled(playerBottom.get.surrendButton())).toBe(true);
       expect(getDisabled(playerTop.get.surrendButton())).toBe(true);
@@ -449,14 +447,14 @@ describe('<Game />', () => {
 
   describe('if /disabled === true/', () => {
     it('disables BOTTOM <PlayButton />', () => {
-      const {getDisabled, playerBottom, players, rerender} = renderer();
+      const {playerBottom, players, rerender} = renderer();
       players.press.tile();
       rerender({disabled: true});
       expect(getDisabled(playerBottom.get.playButton())).toBe(true);
     });
 
     it('disables TOP <PlayButton />', () => {
-      const {getDisabled, playerTop, players, rerender} = renderer({
+      const {playerTop, players, rerender} = renderer({
         firstPlayer: 'TOP',
       });
       players.press.tile();
@@ -465,12 +463,12 @@ describe('<Game />', () => {
     });
 
     it('disables BOTTOM <SurrendButton />', () => {
-      const {getDisabled, playerBottom} = renderer({disabled: true});
+      const {playerBottom} = renderer({disabled: true});
       expect(getDisabled(playerBottom.get.surrendButton())).toBe(true);
     });
 
     it('disables TOP <SurrendButton />', () => {
-      const {getDisabled, playerTop} = renderer({disabled: true});
+      const {playerTop} = renderer({disabled: true});
       expect(getDisabled(playerTop.get.surrendButton())).toBe(true);
     });
 
@@ -489,7 +487,7 @@ describe('<Game />', () => {
     });
 
     it('disables <Board />', () => {
-      const {container, getDisabled} = renderer({disabled: true});
+      const {container} = renderer({disabled: true});
       expect(getDisabled(container.get.tile(0))).toBe(true);
       expect(getDisabled(container.get.tile(1))).toBe(true);
       expect(getDisabled(container.get.tile(2))).toBe(true);
@@ -524,7 +522,7 @@ describe('<Game />', () => {
 
   describe('if /winner !== Empty/', () => {
     it('disables <SurrendButton />', () => {
-      const {getDisabled, playerBottom, playerTop} = renderer();
+      const {playerBottom, playerTop} = renderer();
       playerBottom.press.surrendGame();
       expect(getDisabled(playerBottom.get.surrendButton())).toBe(true);
       expect(getDisabled(playerTop.get.surrendButton())).toBe(true);
@@ -572,7 +570,7 @@ describe('<Game />', () => {
 
   describe('pushes /selectedTileIndex/ on /history/ when press on', () => {
     it(`BOTTOM player "${PLAY_TEXT}" <Pressable />`, () => {
-      const {assets, container, getSource, playerBottom} = renderer();
+      const {assets, container, playerBottom} = renderer();
       playerBottom.press.play();
       expect(getSource(container.query.tileStateImage())).toBe(
         assets.images.playerX,
@@ -580,7 +578,7 @@ describe('<Game />', () => {
     });
 
     it(`TOP player "${PLAY_TEXT}" <Pressable />`, () => {
-      const {assets, getSource, container, playerTop} = renderer({
+      const {assets, container, playerTop} = renderer({
         firstPlayer: 'TOP',
       });
       playerTop.press.play();

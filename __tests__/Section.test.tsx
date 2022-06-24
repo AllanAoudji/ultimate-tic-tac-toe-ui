@@ -1,64 +1,147 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
+import {GestureResponderEvent} from 'react-native';
 import {
   getSections,
   Mode,
+  SectionState,
   Tile,
   TileState,
   WinningLine,
 } from 'ultimate-tic-tac-toe-algorithm';
 
-import {imageSource} from './testUtils';
+import {getSource, getStyle, imageSource} from './testUtils';
 
 import Section from '../src/Section';
 
+const renderer = (
+  options: {
+    activePlayer?: TileState.Player1 | TileState.Player2;
+    disabled?: boolean;
+    mode?: Mode;
+    onPress?: (
+      index: number,
+    ) => ((event?: GestureResponderEvent) => void) | null | undefined;
+    sectionState?: SectionState;
+    selectedTileIndex?: number;
+    tiles?: Tile[][];
+    valid?: boolean;
+  } = {},
+) => {
+  const tiles = options.tiles || getSections([])[0].tiles;
+  const renderSection = render(
+    <Section
+      activePlayer={options.activePlayer}
+      disabled={options.disabled}
+      mode={options.mode}
+      onPress={options.onPress}
+      selectedTileIndex={options.selectedTileIndex}
+      sectionState={options.sectionState}
+      tiles={tiles}
+      valid={options.valid}
+    />,
+  );
+
+  const {getAllByTestId, getByTestId, queryAllByTestId, queryByTestId} =
+    renderSection;
+
+  const getContainer = () => getByTestId('section__container');
+  const getGridImage = () => getByTestId('section__image--grid');
+  const getImageLine = () => getByTestId('section__image--line');
+  const getImagePlayer = () => getByTestId('section__image--player');
+  const getInnerContainer = () => getByTestId('section__container--inner');
+  const getTiles = () => getAllByTestId('tile__container--pressable');
+  const getTileStateImages = () => getAllByTestId('tile__image--state');
+  const getTilesTempImages = () => getAllByTestId('tile__image--temp');
+
+  const queryContainer = () => queryByTestId('section__container');
+  const queryGridImage = () => queryByTestId('section__image--grid');
+  const queryImageLine = () => queryByTestId('section__image--line');
+  const queryImagePlayer = () => queryByTestId('section__image--player');
+  const queryInnerContainer = () => queryByTestId('section__container--inner');
+  const queryTiles = () => queryAllByTestId('tile__container--pressable');
+  const queryTileStateImages = () => queryAllByTestId('tile__image--state');
+  const queryTileTempImages = () => queryAllByTestId('tile__image--temp');
+
+  return {
+    assets: {
+      images: {
+        grid: require(imageSource('SectionGrid')),
+        imgSource0: require(imageSource('O')),
+        imgSourceOBottom: require(imageSource('LinePlayerOBottom')),
+        imgSourceOLeft: require(imageSource('LinePlayerOLeft')),
+        imgSourceOMiddleHorizontal: require(imageSource(
+          'LinePlayerOMiddleHorizontal',
+        )),
+        imgSourceOMiddleVertical: require(imageSource(
+          'LinePlayerOMiddleVertical',
+        )),
+        imgSourceORight: require(imageSource('LinePlayerORight')),
+        imgSourceOTop: require(imageSource('LinePlayerOTop')),
+        imgSourceOTopLeftBottomRight: require(imageSource(
+          'LinePlayerOTopLeftBottomRight',
+        )),
+        imgSourceOTopRightBottomLeft: require(imageSource(
+          'LinePlayerOTopRightBottomLeft',
+        )),
+        imgSourceX: require(imageSource('X')),
+        imgSourceXBottom: require(imageSource('LinePlayerXBottom')),
+        imgSourceXMiddleHorizontal: require(imageSource(
+          'LinePlayerXMiddleHorizontal',
+        )),
+        imgSourceXTop: require(imageSource('LinePlayerXTop')),
+        imgSourceXLeft: require(imageSource('LinePlayerXLeft')),
+        imgSourceXMiddleVertical: require(imageSource(
+          'LinePlayerXMiddleVertical',
+        )),
+        imgSourceXRight: require(imageSource('LinePlayerXRight')),
+        imgSourceXTopLeftBottomRight: require(imageSource(
+          'LinePlayerXTopLeftBottomRight',
+        )),
+        imgSourceXTopRightBottomLeft: require(imageSource(
+          'LinePlayerXTopRightBottomLeft',
+        )),
+      },
+    },
+    container: {
+      get: {
+        container: getContainer,
+        gridImage: getGridImage,
+        imageLine: getImageLine,
+        imagePlayer: getImagePlayer,
+        innerContainer: getInnerContainer,
+        tile: (index: number) => getTiles()[index],
+        tiles: getTiles,
+        tileStateImage: (index: number) => getTileStateImages()[index],
+        tileStateImages: getTileStateImages,
+        tileTempImage: (index: number) => getTilesTempImages()[index],
+        tileTempImages: getTilesTempImages,
+      },
+      press: {
+        tile: (index = 0) => {
+          fireEvent.press(getTiles()[index]);
+        },
+      },
+      query: {
+        container: queryContainer,
+        gridImage: queryGridImage,
+        imageLine: queryImageLine,
+        imagePlayer: queryImagePlayer,
+        innerContainer: queryInnerContainer,
+        tiles: queryTiles,
+        tileStateImages: queryTileStateImages,
+        tileTempImages: queryTileTempImages,
+      },
+    },
+    render: renderSection,
+  };
+};
+
 describe('<Section/>', () => {
-  const SECTION_CONTAINER_TEST_ID = 'section__container',
-    SECTION_CONTAINER_INNER_TEST_ID = 'section__container--inner',
-    SECTION_IMAGE_GRID_TEST_ID = 'section__image--grid',
-    SECTION_IMAGE_PLAYER_TEST_ID = 'section__image--player',
-    TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable',
-    TILE_IMAGE_STATE_TEST_ID = 'tile__image--state',
-    TILE_IMAGE_TEMP_TEST_ID = 'tile__image--temp';
-  const imgSourceO = require(imageSource('O')),
-    imgSourceOBottom = require(imageSource('LinePlayerOBottom')),
-    imgSourceOLeft = require(imageSource('LinePlayerOLeft')),
-    imgSourceOMiddleHorizontal = require(imageSource(
-      'LinePlayerOMiddleHorizontal',
-    )),
-    imgSourceOMiddleVertical = require(imageSource(
-      'LinePlayerOMiddleVertical',
-    )),
-    imgSourceORight = require(imageSource('LinePlayerORight')),
-    imgSourceOTop = require(imageSource('LinePlayerOTop')),
-    imgSourceOTopLeftBottomRight = require(imageSource(
-      'LinePlayerOTopLeftBottomRight',
-    )),
-    imgSourceOTopRightBottomLeft = require(imageSource(
-      'LinePlayerOTopRightBottomLeft',
-    )),
-    imgSourceX = require(imageSource('X')),
-    imgSourceXBottom = require(imageSource('LinePlayerXBottom')),
-    imgSourceXLeft = require(imageSource('LinePlayerXLeft')),
-    imgSourceXMiddleHorizontal = require(imageSource(
-      'LinePlayerXMiddleHorizontal',
-    )),
-    imgSourceXMiddleVertical = require(imageSource(
-      'LinePlayerXMiddleVertical',
-    )),
-    imgSourceXRight = require(imageSource('LinePlayerXRight')),
-    imgSourceXTop = require(imageSource('LinePlayerXTop')),
-    imgSourceXTopLeftBottomRight = require(imageSource(
-      'LinePlayerXTopLeftBottomRight',
-    )),
-    imgSourceXTopRightBottomLeft = require(imageSource(
-      'LinePlayerXTopRightBottomLeft',
-    ));
-  let tiles: Tile[][], handlePress: jest.Mock;
+  let handlePress: jest.Mock;
 
   beforeEach(() => {
     handlePress = jest.fn();
-    tiles = getSections([])[0].tiles;
   });
 
   afterEach(() => {
@@ -66,445 +149,248 @@ describe('<Section/>', () => {
   });
 
   it('renders a <View />', () => {
-    const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(getByTestId(SECTION_CONTAINER_TEST_ID)).toBeTruthy();
+    const {container} = renderer();
+    expect(container.query.container()).not.toBeNull();
   });
 
   it('renders a "grid" <BackgroundImage />', () => {
-    const imageSourceSectionGrid = require(imageSource('SectionGrid'));
-    const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(getByTestId(SECTION_IMAGE_GRID_TEST_ID).props.source).toBe(
-      imageSourceSectionGrid,
-    );
+    const {assets, container} = renderer();
+    expect(container.query.gridImage()).not.toBeNull();
+    expect(getSource(container.get.gridImage())).toBe(assets.images.grid);
   });
 
   it('contains nine <Tile />', () => {
-    const {getAllByTestId} = render(<Section tiles={tiles} />);
-    expect(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)).toHaveLength(9);
+    const {container} = renderer();
+    expect(container.query.tiles()).toHaveLength(9);
   });
 
   it('passes /state/ on each <Tile />', () => {
-    tiles[0][0].state = TileState.Player1;
-    tiles[0][1].state = TileState.Player2;
-    const {getAllByTestId} = render(<Section tiles={tiles} />);
-    expect(getAllByTestId(TILE_IMAGE_STATE_TEST_ID)).toHaveLength(2);
-    expect(getAllByTestId(TILE_IMAGE_STATE_TEST_ID)[0].props.source).toBe(
-      imgSourceX,
+    const propsTiles = getSections([])[0].tiles;
+    propsTiles[0][0].state = TileState.Player1;
+    propsTiles[0][1].state = TileState.Player2;
+    const {assets, container} = renderer({tiles: propsTiles});
+    expect(container.query.tileStateImages()).toHaveLength(2);
+    expect(getSource(container.get.tileStateImage(0))).toBe(
+      assets.images.imgSourceX,
     );
-    expect(getAllByTestId(TILE_IMAGE_STATE_TEST_ID)[1].props.source).toBe(
-      imgSourceO,
+    expect(getSource(container.get.tileStateImage(1))).toBe(
+      assets.images.imgSource0,
     );
   });
 
   it('calls /onPress/ on each <Tile /> with proper /tile.index1D/', () => {
-    render(<Section onPress={handlePress} tiles={tiles} />);
+    renderer({onPress: handlePress});
     expect(handlePress).toHaveBeenCalledTimes(9);
     expect(handlePress).toHaveBeenCalledWith(0);
     expect(handlePress).toHaveBeenCalledWith(1);
-    expect(handlePress).toHaveBeenCalledWith(2);
-  });
-
-  it('disables each <Tile /> if <Section /> if /valid === false/', () => {
-    const {getAllByTestId} = render(
-      <Section onPress={() => handlePress} tiles={tiles} valid={false} />,
-    );
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
-    expect(handlePress).not.toHaveBeenCalled();
   });
 
   it("renders tile's <TempImage /> if /selectedTileIndex === tile.index1D/", () => {
-    const {getAllByTestId} = render(
-      <Section selectedTileIndex={2} tiles={tiles} />,
-    );
-    expect(getAllByTestId(TILE_IMAGE_TEMP_TEST_ID)).toHaveLength(1);
+    const {container} = renderer({selectedTileIndex: 2});
+    expect(container.query.tileTempImages()).toHaveLength(1);
   });
 
   it('passes /activePlayer/ to <Tile />', () => {
-    const {getByTestId} = render(
-      <Section
-        activePlayer={TileState.Player2}
-        selectedTileIndex={2}
-        tiles={tiles}
-      />,
+    const {assets, container} = renderer({
+      activePlayer: TileState.Player2,
+      selectedTileIndex: 2,
+    });
+    expect(getSource(container.get.tileTempImage(0))).toBe(
+      assets.images.imgSource0,
     );
-    expect(getByTestId(TILE_IMAGE_TEMP_TEST_ID).props.source).toBe(imgSourceO);
   });
 
   it('displays a <PlayerImage /> if the <Section /> is won by a player', () => {
-    const {getByTestId} = render(
-      <Section
-        sectionState={[TileState.Player1, WinningLine.BottomRow]}
-        tiles={tiles}
-      />,
-    );
-    expect(getByTestId(SECTION_IMAGE_PLAYER_TEST_ID).props.source).toBe(
-      imgSourceX,
+    const {assets, container} = renderer({
+      sectionState: [TileState.Player1, WinningLine.BottomRow],
+    });
+    expect(container.query.imagePlayer()).not.toBeNull();
+    expect(getSource(container.get.imagePlayer())).toBe(
+      assets.images.imgSourceX,
     );
   });
 
-  it('do not displays a <PlayerImage /> if the <Section /> is not won by a player', () => {
-    const {queryByTestId} = render(<Section tiles={tiles} />);
-    expect(queryByTestId(SECTION_IMAGE_PLAYER_TEST_ID)).toBeNull();
+  it('do not displays a <PlayerImage /> if the <Section /> is not won', () => {
+    const {container} = renderer();
+    expect(container.query.imagePlayer()).toBeNull();
   });
 
   it('<PlayerImage /> should be based on the player who won the section', () => {
-    const {getByTestId} = render(
-      <Section
-        sectionState={[TileState.Player2, WinningLine.BottomRow]}
-        tiles={tiles}
-      />,
+    const {assets, container} = renderer({
+      sectionState: [TileState.Player2, WinningLine.BottomRow],
+    });
+    expect(getSource(container.get.imagePlayer())).toBe(
+      assets.images.imgSource0,
     );
-    expect(getByTestId(SECTION_IMAGE_PLAYER_TEST_ID).props.source).toBe(
-      imgSourceO,
-    );
-  });
-
-  it('disables each <Tile /> if the section is won', () => {
-    const {getAllByTestId} = render(
-      <Section
-        onPress={() => handlePress}
-        sectionState={[TileState.Player1, WinningLine.BottomRow]}
-        tiles={tiles}
-      />,
-    );
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[3]);
-    expect(handlePress).not.toHaveBeenCalled();
-  });
-
-  it('set /opacity: 0.2/ on innerContainer <View /> if /valid === false/', () => {
-    const {getByTestId} = render(<Section tiles={tiles} valid={false} />);
-    expect(
-      getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
-    ).toBe(0.2);
-  });
-
-  it('set /opacity: 1/ on innerContainer <View /> if /valid === false/', () => {
-    const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(
-      getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
-    ).toBe(1);
-  });
-
-  it('set /opacity: 0.2/ on innerContainer <View /> if <Section /> is won', () => {
-    const {getByTestId} = render(
-      <Section
-        sectionState={[TileState.Player1, WinningLine.BottomRow]}
-        tiles={tiles}
-      />,
-    );
-    expect(
-      getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
-    ).toBe(0.2);
-  });
-
-  it('set /opacity: 1/ on innerContainer <View /> if <Section /> is not won', () => {
-    const {getByTestId} = render(<Section tiles={tiles} />);
-    expect(
-      getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
-    ).toBe(1);
-  });
-
-  it('sets /opacity: 0.2/ on innerContainer <View /> if <Section /> is full', () => {
-    const fullSection = tiles.map(tile =>
-      tile.map(t => ({...t, state: TileState.Player1})),
-    );
-    const {getByTestId} = render(
-      <Section
-        sectionState={[TileState.Empty, WinningLine.Draw]}
-        tiles={fullSection}
-      />,
-    );
-    expect(
-      getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
-    ).toBe(0.2);
-  });
-
-  it('disables each <Tile /> if /disabled === true/', () => {
-    const {getAllByTestId} = render(<Section disabled={true} tiles={tiles} />);
-    expect(
-      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0].props
-        .accessibilityState.disabled,
-    ).toBe(true);
-    expect(
-      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1].props
-        .accessibilityState.disabled,
-    ).toBe(true);
-    expect(
-      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[2].props
-        .accessibilityState.disabled,
-    ).toBe(true);
-  });
-
-  it('do not renders <PlayerImage /> if <Section /> is won and /mode === Continue/', () => {
-    const {queryByTestId} = render(
-      <Section
-        mode={Mode.Continue}
-        sectionState={[TileState.Player1, WinningLine.BottomRow]}
-        tiles={tiles}
-      />,
-    );
-    expect(queryByTestId(SECTION_IMAGE_PLAYER_TEST_ID)).toBeNull();
-  });
-
-  it('do not reduce the opacity if <Section /> is won and /mode === Continue/', () => {
-    const {getByTestId} = render(
-      <Section
-        mode={Mode.Continue}
-        sectionState={[TileState.Player1, WinningLine.BottomRow]}
-        tiles={tiles}
-      />,
-    );
-    expect(
-      getByTestId(SECTION_CONTAINER_INNER_TEST_ID).props.style.opacity,
-    ).toBe(1);
-  });
-
-  it('<Tiles /> should be valid if <Section /> is won and /mode === Continue/', () => {
-    const {getAllByTestId} = render(
-      <Section
-        mode={Mode.Continue}
-        onPress={() => handlePress}
-        sectionState={[TileState.Player1, WinningLine.BottomRow]}
-        tiles={tiles}
-      />,
-    );
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[4]);
-    expect(handlePress).toHaveBeenCalled();
   });
 
   describe('renders a <LineImage />', () => {
+    const imagesKey = renderer().assets.images;
+    let expectImagePlayerLine =
+      (player: TileState.Player1 | TileState.Player2) =>
+      (
+        line: string,
+        winningLine: WinningLine,
+        image: keyof typeof imagesKey,
+      ) => {
+        it(line, () => {
+          const {assets, container} = renderer({
+            mode: Mode.Continue,
+            sectionState: [player, winningLine],
+          });
+          expect(getSource(container.get.imageLine())).toBe(
+            assets.images[image],
+          );
+        });
+      };
+
     it('if section is won and /mode === Continue/', () => {
-      const {queryByTestId} = render(
-        <Section
-          mode={Mode.Continue}
-          sectionState={[TileState.Player1, WinningLine.BottomRow]}
-          tiles={tiles}
-        />,
-      );
-      expect(queryByTestId('section__image--line')).not.toBeNull();
-    });
-    describe('with Player X and', () => {
-      it('Top', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player1, WinningLine.TopRow]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceXTop,
-        );
+      const {container} = renderer({
+        mode: Mode.Continue,
+        sectionState: [TileState.Player1, WinningLine.BottomRow],
       });
-
-      it('MiddleHoritontal', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player1, WinningLine.MiddleRow]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceXMiddleHorizontal,
-        );
-      });
-
-      it('Bottom', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player1, WinningLine.BottomRow]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceXBottom,
-        );
-      });
-
-      it('Left', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player1, WinningLine.LeftColumn]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceXLeft,
-        );
-      });
-
-      it('MiddleVertical', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player1, WinningLine.MiddleColumn]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceXMiddleVertical,
-        );
-      });
-
-      it('Right', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player1, WinningLine.RightColumn]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceXRight,
-        );
-      });
-
-      it('TopLeftBottomRight', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[
-              TileState.Player1,
-              WinningLine.TopLeftBottomRightDiagonal,
-            ]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceXTopLeftBottomRight,
-        );
-      });
-
-      it('TopRightBottomLeft', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[
-              TileState.Player1,
-              WinningLine.TopRightBottomLeftDiagonal,
-            ]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceXTopRightBottomLeft,
-        );
-      });
+      expect(container.query.imageLine()).not.toBeNull();
     });
 
     describe('with Player O and', () => {
-      it('Top', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player2, WinningLine.TopRow]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceOTop,
-        );
-      });
+      const expectImageLine = expectImagePlayerLine(TileState.Player2);
+      expectImageLine('bottom', WinningLine.BottomRow, 'imgSourceOBottom');
+      expectImageLine('left', WinningLine.LeftColumn, 'imgSourceOLeft');
+      expectImageLine(
+        'middleHoritontal',
+        WinningLine.MiddleRow,
+        'imgSourceOMiddleHorizontal',
+      );
+      expectImageLine(
+        'middleVertical',
+        WinningLine.MiddleColumn,
+        'imgSourceOMiddleVertical',
+      );
+      expectImageLine('right', WinningLine.RightColumn, 'imgSourceORight');
+      expectImageLine('top', WinningLine.TopRow, 'imgSourceOTop');
+      expectImageLine(
+        'topLeftBottomRight',
+        WinningLine.TopLeftBottomRightDiagonal,
+        'imgSourceOTopLeftBottomRight',
+      );
+      expectImageLine(
+        'topRightBottomLeft',
+        WinningLine.TopRightBottomLeftDiagonal,
+        'imgSourceOTopRightBottomLeft',
+      );
+    });
 
-      it('MiddleHoritontal', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player2, WinningLine.MiddleRow]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceOMiddleHorizontal,
-        );
-      });
+    describe('with Player X and', () => {
+      const expectImageLine = expectImagePlayerLine(TileState.Player1);
+      expectImageLine('bottom', WinningLine.BottomRow, 'imgSourceXBottom');
+      expectImageLine('left', WinningLine.LeftColumn, 'imgSourceXLeft');
+      expectImageLine(
+        'middleHoritontal',
+        WinningLine.MiddleRow,
+        'imgSourceXMiddleHorizontal',
+      );
+      expectImageLine(
+        'middleVertical',
+        WinningLine.MiddleColumn,
+        'imgSourceXMiddleVertical',
+      );
+      expectImageLine('right', WinningLine.RightColumn, 'imgSourceXRight');
+      expectImageLine('top', WinningLine.TopRow, 'imgSourceXTop');
+      expectImageLine(
+        'topLeftBottomRight',
+        WinningLine.TopLeftBottomRightDiagonal,
+        'imgSourceXTopLeftBottomRight',
+      );
+      expectImageLine(
+        'topRightBottomLeft',
+        WinningLine.TopRightBottomLeftDiagonal,
+        'imgSourceXTopRightBottomLeft',
+      );
+    });
+  });
+  describe('sets /opacity: 0.2/ on innerContainer <View /> if ', () => {
+    it('/valid === false/', () => {
+      const {container} = renderer({valid: false});
+      expect(getStyle(container.get.innerContainer()).opacity).toBe(0.2);
+    });
 
-      it('Bottom', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player2, WinningLine.BottomRow]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceOBottom,
-        );
+    it('<Section /> is won', () => {
+      const {container} = renderer({
+        sectionState: [TileState.Player1, WinningLine.BottomRow],
       });
+      expect(getStyle(container.get.innerContainer()).opacity).toBe(0.2);
+    });
 
-      it('Left', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player2, WinningLine.LeftColumn]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceOLeft,
-        );
+    it('<Section /> is full', () => {
+      const fullSection = getSections([])[0].tiles.map(tile =>
+        tile.map(t => ({...t, state: TileState.Player1})),
+      );
+      const {container} = renderer({
+        sectionState: [TileState.Empty, WinningLine.Draw],
+        tiles: fullSection,
       });
+      expect(getStyle(container.get.innerContainer()).opacity).toBe(0.2);
+    });
+  });
 
-      it('MiddleVertical', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player2, WinningLine.MiddleColumn]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceOMiddleVertical,
-        );
+  describe('if <Section /> is won and /mode === Continue/', () => {
+    it('do not reduce the opacity', () => {
+      const {container} = renderer({
+        mode: Mode.Continue,
+        sectionState: [TileState.Player1, WinningLine.BottomRow],
       });
+      expect(getStyle(container.get.innerContainer()).opacity).toBe(1);
+    });
 
-      it('Right', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[TileState.Player2, WinningLine.RightColumn]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceORight,
-        );
+    it('<Tiles /> should be valid', () => {
+      const {container} = renderer({
+        mode: Mode.Continue,
+        onPress: () => handlePress,
+        sectionState: [TileState.Player1, WinningLine.BottomRow],
       });
+      container.press.tile();
+      expect(handlePress).toHaveBeenCalled();
+    });
 
-      it('TopLeftBottomRight', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[
-              TileState.Player2,
-              WinningLine.TopLeftBottomRightDiagonal,
-            ]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceOTopLeftBottomRight,
-        );
+    it('do not renders <PlayerImage />', () => {
+      const {container} = renderer({
+        mode: Mode.Continue,
+        sectionState: [TileState.Player1, WinningLine.BottomRow],
       });
+      expect(container.query.imagePlayer()).toBeNull();
+    });
+  });
 
-      it('TopRightBottomLeft', () => {
-        const {getByTestId} = render(
-          <Section
-            mode={Mode.Continue}
-            sectionState={[
-              TileState.Player2,
-              WinningLine.TopRightBottomLeftDiagonal,
-            ]}
-            tiles={tiles}
-          />,
-        );
-        expect(getByTestId('section__image--line').props.source).toBe(
-          imgSourceOTopRightBottomLeft,
-        );
+  describe('if /valid === false/', () => {
+    it('disables each <Tile /> if <Section />', () => {
+      const {container} = renderer({onPress: () => handlePress, valid: false});
+      container.press.tile();
+      expect(handlePress).not.toHaveBeenCalled();
+    });
+
+    it('set /opacity: 1/ on innerContainer <View />', () => {
+      const {container} = renderer();
+      expect(getStyle(container.get.innerContainer()).opacity).toBe(1);
+    });
+  });
+
+  describe('disables each <Tile /> if', () => {
+    it('the section is won', () => {
+      const {container} = renderer({
+        onPress: () => handlePress,
+        sectionState: [TileState.Player1, WinningLine.BottomRow],
       });
+      container.press.tile();
+      expect(handlePress).not.toHaveBeenCalled();
+    });
+
+    it('/disabled === true/', () => {
+      const {container} = renderer({
+        disabled: true,
+        onPress: () => handlePress,
+      });
+      container.press.tile();
+      expect(handlePress).not.toHaveBeenCalled();
     });
   });
 });
