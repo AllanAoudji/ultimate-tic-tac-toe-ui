@@ -7,7 +7,8 @@ import {imageSource} from './testUtils';
 import Board from '../src/Board';
 
 describe('<Board />', () => {
-  const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable';
+  const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable',
+    SECTION_IMAGE_PLAYER_TEST_ID = 'section__image--player';
   beforeEach(() => {
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
   });
@@ -129,5 +130,15 @@ describe('<Board />', () => {
         activePlayer: ultimateTicTactToAlgorithm.TileState.Player1,
       }),
     ).toHaveLength(9);
+  });
+
+  it('passes sectionState to each <Section />', () => {
+    const {sectionStates} = ultimateTicTactToAlgorithm.generateAssets();
+    sectionStates[0] = [
+      ultimateTicTactToAlgorithm.TileState.Player1,
+      ultimateTicTactToAlgorithm.WinningLine.LeftColumn,
+    ];
+    const {queryByTestId} = render(<Board sectionStates={sectionStates} />);
+    expect(queryByTestId(SECTION_IMAGE_PLAYER_TEST_ID)).not.toBeNull();
   });
 });

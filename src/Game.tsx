@@ -2,6 +2,7 @@ import React from 'react';
 import {
   generateAssets,
   getActivePlayer,
+  getTileIndexPositionAndSection,
   Mode,
   play,
   SectionState,
@@ -21,6 +22,12 @@ interface Props {
 }
 
 const initialAssets = generateAssets();
+
+const arrayEquals = (a: any, b: any) =>
+  Array.isArray(a) &&
+  Array.isArray(b) &&
+  a.length === b.length &&
+  a.every((val, index) => val === b[index]);
 
 const normalizeGameIsDone: (winner: SectionState) => boolean = winner =>
   winner[0] !== TileState.Empty || winner[1] === WinningLine.Draw;
@@ -53,6 +60,9 @@ const Game: React.FC<Props> = ({
       TileState.Player1 | TileState.Player2,
     ]
   >(randomizePlayer());
+  const [sectionStates, setSectionStates] = React.useState<SectionState[]>(
+    initialAssets.sectionStates,
+  );
   const [selectedTileIndex, setSelectedTilIndex] = React.useState<
     number | null
   >(null);
@@ -84,15 +94,20 @@ const Game: React.FC<Props> = ({
       const assets = play(selectedTileIndex, {
         history,
         mode,
+        sectionStates,
         winner,
       });
       setHistory(assets.history);
+      const {section} = getTileIndexPositionAndSection(selectedTileIndex);
+      if (!arrayEquals(sectionStates[section], assets.sectionStates[section])) {
+        setSectionStates(assets.sectionStates);
+      }
       if (normalizeGameIsDone(assets.winner)) {
         setWinner(assets.winner);
       }
     }
     setSelectedTilIndex(null);
-  }, [history, mode, selectedTileIndex, winner]);
+  }, [history, mode, sectionStates, selectedTileIndex, winner]);
   const onSurrend = React.useCallback(
     (player: TileState.Player1 | TileState.Player2) => () => {
       if (!normalizeGameIsDone(winner)) {
@@ -118,6 +133,7 @@ const Game: React.FC<Props> = ({
         setGameIsDone(false);
       }
       setPlayers(randomizePlayer());
+      setSectionStates(initialAssets.sectionStates);
       setSelectedTilIndex(null);
       setWinner([TileState.Empty, null]);
     }
@@ -151,6 +167,7 @@ const Game: React.FC<Props> = ({
         gameIsDone={normalizeGameIsDone(winner)}
         history={history}
         mode={mode}
+        sectionStates={sectionStates}
         onPress={onPressBoard}
         selectedTileIndex={selectedTileIndex}
       />
