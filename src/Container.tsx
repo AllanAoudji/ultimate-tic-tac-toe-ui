@@ -24,6 +24,7 @@ type justifyContent =
   | 'space-around'
   | 'space-between'
   | 'space-evenly';
+type pointerEvent = 'none' | 'box-none' | 'box-only' | 'auto';
 type position = 'absolute' | 'relative';
 type rotate = '0deg' | '90deg' | '180deg' | '270deg';
 
@@ -53,6 +54,7 @@ interface Props {
   paddingRight?: keyof Theming.SpacingTheme;
   paddingTop?: keyof Theming.SpacingTheme;
   paddingVertical?: keyof Theming.SpacingTheme;
+  pointerEvents?: pointerEvent;
   position?: position;
   resizeMode?: ImageResizeMode;
   rotate?: rotate;
@@ -89,6 +91,7 @@ const Container: React.FC<Props> = ({
   paddingRight,
   paddingTop,
   paddingVertical,
+  pointerEvents,
   position,
   resizeMode,
   rotate,
@@ -180,7 +183,10 @@ const Container: React.FC<Props> = ({
   }
 
   return (
-    <View style={styles.container} testID={testID || 'container__container'}>
+    <View
+      pointerEvents={pointerEvents}
+      style={styles.container}
+      testID={testID || 'container__container'}>
       {children}
     </View>
   );

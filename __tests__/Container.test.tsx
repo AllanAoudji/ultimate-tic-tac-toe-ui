@@ -44,6 +44,7 @@ const renderer = (
     paddingRight?: keyof Theming.SpacingTheme;
     paddingTop?: keyof Theming.SpacingTheme;
     paddingVertical?: keyof Theming.SpacingTheme;
+    pointerEvents?: 'none' | 'box-none' | 'box-only' | 'auto';
     position?: 'absolute' | 'relative';
     resizeMode?: ImageResizeMode;
     rotate?: '0deg' | '90deg' | '180deg' | '270deg';
@@ -83,6 +84,7 @@ const renderer = (
       paddingRight={options.paddingRight}
       paddingTop={options.paddingTop}
       paddingVertical={options.paddingVertical}
+      pointerEvents={options.pointerEvents}
       position={options.position}
       resizeMode={options.resizeMode}
       rotate={options.rotate}
@@ -142,6 +144,16 @@ describe('<Container />', () => {
   it('renders another /children/', () => {
     const {container} = renderer({children: <Text>another hello world</Text>});
     expect(container.query.byText('another hello world')).not.toBeNull();
+  });
+
+  it('sets /pointerEvents === auto', () => {
+    const {container} = renderer({pointerEvents: 'auto'});
+    expect(container.get.container().props.pointerEvents).toBe('auto');
+  });
+
+  it('sets a /pointerEvents === undefined/ by default', () => {
+    const {container} = renderer();
+    expect(container.get.container().props.pointerEvents).toBeUndefined();
   });
 
   it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.background}/ by default`, () => {
