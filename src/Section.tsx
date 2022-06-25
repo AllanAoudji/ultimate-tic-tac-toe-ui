@@ -2,13 +2,10 @@ import React from 'react';
 import {
   GestureResponderEvent,
   Image,
-  ImageBackground,
   ImageSourcePropType,
   ImageStyle,
   StyleSheet,
   useWindowDimensions,
-  View,
-  ViewStyle,
 } from 'react-native';
 import {
   Tile as TileInterface,
@@ -18,6 +15,8 @@ import {
   WinningLine,
   checkIfSectionIsFull,
 } from 'ultimate-tic-tac-toe-algorithm';
+import Container from './Container';
+import {ThemeContext} from './Theme.context';
 
 import Tile from './Tile';
 
@@ -125,13 +124,18 @@ const PlayerImage: React.FC<PlayerImageProps> = ({state}) => {
 };
 
 const WinningImage: React.FC<WinningImageProps> = ({mode, state}) => (
-  <View pointerEvents="none" style={winnerImageStyles.container}>
+  <Container
+    height="100%"
+    padding="base"
+    position="absolute"
+    width="100%"
+    pointerEvents="none">
     {mode === Mode.Normal ? (
       <PlayerImage state={state} />
     ) : (
       <LineImage state={state} />
     )}
-  </View>
+  </Container>
 );
 
 const Section: React.FC<SectionProps> = ({
@@ -145,26 +149,26 @@ const Section: React.FC<SectionProps> = ({
   valid = true,
 }) => {
   const {width} = useWindowDimensions();
-  const styles = React.useMemo(
+  const {theme} = React.useContext(ThemeContext);
+
+  const invalid = React.useMemo(
     () =>
-      sectionStyles({
-        width,
-        invalid:
-          checkIfSectionIsFull(tiles) ||
-          (mode === Mode.Normal
-            ? sectionState[0] !== TileState.Empty
-            : false) ||
-          !valid,
-      }),
-    [mode, sectionState, tiles, valid, width],
+      checkIfSectionIsFull(tiles) ||
+      (mode === Mode.Normal ? sectionState[0] !== TileState.Empty : false) ||
+      !valid,
+    [mode, sectionState, tiles, valid],
   );
 
   return (
-    <View testID="section__container">
-      <View testID="section__container--inner" style={styles.innerContainer}>
-        <ImageBackground
+    <Container testID="section__container">
+      <Container opacity={invalid ? 0.2 : 1} testID="section__container--inner">
+        <Container
+          flexDirection="row"
+          flexWrap="wrap"
+          height={(width - theme.spacing.base) / 3}
+          padding="base"
+          width={(width - theme.spacing.base) / 3}
           resizeMode="cover"
-          style={styles.imageBackground}
           source={require('../assets/images/SectionGrid.png')}
           testID="section__image--grid">
           {tiles.map(tilesRow =>
@@ -185,42 +189,18 @@ const Section: React.FC<SectionProps> = ({
               />
             )),
           )}
-        </ImageBackground>
-      </View>
+        </Container>
+      </Container>
       {sectionState[0] !== TileState.Empty && (
         <WinningImage mode={mode} state={sectionState} />
       )}
-    </View>
+    </Container>
   );
 };
 
-const sectionStyles = ({invalid, width}: {invalid: boolean; width: number}) =>
-  StyleSheet.create<{
-    imageBackground: ViewStyle;
-    innerContainer: ViewStyle;
-  }>({
-    imageBackground: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      height: (width - 8) / 3,
-      padding: 4,
-      width: (width - 8) / 3,
-    },
-    innerContainer: {
-      opacity: invalid ? 0.2 : 1,
-    },
-  });
 const winnerImageStyles = StyleSheet.create<{
-  container: ViewStyle;
   image: ImageStyle;
 }>({
-  container: {
-    height: '100%',
-    padding: 7,
-    position: 'absolute',
-    width: '100%',
-  },
   image: {flex: 1, width: '100%'},
 });
 
