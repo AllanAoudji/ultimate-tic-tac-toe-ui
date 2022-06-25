@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  View,
   Pressable,
   GestureResponderEvent,
   StyleSheet,
@@ -8,6 +7,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+
+import Container from './Container';
 import Typography from './Typography';
 
 interface Props {
@@ -39,12 +40,31 @@ const SurrendModal: React.FC<Props> = ({
   );
 
   return (
-    <View style={styles.container} testID="surrendModal__container">
-      <View
-        style={styles.innerContainer}
+    <Container
+      height={(height - width) / 2}
+      padding="double"
+      position="absolute"
+      testID="surrendModal__container"
+      width={width}>
+      <Container
+        alignItems="center"
+        backgroundColor="onSurface"
+        borderColor={player === TileState.Player1 ? 'playerX' : 'playerO'}
+        borderRadius={8}
+        borderWidth={2}
+        flex={1}
+        justifyContent="space-between"
+        paddingBottom="double"
+        paddingHorizontal="double"
+        paddingTop="base"
+        shadow="base"
+        shadowColor={player === TileState.Player1 ? 'playerX' : 'playerO'}
         testID="surrendModal__container--inner">
         <Typography color={playerColor}>Surrend?</Typography>
-        <View style={styles.buttonContainer}>
+        <Container
+          flexDirection="row"
+          justifyContent="space-between"
+          width="100%">
           <Pressable
             disabled={disabled}
             onPress={onPressYes}
@@ -59,16 +79,14 @@ const SurrendModal: React.FC<Props> = ({
             testID="surrendModal__button--no">
             <Typography color={playerColor}>no</Typography>
           </Pressable>
-        </View>
-      </View>
-    </View>
+        </Container>
+      </Container>
+    </Container>
   );
 };
 
 const surrendModalStyles = ({
-  height,
   player,
-  width,
 }: {
   height: number;
   player: TileState.Player1 | TileState.Player2;
@@ -76,11 +94,8 @@ const surrendModalStyles = ({
 }) =>
   StyleSheet.create<{
     button: ViewStyle;
-    buttonContainer: ViewStyle;
     buttonNo: ViewStyle;
     buttonYes: ViewStyle;
-    container: ViewStyle;
-    innerContainer: ViewStyle;
   }>({
     button: {
       alignItems: 'center',
@@ -88,43 +103,12 @@ const surrendModalStyles = ({
       padding: 8,
       width: 120,
     },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
-    },
     buttonNo: {
       borderColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
       borderWidth: 2,
     },
     buttonYes: {
       backgroundColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
-    },
-    container: {
-      height: (height - width) / 2,
-      padding: 10,
-      position: 'absolute',
-      width,
-    },
-    innerContainer: {
-      alignItems: 'center',
-      backgroundColor: '#fff',
-      borderColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
-      borderRadius: 10,
-      borderWidth: 3,
-      elevation: 19,
-      flex: 1,
-      justifyContent: 'space-between',
-      paddingBottom: 15,
-      paddingHorizontal: 23,
-      paddingTop: 10,
-      shadowColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
-      shadowOffset: {
-        width: 0,
-        height: 9,
-      },
-      shadowOpacity: 0.5,
-      shadowRadius: 12.35,
     },
   });
 

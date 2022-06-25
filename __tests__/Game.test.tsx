@@ -12,6 +12,7 @@ import {
 } from './testUtils';
 
 import Game from '../src/Game';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 const renderer = (
   options: {
@@ -360,7 +361,7 @@ describe('<Game />', () => {
       expect(players.query.surrendModal()).not.toBeNull();
       expect(
         getStyle(players.get.surrendModalInnerContainer()).borderColor,
-      ).toBe(PLAYER_O_COLOR);
+      ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
     });
 
     it('of the BOTTOM player when <SurrendButton /> is pressed', () => {
@@ -369,7 +370,7 @@ describe('<Game />', () => {
       expect(players.query.surrendModal()).not.toBeNull();
       expect(
         getStyle(players.get.surrendModalInnerContainer()).borderColor,
-      ).toBe(PLAYER_X_COLOR);
+      ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
     });
   });
 

@@ -68,36 +68,36 @@ describe('<SurrendModal />', () => {
     ).toBe(true);
   });
 
-  it(`set /borderColor: ${PLAYER_2_COLOR}/ if /player === Player2/`, () => {
+  it(`set /borderColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ if /player === Player2/`, () => {
     const {getByTestId} = render(<SurrendModal player={TileState.Player2} />);
     expect(
       getByTestId(SURREND_MODAL_CONTAINER_INNER_TEST_ID).props.style
         .borderColor,
-    ).toBe(PLAYER_2_COLOR);
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 
-  it(`set /borderColor: ${PLAYER_1_COLOR}/ on the inner container <View /> if /player === Player1/`, () => {
+  it(`set /borderColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on the inner container <View /> if /player === Player1/`, () => {
     const {getByTestId} = render(<SurrendModal />);
     expect(
       getByTestId(SURREND_MODAL_CONTAINER_INNER_TEST_ID).props.style
         .borderColor,
-    ).toBe(PLAYER_1_COLOR);
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
   });
 
-  it(`set /shadowColor: ${PLAYER_1_COLOR}/ if /player === Player1/`, () => {
+  it(`set /shadowColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ if /player === Player1/`, () => {
     const {getByTestId} = render(<SurrendModal />);
     expect(
       getByTestId(SURREND_MODAL_CONTAINER_INNER_TEST_ID).props.style
         .shadowColor,
-    ).toBe(PLAYER_1_COLOR);
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
   });
 
-  it(`set /shadowColor: ${PLAYER_2_COLOR}/ if /player === Player2/`, () => {
+  it(`set /shadowColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ if /player === Player2/`, () => {
     const {getByTestId} = render(<SurrendModal player={TileState.Player2} />);
     expect(
       getByTestId(SURREND_MODAL_CONTAINER_INNER_TEST_ID).props.style
         .shadowColor,
-    ).toBe(PLAYER_2_COLOR);
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 
   it(`set /color: ${DEFAULT_LIGHT_THEME.color.playerO}/ on the title if /player === Player2/`, () => {
