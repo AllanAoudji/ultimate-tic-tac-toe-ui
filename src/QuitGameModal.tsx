@@ -1,5 +1,7 @@
 import React from 'react';
-import {GestureResponderEvent, Pressable, View} from 'react-native';
+import {GestureResponderEvent, Pressable} from 'react-native';
+
+import Container from './Container';
 import Typography from './Typography';
 
 interface Props {
@@ -13,7 +15,7 @@ const QuitGameModal: React.FC<Props> = ({
   onPressNo = () => {},
   onPressYes = () => {},
 }) => (
-  <View testID="quitGameModal__container">
+  <Container testID="quitGameModal__container">
     <Typography>quit game?</Typography>
     <Pressable disabled={disabled} onPress={onPressYes}>
       <Typography>yes</Typography>
@@ -26,7 +28,7 @@ const QuitGameModal: React.FC<Props> = ({
       onPress={onPressNo}
       testID="quitGameModal__background--pressable"
     />
-  </View>
+  </Container>
 );
 
 export default QuitGameModal;
