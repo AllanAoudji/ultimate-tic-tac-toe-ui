@@ -11,12 +11,15 @@ const renderer = (
   options: {
     children?: string;
     color?: 'onPlayerO' | 'onPlayerX' | 'onPrimary' | 'onSurface';
+    textTransform?: 'capitalize' | 'lowercase' | 'none' | 'uppercase';
   } = {children: 'hello world'},
 ) => {
   const children = options.children || 'hello world';
   const renderTypography = render(
     <ThemeProvider initialTheme={DEFAULT_LIGHT_THEME}>
-      <Typography color={options.color}>{children}</Typography>
+      <Typography color={options.color} textTransform={options.textTransform}>
+        {children}
+      </Typography>
     </ThemeProvider>,
   );
 
@@ -63,6 +66,24 @@ describe('<Typography />', () => {
     expect(getStyle(container.get.text())).toEqual(
       expect.objectContaining({
         color: DEFAULT_LIGHT_THEME.color.onPlayerO,
+      }),
+    );
+  });
+
+  it('set /textTransform: none/ by default', () => {
+    const {container} = renderer({color: 'onPlayerO'});
+    expect(getStyle(container.get.text())).toEqual(
+      expect.objectContaining({
+        textTransform: 'none',
+      }),
+    );
+  });
+
+  it('set another /textTransform/', () => {
+    const {container} = renderer({textTransform: 'capitalize'});
+    expect(getStyle(container.get.text())).toEqual(
+      expect.objectContaining({
+        textTransform: 'capitalize',
       }),
     );
   });
