@@ -137,11 +137,11 @@ describe('<PlayerBoard />', () => {
     ).toBe(true);
   });
 
-  it('set /opacity: 0.5/ if /disabledPlayButton === true/', () => {
+  it('set /opacity: 0.4/ if /disabledPlayButton === true/', () => {
     const {getByTestId} = render(<PlayerBoard disabledPlayButton={true} />);
     expect(
       getByTestId(PLAYER_BOARD_CONTAINER_OPACITY_TEST_ID).props.style.opacity,
-    ).toBe(0.5);
+    ).toBe(0.4);
   });
 
   it('set /opacity: 1/ if /disabled === false/', () => {

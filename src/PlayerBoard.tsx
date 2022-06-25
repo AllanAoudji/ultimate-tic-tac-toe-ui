@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  GestureResponderEvent,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {GestureResponderEvent, useWindowDimensions} from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import Container from './Container';
 
 import PlayButton from './PlayButton';
 import SurrendButton from './SurrendButton';
@@ -37,11 +32,6 @@ const PlayerBoard: React.FC<Props> = ({
 }) => {
   const {width, height} = useWindowDimensions();
 
-  const styles = React.useMemo(
-    () => playerBoardStyles({disabledPlayButton, height, position, width}),
-    [disabledPlayButton, height, position, width],
-  );
-
   const onPressSurrend = React.useCallback(
     () => setVisibleModal(true),
     [setVisibleModal],
@@ -56,23 +46,29 @@ const PlayerBoard: React.FC<Props> = ({
   );
 
   return (
-    <View style={styles.container} testID="playerBoard__container">
-      <View
-        style={styles.containerOpacity}
+    <Container
+      height={(height - width) / 2}
+      justifyContent="space-between"
+      paddingHorizontal="double"
+      paddingVertical="double"
+      rotate={position === 'TOP' ? '180deg' : '0deg'}
+      testID="playerBoard__container">
+      <Container
+        opacity={disabledPlayButton ? 0.4 : 1}
         testID="playerBoard__container--opacity">
         <PlayButton
           disabled={disabledPlayButton || visibleModal}
           onPress={onPressPlay}
           player={player}
         />
-      </View>
-      <View style={styles.containerSurrendButton}>
+      </Container>
+      <Container alignItems="flex-end">
         <SurrendButton
           disabled={disabledSurrendButton || visibleModal}
           onPress={onPressSurrend}
           player={player}
         />
-      </View>
+      </Container>
       <SurrendModalWrapper
         disabled={disabledSurrendModal}
         onPressNo={onPressNo}
@@ -80,39 +76,8 @@ const PlayerBoard: React.FC<Props> = ({
         player={player}
         visible={visibleModal}
       />
-    </View>
+    </Container>
   );
 };
-
-const playerBoardStyles = ({
-  disabledPlayButton,
-  height,
-  position,
-  width,
-}: {
-  disabledPlayButton: boolean;
-  height: number;
-  position: 'BOTTOM' | 'TOP';
-  width: number;
-}) =>
-  StyleSheet.create<{
-    container: ViewStyle;
-    containerOpacity: ViewStyle;
-    containerSurrendButton: ViewStyle;
-  }>({
-    container: {
-      height: (height - width) / 2,
-      justifyContent: 'space-between',
-      paddingHorizontal: 40,
-      paddingVertical: 20,
-      transform: [{rotate: position === 'TOP' ? '180deg' : '0deg'}],
-    },
-    containerOpacity: {
-      opacity: disabledPlayButton ? 0.5 : 1,
-    },
-    containerSurrendButton: {
-      alignItems: 'flex-end',
-    },
-  });
 
 export default PlayerBoard;
