@@ -1,8 +1,10 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import PlayerBoard from '../src/PlayerBoard';
+import {getStyle} from './testUtils';
 
 describe('<PlayerBoard />', () => {
   const NO_TEXT = 'no',
@@ -167,7 +169,11 @@ describe('<PlayerBoard />', () => {
     const {getByText} = render(
       <PlayerBoard player={TileState.Player2} visibleModal={true} />,
     );
-    expect(getByText(SURREND_TEXT).props.style.color).toBe('#ed1327');
+    expect(getStyle(getByText(SURREND_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerO,
+      }),
+    );
   });
 
   it('disables <SurrendButton /> if /disabledSurrendButton === true/', () => {

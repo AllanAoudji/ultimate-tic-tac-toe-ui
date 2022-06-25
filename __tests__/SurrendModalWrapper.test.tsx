@@ -2,6 +2,9 @@ import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
+import {getStyle} from './testUtils';
+
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 import SurrendModalWrapper from '../src/SurrendModalWrapper';
 
 describe('<SurrendModalWrapper />', () => {
@@ -46,7 +49,11 @@ describe('<SurrendModalWrapper />', () => {
     const {getByText} = render(
       <SurrendModalWrapper player={TileState.Player2} visible={true} />,
     );
-    expect(getByText(SURREND_TEXT).props.style.color).toBe('#ed1327');
+    expect(getStyle(getByText(SURREND_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerO,
+      }),
+    );
   });
 
   it('passes /disabled/ to <SurrendModal />', () => {
