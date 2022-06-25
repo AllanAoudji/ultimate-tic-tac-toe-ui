@@ -3,10 +3,9 @@ import {StyleSheet, Text, TextStyle} from 'react-native';
 
 import {ThemeContext} from './Theme.context';
 
-type color = 'onPlayerO' | 'onPlayerX' | 'onPrimary' | 'onSurface';
 type textTransform = 'capitalize' | 'lowercase' | 'none' | 'uppercase';
 interface Props {
-  color?: color;
+  color?: keyof Theming.ColorTheme;
   textTransform?: textTransform;
 }
 
@@ -27,7 +26,13 @@ const Typography: React.FC<Props> = ({
 };
 
 const stylesTypography =
-  ({color, textTransform}: {color: color; textTransform: textTransform}) =>
+  ({
+    color,
+    textTransform,
+  }: {
+    color: keyof Theming.ColorTheme;
+    textTransform: textTransform;
+  }) =>
   (theme: Theming.Theme) =>
     StyleSheet.create<{textStyle: TextStyle}>({
       textStyle: {
