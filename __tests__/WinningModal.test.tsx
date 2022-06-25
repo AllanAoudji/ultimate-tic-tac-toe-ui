@@ -25,7 +25,7 @@ describe('<WinningModal />', () => {
     onPress.mockRestore();
   });
 
-  it('renders a <View />', () => {
+  it('renders a <Container />', () => {
     const {queryByTestId} = render(<WinningModal winner={TileState.Player1} />);
     expect(queryByTestId(WINNING_MODAL_CONTAINER_TEST_ID)).not.toBeNull();
   });
@@ -113,7 +113,7 @@ describe('<WinningModal />', () => {
     );
   });
 
-  it(`sets /borderColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player1/`, () => {
+  it(`sets /borderColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <Container /> if /winner === Player1/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player1} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
@@ -121,7 +121,7 @@ describe('<WinningModal />', () => {
     ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
   });
 
-  it(`sets /borderColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player2/`, () => {
+  it(`sets /borderColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <Container /> if /winner === Player2/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player2} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
@@ -129,7 +129,7 @@ describe('<WinningModal />', () => {
     ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 
-  it(`sets /shadowColor: playerX/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player1/`, () => {
+  it(`sets /shadowColor: playerX/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <Container /> if /winner === Player1/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player1} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
@@ -137,7 +137,7 @@ describe('<WinningModal />', () => {
     ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
   });
 
-  it(`sets /shadowColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player2/`, () => {
+  it(`sets /shadowColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <Container /> if /winner === Player2/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player2} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
@@ -145,14 +145,14 @@ describe('<WinningModal />', () => {
     ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 
-  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" <View /> if /winner === Player1/`, () => {
+  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" <Container /> if /winner === Player1/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player1} />);
     expect(
       getByTestId(WINNING_MODAL_SEPARATOR_TEST_ID).props.style.backgroundColor,
     ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
   });
 
-  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" <View /> if /winner === Player2/`, () => {
+  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" <Container /> if /winner === Player2/`, () => {
     const {getByTestId} = render(<WinningModal winner={TileState.Player2} />);
     expect(
       getByTestId(WINNING_MODAL_SEPARATOR_TEST_ID).props.style.backgroundColor,

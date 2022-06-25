@@ -28,7 +28,7 @@ describe('<PlayerBoard />', () => {
     onPress.mockRestore();
   });
 
-  it('renders a <View />', () => {
+  it('renders a <Container />', () => {
     const {queryByTestId} = render(<PlayerBoard />);
     expect(queryByTestId(PLAYER_BOARD_CONTAINER_TEST_ID)).not.toBeNull();
   });

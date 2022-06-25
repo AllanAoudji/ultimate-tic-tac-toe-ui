@@ -25,7 +25,7 @@ describe('<SurrendModal />', () => {
     onPress.mockRestore();
   });
 
-  it('render a <View />', () => {
+  it('render a <Container />', () => {
     const {queryByText} = render(<SurrendModal />);
     expect(queryByText(SURREND_TEXT)).not.toBeNull();
   });
@@ -76,7 +76,7 @@ describe('<SurrendModal />', () => {
     ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 
-  it(`set /borderColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on the inner container <View /> if /player === Player1/`, () => {
+  it(`set /borderColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on the innerContainer <Container /> if /player === Player1/`, () => {
     const {getByTestId} = render(<SurrendModal />);
     expect(
       getByTestId(SURREND_MODAL_CONTAINER_INNER_TEST_ID).props.style

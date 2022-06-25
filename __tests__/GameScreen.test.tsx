@@ -88,7 +88,7 @@ describe('<GameScreen />', () => {
     jest.spyOn(BackHandler, 'removeEventListener').mockRestore();
   });
 
-  it('renders a <View />', () => {
+  it('renders a <Container />', () => {
     const {queryByTestId} = renderer();
     expect(queryByTestId('gameScreen__container')).not.toBeNull();
   });

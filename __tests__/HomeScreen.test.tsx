@@ -24,7 +24,7 @@ describe('<HomeScreen />', () => {
     renderer = render(<HomeScreen {...props} />);
   });
 
-  it('renders a <View />', () => {
+  it('renders a <Container />', () => {
     const {queryByTestId} = renderer;
     expect(queryByTestId(HOME_SCREEN_CONTAINER)).not.toBeNull();
   });

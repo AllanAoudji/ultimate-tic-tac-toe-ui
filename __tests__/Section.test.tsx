@@ -148,7 +148,7 @@ describe('<Section/>', () => {
     handlePress.mockRestore();
   });
 
-  it('renders a <View />', () => {
+  it('renders a <Container />', () => {
     const {container} = renderer();
     expect(container.query.container()).not.toBeNull();
   });
@@ -308,7 +308,7 @@ describe('<Section/>', () => {
       );
     });
   });
-  describe('sets /opacity: 0.2/ on innerContainer <View /> if ', () => {
+  describe('sets /opacity: 0.2/ on innerContainer <Container /> if ', () => {
     it('/valid === false/', () => {
       const {container} = renderer({valid: false});
       expect(getStyle(container.get.innerContainer()).opacity).toBe(0.2);
@@ -368,7 +368,7 @@ describe('<Section/>', () => {
       expect(handlePress).not.toHaveBeenCalled();
     });
 
-    it('set /opacity: 1/ on innerContainer <View />', () => {
+    it('set /opacity: 1/ on innerContainer <Container />', () => {
       const {container} = renderer();
       expect(getStyle(container.get.innerContainer()).opacity).toBe(1);
     });
