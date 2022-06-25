@@ -1,6 +1,6 @@
 import React from 'react';
-import {View} from 'react-native';
 import {Mode} from 'ultimate-tic-tac-toe-algorithm';
+import Container from './Container';
 
 import Logo from './Logo';
 import PlayGameButton from './PlayGameButton';
@@ -14,7 +14,7 @@ const HomeScreen: React.FC<Screen.RootStack.HomeNavigationProps> = ({
   );
 
   return (
-    <View testID="homeScreen__container">
+    <Container testID="homeScreen__container">
       <Logo />
       <PlayGameButton
         onPress={handlePress(Mode.Normal)}
@@ -24,7 +24,7 @@ const HomeScreen: React.FC<Screen.RootStack.HomeNavigationProps> = ({
         onPress={handlePress(Mode.Continue)}
         title="play continue game"
       />
-    </View>
+    </Container>
   );
 };
 
