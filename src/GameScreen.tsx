@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
 import {BackHandler} from 'react-native';
-import {View} from 'react-native';
+import Container from './Container';
 
 import Game from './Game';
 import QuitGameModalWrapper from './QuitGameModalWrapper';
@@ -42,7 +42,7 @@ const GameScreen: React.FC<Screen.RootStack.GameNavigationProps> = ({
   );
 
   return (
-    <View testID="gameScreen__container">
+    <Container testID="gameScreen__container">
       <QuitGameModalWrapper
         onPressNo={onPressNo}
         onPressYes={onQuit}
@@ -54,7 +54,7 @@ const GameScreen: React.FC<Screen.RootStack.GameNavigationProps> = ({
         mode={route.params.mode}
         onPressQuit={onQuit}
       />
-    </View>
+    </Container>
   );
 };
 
