@@ -23,6 +23,19 @@ declare global {
       primary: string;
       surface: string;
     }
+    interface Shadow {
+      elevation: number;
+      shadowOffset: {
+        width: number;
+        height: number;
+      };
+      shadowOpacity: number;
+      shadowRadius: number;
+    }
+    interface ShadowTheme {
+      base: Shadow;
+      double: Shadow;
+    }
     interface SpacingTheme {
       base: number;
       double: number;
@@ -30,6 +43,7 @@ declare global {
     interface Theme {
       id: string;
       color: ColorTheme;
+      shadow: ShadowTheme;
       spacing: SpacingTheme;
     }
   }
