@@ -741,6 +741,27 @@ describe('<Container />', () => {
       expect(getSource(container.get.imageBackground())).toBe(source);
     });
 
+    it(' with another testID', () => {
+      const source = require(imageSource('X'));
+      const {container} = renderer({source, testID: 'anotherTestId'});
+      expect(container.query.byTestId('anotherTestId')).not.toBeNull();
+    });
+
+    it('renders /children/', () => {
+      const source = require(imageSource('X'));
+      const {container} = renderer({source});
+      expect(container.query.byText('hello world')).not.toBeNull();
+    });
+
+    it('renders another /children/', () => {
+      const source = require(imageSource('X'));
+      const {container} = renderer({
+        source,
+        children: <Text>another hello world</Text>,
+      });
+      expect(container.query.byText('another hello world')).not.toBeNull();
+    });
+
     it('with another source', () => {
       const source = require(imageSource('O'));
       const {container} = renderer({source});

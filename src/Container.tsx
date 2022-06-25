@@ -173,8 +173,9 @@ const Container: React.FC<Props> = ({
         resizeMode={resizeMode}
         source={source}
         style={styles.container}
-        testID="container__imageBackground"
-      />
+        testID={testID || 'container__imageBackground'}>
+        {children}
+      </ImageBackground>
     );
   }
 
