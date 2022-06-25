@@ -1,8 +1,10 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import WinningModal from '../src/WinningModal';
+import {getStyle} from './testUtils';
 
 describe('<WinningModal />', () => {
   const DRAW_COLOR = '#333333',
@@ -96,14 +98,22 @@ describe('<WinningModal />', () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it(`set /color: ${PLAYER_1_COLOR}/ on winner <Text /> if /winner === Player1/`, () => {
+  it(`set /color: ${DEFAULT_LIGHT_THEME.color.playerX}/ on winner <Text /> if /winner === Player1/`, () => {
     const {getByText} = render(<WinningModal winner={TileState.Player1} />);
-    expect(getByText(PLAYER_X_TEXT).props.style.color).toBe(PLAYER_1_COLOR);
+    expect(getStyle(getByText(PLAYER_X_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerX,
+      }),
+    );
   });
 
-  it(`sets /color: ${PLAYER_2_COLOR}/ on winner <Text /> if /winner === Player1/`, () => {
-    const {getByText} = render(<WinningModal winner={TileState.Player2} />);
-    expect(getByText(PLAYER_O_TEXT).props.style.color).toBe(PLAYER_2_COLOR);
+  it(`sets /color: ${DEFAULT_LIGHT_THEME.color}/ on winner <Text /> if /winner === Player2/`, () => {
+    const {getByText} = render(<WinningModal winner={TileState.Player1} />);
+    expect(getStyle(getByText(PLAYER_X_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerO,
+      }),
+    );
   });
 
   it(`sets /borderColor: ${PLAYER_1_COLOR}/ on "${WINNING_MODAL_CONTAINER_INNER_TEST_ID}" <View /> if /winner === Player1/`, () => {
@@ -180,14 +190,12 @@ describe('<WinningModal />', () => {
     ).toBe(DRAW_COLOR);
   });
 
-  it(`sets /color: ${DRAW_COLOR}/ on winner <Text /> if it's a draw`, () => {
+  it(`sets /color: ${DEFAULT_LIGHT_THEME.color.onSurface}/ on winner <Text /> if it's a draw`, () => {
     const {getByText} = render(<WinningModal winner={WinningLine.Draw} />);
-    expect(getByText(DRAW_TEXT).props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          color: DRAW_COLOR,
-        }),
-      ]),
+    expect(getStyle(getByText(DRAW_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.onSurface,
+      }),
     );
   });
 });

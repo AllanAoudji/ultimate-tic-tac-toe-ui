@@ -3,13 +3,12 @@ import {
   GestureResponderEvent,
   Pressable,
   StyleSheet,
-  Text,
-  TextStyle,
   useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native';
 import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
+import Typography from './Typography';
 
 interface TitleProps {
   winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
@@ -36,22 +35,22 @@ const generateColor: (
 };
 
 const Title: React.FC<TitleProps> = ({winner}) => {
-  const styles = React.useMemo(() => titleStyles({winner}), [winner]);
+  const color = React.useMemo<keyof Theming.ColorTheme>(
+    () => (winner === TileState.Player1 ? 'playerX' : 'playerO'),
+    [winner],
+  );
 
   if (winner === WinningLine.Draw) {
-    return (
-      <Text style={[styles.winnerText, styles.winnerTextPlayer]}>
-        it's a draw
-      </Text>
-    );
+    return <Typography>it's a draw</Typography>;
   }
+
   return (
-    <Text style={styles.winnerText}>
-      <Text style={styles.winnerTextPlayer}>
+    <Typography>
+      <Typography color={color} textTransform="capitalize">
         player {winner === TileState.Player1 ? 'x' : 'o'}
-      </Text>{' '}
+      </Typography>
       won the game
-    </Text>
+    </Typography>
   );
 };
 
@@ -80,39 +79,19 @@ const WinningModal: React.FC<WinningModalProps> = ({
             disabled={disabled}
             onPress={onPressNewGame}
             style={styles.button}>
-            <Text style={styles.buttonText}>new game</Text>
+            <Typography>new game</Typography>
           </Pressable>
           <Pressable
             disabled={disabled}
             onPress={onPressQuit}
             style={[styles.button, styles.buttonRight]}>
-            <Text style={styles.buttonText}>quit</Text>
+            <Typography>quit</Typography>
           </Pressable>
         </View>
       </View>
     </View>
   );
 };
-
-const titleStyles = ({
-  winner,
-}: {
-  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
-}) =>
-  StyleSheet.create<{
-    winnerTextPlayer: TextStyle;
-    winnerText: TextStyle;
-  }>({
-    winnerText: {
-      color: '#000',
-      fontSize: 27,
-      fontWeight: 'bold',
-    },
-    winnerTextPlayer: {
-      color: generateColor(winner),
-      textTransform: 'capitalize',
-    },
-  });
 
 const winningModalStyles = ({
   width,
@@ -124,7 +103,6 @@ const winningModalStyles = ({
   StyleSheet.create<{
     button: ViewStyle;
     buttonRight: ViewStyle;
-    buttonText: TextStyle;
     buttonsContainer: ViewStyle;
     container: ViewStyle;
     innerContainer: ViewStyle;
@@ -136,10 +114,6 @@ const winningModalStyles = ({
     },
     buttonRight: {
       alignItems: 'flex-end',
-    },
-    buttonText: {
-      color: '#000',
-      fontSize: 18,
     },
     buttonsContainer: {
       flexDirection: 'row',
