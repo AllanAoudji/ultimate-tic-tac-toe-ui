@@ -3,7 +3,6 @@ import React from 'react';
 
 import {getStyle} from './testUtils';
 
-import {ThemeProvider} from '../src/Theme.context';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 import Typography from '../src/Typography';
 
@@ -16,11 +15,9 @@ const renderer = (
 ) => {
   const children = options.children || 'hello world';
   const renderTypography = render(
-    <ThemeProvider initialTheme={DEFAULT_LIGHT_THEME}>
-      <Typography color={options.color} textTransform={options.textTransform}>
-        {children}
-      </Typography>
-    </ThemeProvider>,
+    <Typography color={options.color} textTransform={options.textTransform}>
+      {children}
+    </Typography>,
   );
 
   const {getByText, queryByText} = renderTypography;
