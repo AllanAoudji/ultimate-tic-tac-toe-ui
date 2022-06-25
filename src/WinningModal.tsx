@@ -4,10 +4,11 @@ import {
   Pressable,
   StyleSheet,
   useWindowDimensions,
-  View,
   ViewStyle,
 } from 'react-native';
 import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
+import Container from './Container';
+import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 
 interface TitleProps {
@@ -22,15 +23,15 @@ interface WinningModalProps {
 
 const generateColor: (
   winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw,
-) => string = winner => {
+) => keyof Theming.ColorTheme = winner => {
   switch (winner) {
     case TileState.Player1:
-      return '#0012ff';
+      return 'playerX';
     case TileState.Player2:
-      return '#ed1327';
+      return 'playerO';
     case WinningLine.Draw:
     default:
-      return '#333333';
+      return 'onSurface';
   }
 };
 
@@ -61,20 +62,47 @@ const WinningModal: React.FC<WinningModalProps> = ({
   winner,
 }) => {
   const {width} = useWindowDimensions();
+  const {theme} = React.useContext(ThemeContext);
 
-  const styles = React.useMemo(
-    () => winningModalStyles({width, winner}),
-    [width, winner],
-  );
+  const winnerColor = React.useMemo(() => generateColor(winner), [winner]);
 
   return (
-    <View style={styles.container} testID="winningModal__container">
-      <View
-        style={styles.innerContainer}
+    <Container
+      alignItems="center"
+      // should be 'rgba(0,0,0,0.7)'
+      backgroundColor="onSurface"
+      height="100%"
+      justifyContent="center"
+      position="absolute"
+      testID="winningModal__container"
+      width="100%">
+      <Container
+        alignItems="center"
+        backgroundColor="surface"
+        borderColor={winnerColor}
+        borderRadius={16}
+        borderWidth={4}
+        paddingBottom="double"
+        paddingHorizontal="double"
+        paddingTop="double"
+        shadow="double"
+        shadowColor={winnerColor}
+        width={width - theme.spacing.double}
         testID="winningModal__container--inner">
         <Title winner={winner} />
-        <View style={styles.separator} testID="winningModal__separator" />
-        <View style={styles.buttonsContainer}>
+        <Container
+          backgroundColor={winnerColor}
+          borderRadius={2}
+          height={4}
+          marginBottom="double"
+          marginTop="double"
+          width="33%"
+          testID="winningModal__separator"
+        />
+        <Container
+          flexDirection="row"
+          justifyContent="space-between"
+          width="100%">
           <Pressable
             disabled={disabled}
             onPress={onPressNewGame}
@@ -87,74 +115,23 @@ const WinningModal: React.FC<WinningModalProps> = ({
             style={[styles.button, styles.buttonRight]}>
             <Typography>quit</Typography>
           </Pressable>
-        </View>
-      </View>
-    </View>
+        </Container>
+      </Container>
+    </Container>
   );
 };
 
-const winningModalStyles = ({
-  width,
-  winner,
-}: {
-  width: number;
-  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
-}) =>
-  StyleSheet.create<{
-    button: ViewStyle;
-    buttonRight: ViewStyle;
-    buttonsContainer: ViewStyle;
-    container: ViewStyle;
-    innerContainer: ViewStyle;
-    separator: ViewStyle;
-  }>({
-    button: {
-      paddingVertical: 10,
-      width: 100,
-    },
-    buttonRight: {
-      alignItems: 'flex-end',
-    },
-    buttonsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
-    },
-    container: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(0,0,0,0.7)',
-      height: '100%',
-      justifyContent: 'center',
-      position: 'absolute',
-      width: '100%',
-    },
-    innerContainer: {
-      alignItems: 'center',
-      backgroundColor: '#fff',
-      borderColor: generateColor(winner),
-      borderRadius: 13,
-      borderWidth: 5,
-      elevation: 19,
-      paddingBottom: 15,
-      paddingHorizontal: 30,
-      paddingTop: 25,
-      shadowColor: generateColor(winner),
-      shadowOffset: {
-        width: 0,
-        height: 9,
-      },
-      shadowOpacity: 0.5,
-      shadowRadius: 12.35,
-      width: width - 20,
-    },
-    separator: {
-      backgroundColor: generateColor(winner),
-      borderRadius: 2,
-      height: 4,
-      marginBottom: 28,
-      marginTop: 24,
-      width: '30%',
-    },
-  });
+const styles = StyleSheet.create<{
+  button: ViewStyle;
+  buttonRight: ViewStyle;
+}>({
+  button: {
+    paddingVertical: 10,
+    width: 100,
+  },
+  buttonRight: {
+    alignItems: 'flex-end',
+  },
+});
 
 export default WinningModal;
