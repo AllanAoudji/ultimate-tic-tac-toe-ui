@@ -1,6 +1,7 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import PlayButton from '../src/PlayButton';
 
@@ -42,7 +43,7 @@ describe('<PlayButton />', () => {
     expect(
       getByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props.style
         .backgroundColor,
-    ).toBe('#0012ff');
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
   });
 
   it('renders a red background if /player === Player2', () => {
@@ -50,6 +51,6 @@ describe('<PlayButton />', () => {
     expect(
       getByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props.style
         .backgroundColor,
-    ).toBe('#ed1327');
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 });

@@ -55,7 +55,7 @@ describe('<PlayerBoard />', () => {
     const {getByTestId} = render(<PlayerBoard player={TileState.Player2} />);
     expect(
       getByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE).props.style.backgroundColor,
-    ).toBe('#ed1327');
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 
   it('passes /player/ to <SurrendButton />', () => {

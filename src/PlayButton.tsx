@@ -6,6 +6,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 
 interface Props {
@@ -19,7 +20,12 @@ const PlayButton: React.FC<Props> = ({
   onPress = () => {},
   player = TileState.Player1,
 }) => {
-  const styles = React.useMemo(() => playerButtonStyles({player}), [player]);
+  const {theme} = React.useContext(ThemeContext);
+  const stylesProps = React.useMemo(
+    () => playerButtonStyles({player}),
+    [player],
+  );
+  const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
 
   return (
     <Pressable
@@ -32,19 +38,20 @@ const PlayButton: React.FC<Props> = ({
   );
 };
 
-const playerButtonStyles = ({
-  player,
-}: {
-  player: TileState.Player1 | TileState.Player2;
-}) =>
-  StyleSheet.create<{container: ViewStyle}>({
-    container: {
-      alignItems: 'center',
-      backgroundColor: player === TileState.Player1 ? '#0012ff' : '#ed1327',
-      borderRadius: 6,
-      justifyContent: 'center',
-      padding: 6,
-    },
-  });
+const playerButtonStyles =
+  ({player}: {player: TileState.Player1 | TileState.Player2}) =>
+  (theme: Theming.Theme) =>
+    StyleSheet.create<{container: ViewStyle}>({
+      container: {
+        alignItems: 'center',
+        backgroundColor:
+          player === TileState.Player1
+            ? theme.color.playerX
+            : theme.color.playerO,
+        borderRadius: 6,
+        justifyContent: 'center',
+        padding: theme.spacing.base,
+      },
+    });
 
 export default PlayButton;

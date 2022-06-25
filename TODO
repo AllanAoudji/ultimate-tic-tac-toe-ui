@@ -8,3 +8,5 @@ save game button
 shadowColor: string,
 
 <PlayButton /> should be grey if it's not the player turn
+
+remove all plain color and plain padding
