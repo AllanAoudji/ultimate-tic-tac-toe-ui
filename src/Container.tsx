@@ -35,6 +35,7 @@ interface Props {
   borderRadius?: borderRadius;
   borderWidth?: borderWidth;
   children?: React.ReactNode;
+  flex?: number;
   flexDirection?: flexDirection;
   flexWrap?: flexWrap;
   height?: size;
@@ -72,6 +73,7 @@ const Container: React.FC<Props> = ({
   borderRadius,
   borderWidth,
   children,
+  flex,
   flexDirection,
   flexWrap,
   height,
@@ -111,6 +113,7 @@ const Container: React.FC<Props> = ({
         borderColor,
         borderRadius,
         borderWidth,
+        flex,
         flexDirection,
         flexWrap,
         height,
@@ -142,6 +145,7 @@ const Container: React.FC<Props> = ({
       borderColor,
       borderRadius,
       borderWidth,
+      flex,
       flexDirection,
       flexWrap,
       height,
@@ -199,6 +203,7 @@ const stylesContainer =
     borderColor,
     borderRadius,
     borderWidth,
+    flex,
     flexDirection,
     flexWrap,
     height,
@@ -229,6 +234,7 @@ const stylesContainer =
     borderColor?: keyof Theming.ColorTheme;
     borderRadius?: borderRadius;
     borderWidth?: borderWidth;
+    flex?: number;
     flexDirection?: flexDirection;
     flexWrap?: flexWrap;
     height?: size;
@@ -271,6 +277,7 @@ const stylesContainer =
         borderRadius,
         borderWidth,
         elevation: shadow ? theme.shadow[shadow].elevation : undefined,
+        flex,
         flexDirection,
         flexWrap,
         height,

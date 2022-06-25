@@ -19,6 +19,7 @@ const renderer = (
     borderRadius?: 1 | 2 | 4 | 8 | 16 | 32;
     borderWidth?: 1 | 2 | 4 | 8;
     children?: React.ReactNode;
+    flex?: number;
     flexDirection?: 'column' | 'column-reverse' | 'row' | 'row-reverse';
     flexWrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
     height?: '25%' | '33%' | '50%' | '66%' | '75%' | '100%' | number;
@@ -65,6 +66,7 @@ const renderer = (
       borderColor={options.borderColor}
       borderRadius={options.borderRadius}
       borderWidth={options.borderWidth}
+      flex={options.flex}
       flexDirection={options.flexDirection}
       flexWrap={options.flexWrap}
       height={options.height}
@@ -741,6 +743,24 @@ describe('<Container />', () => {
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
         shadowColor: DEFAULT_LIGHT_THEME.color.background,
+      }),
+    );
+  });
+
+  it('sets /flex: undefined/ by default', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        flex: undefined,
+      }),
+    );
+  });
+
+  it('sets another /flex/', () => {
+    const {container} = renderer({flex: 1});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        flex: 1,
       }),
     );
   });
