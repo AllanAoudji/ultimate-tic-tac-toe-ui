@@ -16,7 +16,7 @@ type borderWidth = 1 | 2 | 4 | 8;
 type flexDirection = 'column' | 'column-reverse' | 'row' | 'row-reverse';
 type flexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 type size = '25%' | '33%' | '50%' | '66%' | '75%' | '100%' | number;
-type opacity = 0.1 | 0.2 | 0.4 | 0.8;
+type opacity = 0.1 | 0.2 | 0.4 | 0.8 | 1;
 type justifyContent =
   | 'center'
   | 'flex-end'
@@ -25,7 +25,7 @@ type justifyContent =
   | 'space-between'
   | 'space-evenly';
 type position = 'absolute' | 'relative';
-type rotate = '90deg' | '180deg' | '270deg';
+type rotate = '0deg' | '90deg' | '180deg' | '270deg';
 
 interface Props {
   alignItems?: FlexAlignType;

@@ -36,7 +36,7 @@ const renderer = (
     marginRight?: keyof Theming.SpacingTheme;
     marginTop?: keyof Theming.SpacingTheme;
     marginVertical?: keyof Theming.SpacingTheme;
-    opacity?: 0.1 | 0.2 | 0.4 | 0.8;
+    opacity?: 0.1 | 0.2 | 0.4 | 0.8 | 1;
     padding?: keyof Theming.SpacingTheme;
     paddingBottom?: keyof Theming.SpacingTheme;
     paddingHorizontal?: keyof Theming.SpacingTheme;
@@ -46,7 +46,7 @@ const renderer = (
     paddingVertical?: keyof Theming.SpacingTheme;
     position?: 'absolute' | 'relative';
     resizeMode?: ImageResizeMode;
-    rotate?: '90deg' | '180deg' | '270deg';
+    rotate?: '0deg' | '90deg' | '180deg' | '270deg';
     shadow?: keyof Theming.ShadowTheme;
     shadowColor?: keyof Theming.ColorTheme;
     source?: ImageSourcePropType;
