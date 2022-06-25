@@ -1,8 +1,10 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import SurrendModal from '../src/SurrendModal';
+import {getStyle} from './testUtils';
 
 describe('<SurrendModal />', () => {
   const NO_TEXT = 'no',
@@ -98,14 +100,22 @@ describe('<SurrendModal />', () => {
     ).toBe(PLAYER_2_COLOR);
   });
 
-  it(`set /color: ${PLAYER_2_COLOR}/ on the title if /player === Player2/`, () => {
+  it(`set /color: ${DEFAULT_LIGHT_THEME.color.playerO}/ on the title if /player === Player2/`, () => {
     const {getByText} = render(<SurrendModal player={TileState.Player2} />);
-    expect(getByText(SURREND_TEXT).props.style.color).toBe(PLAYER_2_COLOR);
+    expect(getStyle(getByText(SURREND_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerO,
+      }),
+    );
   });
 
-  it(`set /color: ${PLAYER_1_COLOR}/ on the title if /player === Player1/`, () => {
+  it(`set /color: ${DEFAULT_LIGHT_THEME.color.playerX}/ on the title if /player === Player1/`, () => {
     const {getByText} = render(<SurrendModal />);
-    expect(getByText(SURREND_TEXT).props.style.color).toBe(PLAYER_1_COLOR);
+    expect(getStyle(getByText(SURREND_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerX,
+      }),
+    );
   });
 
   it(`set /backgroundColor: ${PLAYER_2_COLOR}/ on the "yes" <Button /> if /player === Player2/`, () => {
@@ -127,6 +137,24 @@ describe('<SurrendModal />', () => {
           backgroundColor: PLAYER_1_COLOR,
         }),
       ]),
+    );
+  });
+
+  it(`set /color: ${DEFAULT_LIGHT_THEME.color.onPlayerO}/ on the "${YES_TEXT}" <Button /> text if /Player === Player2/`, () => {
+    const {getByText} = render(<SurrendModal player={TileState.Player2} />);
+    expect(getStyle(getByText(YES_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.onPlayerO,
+      }),
+    );
+  });
+
+  it(`set /color: ${DEFAULT_LIGHT_THEME.color.onPlayerX}/ on the "${YES_TEXT}" <Button /> text if /Player === Player1/`, () => {
+    const {getByText} = render(<SurrendModal />);
+    expect(getStyle(getByText(YES_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.onPlayerX,
+      }),
     );
   });
 
@@ -152,25 +180,21 @@ describe('<SurrendModal />', () => {
     );
   });
 
-  it(`set /color: ${PLAYER_2_COLOR}/ on the "no" <Button /> text if /Player === Player2/`, () => {
+  it(`set /color: ${DEFAULT_LIGHT_THEME.color.playerO}/ on the "no" <Button /> text if /Player === Player2/`, () => {
     const {getByText} = render(<SurrendModal player={TileState.Player2} />);
-    expect(getByText(NO_TEXT).props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          color: PLAYER_2_COLOR,
-        }),
-      ]),
+    expect(getStyle(getByText(NO_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerO,
+      }),
     );
   });
 
-  it(`set /color: ${PLAYER_1_COLOR}/ on the "no" <Button /> text if /Player === Player1/`, () => {
+  it(`set /color: ${DEFAULT_LIGHT_THEME.color.playerX}/ on the "no" <Button /> text if /Player === Player1/`, () => {
     const {getByText} = render(<SurrendModal />);
-    expect(getByText(NO_TEXT).props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          color: PLAYER_1_COLOR,
-        }),
-      ]),
+    expect(getStyle(getByText(NO_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerX,
+      }),
     );
   });
 });

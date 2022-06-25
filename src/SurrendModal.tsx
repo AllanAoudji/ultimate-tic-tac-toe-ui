@@ -1,15 +1,14 @@
 import React from 'react';
 import {
   View,
-  Text,
   Pressable,
   GestureResponderEvent,
   StyleSheet,
   ViewStyle,
   useWindowDimensions,
-  TextStyle,
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import Typography from './Typography';
 
 interface Props {
   disabled?: boolean;
@@ -26,30 +25,39 @@ const SurrendModal: React.FC<Props> = ({
 }) => {
   const {width, height} = useWindowDimensions();
 
+  const playerColor = React.useMemo(
+    () => (player === TileState.Player1 ? 'playerX' : 'playerO'),
+    [player],
+  );
   const styles = React.useMemo(
     () => surrendModalStyles({height, player, width}),
     [height, player, width],
   );
+  const onPlayerColor = React.useMemo(
+    () => (player === TileState.Player1 ? 'onPlayerX' : 'onPlayerO'),
+    [player],
+  );
+
   return (
     <View style={styles.container} testID="surrendModal__container">
       <View
         style={styles.innerContainer}
         testID="surrendModal__container--inner">
-        <Text style={styles.modalText}>Surrend?</Text>
+        <Typography color={playerColor}>Surrend?</Typography>
         <View style={styles.buttonContainer}>
           <Pressable
             disabled={disabled}
             onPress={onPressYes}
             style={[styles.button, styles.buttonYes]}
             testID="surrendModal__button--yes">
-            <Text style={[styles.buttonText, styles.buttonTextYes]}>yes</Text>
+            <Typography color={onPlayerColor}>yes</Typography>
           </Pressable>
           <Pressable
             disabled={disabled}
             onPress={onPressNo}
             style={[styles.button, styles.buttonNo]}
             testID="surrendModal__button--no">
-            <Text style={[styles.buttonText]}>no</Text>
+            <Typography color={playerColor}>no</Typography>
           </Pressable>
         </View>
       </View>
@@ -70,12 +78,9 @@ const surrendModalStyles = ({
     button: ViewStyle;
     buttonContainer: ViewStyle;
     buttonNo: ViewStyle;
-    buttonText: TextStyle;
-    buttonTextYes: TextStyle;
     buttonYes: ViewStyle;
     container: ViewStyle;
     innerContainer: ViewStyle;
-    modalText: TextStyle;
   }>({
     button: {
       alignItems: 'center',
@@ -83,7 +88,6 @@ const surrendModalStyles = ({
       padding: 8,
       width: 120,
     },
-
     buttonContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -92,14 +96,6 @@ const surrendModalStyles = ({
     buttonNo: {
       borderColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
       borderWidth: 2,
-    },
-    buttonText: {
-      color: player === TileState.Player2 ? '#ed1327' : '#0012ff',
-      fontSize: 17,
-      fontWeight: 'bold',
-    },
-    buttonTextYes: {
-      color: '#fff',
     },
     buttonYes: {
       backgroundColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
@@ -129,11 +125,6 @@ const surrendModalStyles = ({
       },
       shadowOpacity: 0.5,
       shadowRadius: 12.35,
-    },
-    modalText: {
-      color: player === TileState.Player2 ? '#ed1327' : '#0012ff',
-      fontSize: 30,
-      fontWeight: '900',
     },
   });
 
