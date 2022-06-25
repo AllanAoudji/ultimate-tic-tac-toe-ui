@@ -3,14 +3,12 @@ import {
   GestureResponderEvent,
   Pressable,
   StyleSheet,
-  Text,
-  TextStyle,
   ViewStyle,
 } from 'react-native';
+import Typography from './Typography';
 
 interface Props {
   backgroundColor?: string;
-  color?: string;
   disabled?: boolean;
   onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
   title: string;
@@ -18,14 +16,13 @@ interface Props {
 
 const PlayGameButton: React.FC<Props> = ({
   backgroundColor = '#0012ff',
-  color = '#fff',
   disabled = false,
   onPress = () => {},
   title,
 }) => {
   const styles = React.useMemo(
-    () => stylesPlayNormalGameButton({backgroundColor, color, disabled}),
-    [backgroundColor, color, disabled],
+    () => stylesPlayNormalGameButton({backgroundColor, disabled}),
+    [backgroundColor, disabled],
   );
 
   return (
@@ -34,27 +31,22 @@ const PlayGameButton: React.FC<Props> = ({
       onPress={onPress}
       style={styles.container}
       testID="playGameButton__container--pressable">
-      <Text style={styles.title}>{title}</Text>
+      <Typography>{title}</Typography>
     </Pressable>
   );
 };
 
 const stylesPlayNormalGameButton = ({
   backgroundColor,
-  color,
   disabled,
 }: {
   backgroundColor: string;
-  color: string;
   disabled: boolean;
 }) =>
-  StyleSheet.create<{container: ViewStyle; title: TextStyle}>({
+  StyleSheet.create<{container: ViewStyle}>({
     container: {
       backgroundColor,
       opacity: disabled ? 0.5 : 1,
-    },
-    title: {
-      color,
     },
   });
 

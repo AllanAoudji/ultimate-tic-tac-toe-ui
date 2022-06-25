@@ -1,7 +1,9 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import PlayGameButton from '../src/PlayGameButton';
+import {getStyle} from './testUtils';
 
 describe('<PlayGameButton />', () => {
   const PLAY_GAME_BUTTON_CONTAINER_PRESSABLE =
@@ -82,24 +84,12 @@ describe('<PlayGameButton />', () => {
     ).toBe('#0012ff');
   });
 
-  it('sets /color: #eb34e8/ if /color === #eb34e8/', () => {
-    const color = '#eb34e8';
-    const {getByText} = render(
-      <PlayGameButton color={color} title={TITLE_TEXT} />,
-    );
-    expect(getByText(TITLE_TEXT).props.style.color).toBe(color);
-  });
-
-  it('sets /color: #3af043/ if /color === #3af043/', () => {
-    const color = '#3af043';
-    const {getByText} = render(
-      <PlayGameButton color={color} title={TITLE_TEXT} />,
-    );
-    expect(getByText(TITLE_TEXT).props.style.color).toBe(color);
-  });
-
-  it('sets /color: #fff/ if /color === undefined/', () => {
+  it(`sets /color: ${DEFAULT_LIGHT_THEME.color.onSurface}/ if /color === undefined/`, () => {
     const {getByText} = render(<PlayGameButton title={TITLE_TEXT} />);
-    expect(getByText(TITLE_TEXT).props.style.color).toBe('#fff');
+    expect(getStyle(getByText(TITLE_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.onSurface,
+      }),
+    );
   });
 });
