@@ -8,6 +8,7 @@ import {
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import SurrendIcon from './SurrendIcon';
+import {ThemeContext} from './Theme.context';
 
 interface Props {
   disabled?: boolean;
@@ -20,7 +21,12 @@ const SurrendButton: React.FC<Props> = ({
   onPress = () => {},
   player = TileState.Player1,
 }) => {
-  const styles = React.useMemo(() => surrendBUttonStyles({player}), [player]);
+  const {theme} = React.useContext(ThemeContext);
+  const stylesProps = React.useMemo(
+    () => surrendButtonStyles({player}),
+    [player],
+  );
+  const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
 
   return (
     <Pressable
@@ -33,20 +39,21 @@ const SurrendButton: React.FC<Props> = ({
   );
 };
 
-const surrendBUttonStyles = ({
-  player,
-}: {
-  player: TileState.Player1 | TileState.Player2;
-}) =>
-  StyleSheet.create<{container: ViewStyle}>({
-    container: {
-      alignItems: 'center',
-      borderColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
-      borderWidth: 4,
-      borderRadius: 50,
-      justifyContent: 'center',
-      padding: 7,
-    },
-  });
+const surrendButtonStyles =
+  ({player}: {player: TileState.Player1 | TileState.Player2}) =>
+  (theme: Theming.Theme) =>
+    StyleSheet.create<{container: ViewStyle}>({
+      container: {
+        alignItems: 'center',
+        borderColor:
+          player === TileState.Player2
+            ? theme.color.playerO
+            : theme.color.playerX,
+        borderWidth: 4,
+        borderRadius: 50,
+        justifyContent: 'center',
+        padding: theme.spacing.base,
+      },
+    });
 
 export default SurrendButton;

@@ -1,6 +1,7 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import SurrendButton from '../src/SurrendButton';
 
@@ -36,20 +37,20 @@ describe('<SurrendButton />', () => {
     ).toBe(1);
   });
 
-  it('set /borderColor: #ed1327/ if /player === Player2/', () => {
+  it(`set /borderColors: ${DEFAULT_LIGHT_THEME.color.playerO}/ if /player === Player2/`, () => {
     const {getByTestId} = render(<SurrendButton player={TileState.Player2} />);
     expect(
       getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props.style
         .borderColor,
-    ).toBe('#ed1327');
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 
-  it('set /borderColor: #0012ff/ if /player === Player1/', () => {
+  it(`set /borderColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ if /player === Player1/`, () => {
     const {getByTestId} = render(<SurrendButton />);
     expect(
       getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props.style
         .borderColor,
-    ).toBe('#0012ff');
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
   });
 
   it('not calls /onPress/ if /disabled === true/', () => {
