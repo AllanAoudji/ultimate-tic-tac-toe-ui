@@ -43,13 +43,13 @@ const Title: React.FC<TitleProps> = ({winner}) => {
   );
 
   if (winner === WinningLine.Draw) {
-    return <Typography>it's a draw</Typography>;
+    return <Typography fontSize="large">it's a draw</Typography>;
   }
 
   return (
-    <Typography>
-      <Typography color={color} textTransform="capitalize">
-        player {winner === TileState.Player1 ? 'x' : 'o'}
+    <Typography fontSize="large">
+      <Typography color={color} fontSize="large" textTransform="capitalize">
+        player {winner === TileState.Player1 ? 'x ' : 'o '}
       </Typography>
       won the game
     </Typography>
@@ -72,8 +72,7 @@ const WinningModal: React.FC<WinningModalProps> = ({
   return (
     <Container
       alignItems="center"
-      // TODO: should be 'rgba(0,0,0,0.7)'
-      backgroundColor="onSurface"
+      backgroundColor="blackTransparent"
       height="100%"
       justifyContent="center"
       position="absolute"
@@ -85,20 +84,20 @@ const WinningModal: React.FC<WinningModalProps> = ({
         borderColor={winnerColor}
         borderRadius={16}
         borderWidth={4}
-        paddingBottom="normal"
-        paddingHorizontal="normal"
-        paddingTop="normal"
+        paddingBottom="largest"
+        paddingHorizontal="large"
+        paddingTop="large"
         shadow="base"
         shadowColor={winnerColor}
-        width={width - theme.spacing.normal}
+        width={width - theme.spacing.large}
         testID="winningModal__container--inner">
         <Title winner={winner} />
         <Container
           backgroundColor={winnerColor}
           borderRadius={2}
           height={4}
-          marginBottom="normal"
-          marginTop="normal"
+          marginBottom="largest"
+          marginTop="large"
           width="33%"
           testID="winningModal__separator"
         />

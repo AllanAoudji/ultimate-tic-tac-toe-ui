@@ -104,9 +104,9 @@ describe('<WinningModal />', () => {
     );
   });
 
-  it(`sets /color: ${DEFAULT_LIGHT_THEME.color}/ on winner <Text /> if /winner === Player2/`, () => {
-    const {getByText} = render(<WinningModal winner={TileState.Player1} />);
-    expect(getStyle(getByText(PLAYER_X_TEXT))).toEqual(
+  it(`sets /color: ${DEFAULT_LIGHT_THEME.color.playerO}/ on winner <Text /> if /winner === Player2/`, () => {
+    const {getByText} = render(<WinningModal winner={TileState.Player2} />);
+    expect(getStyle(getByText(PLAYER_O_TEXT))).toEqual(
       expect.objectContaining({
         color: DEFAULT_LIGHT_THEME.color.playerO,
       }),
