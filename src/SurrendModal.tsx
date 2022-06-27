@@ -106,7 +106,7 @@ const surrendModalStyles =
       button: {
         alignItems: 'center',
         borderRadius: 4,
-        padding: 8,
+        padding: theme.spacing.base,
         width: 120,
       },
       buttonNo: {
