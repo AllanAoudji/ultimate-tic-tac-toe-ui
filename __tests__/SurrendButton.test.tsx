@@ -32,7 +32,7 @@ describe('<SurrendButton />', () => {
     const {getByTestId} = render(<SurrendButton player={TileState.Player2} />);
     expect(
       getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).findAllByProps({
-        fill: '#ed1327',
+        fill: DEFAULT_LIGHT_THEME.color.playerO,
       }).length,
     ).toBe(1);
   });

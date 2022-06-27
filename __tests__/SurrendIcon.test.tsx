@@ -1,12 +1,11 @@
 import {render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 import SurrendIcon from '../src/SurrendIcon';
 
 describe('<SurrendIcon />', () => {
   const DEFAULT_SIZE = 25,
-    PLAYER_1_COLOR = '#0012ff',
-    PLAYER_2_COLOR = '#ed1327',
     SURREND_ICON_CONTAINER_SVG = 'surrendIcon__container--svg';
 
   it('renders a <SVG /> container', () => {
@@ -14,11 +13,11 @@ describe('<SurrendIcon />', () => {
     expect(queryByTestId(SURREND_ICON_CONTAINER_SVG)).not.toBeNull();
   });
 
-  it(`renders a <Path /> with /fill === ${PLAYER_1_COLOR}/`, () => {
+  it(`renders a <Path /> with /fill === ${DEFAULT_LIGHT_THEME.color.playerX}/`, () => {
     const {getByTestId} = render(<SurrendIcon />);
     expect(
       getByTestId(SURREND_ICON_CONTAINER_SVG).findAllByProps({
-        fill: PLAYER_1_COLOR,
+        fill: DEFAULT_LIGHT_THEME.color.playerX,
       }).length,
     ).toEqual(1);
   });
@@ -27,7 +26,7 @@ describe('<SurrendIcon />', () => {
     const {getByTestId} = render(<SurrendIcon player={TileState.Player2} />);
     expect(
       getByTestId(SURREND_ICON_CONTAINER_SVG).findAllByProps({
-        fill: PLAYER_2_COLOR,
+        fill: DEFAULT_LIGHT_THEME.color.playerO,
       }).length,
     ).toEqual(1);
   });
