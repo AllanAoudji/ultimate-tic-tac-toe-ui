@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
+import {ThemeContext} from './Theme.context';
+
 interface StateImageProps {
   state: TileState;
 }
@@ -78,7 +80,10 @@ const Tile: React.FC<TileProps> = ({
   valid = true,
 }) => {
   const {width} = useWindowDimensions();
-  const styles = React.useMemo(() => tileStyles({width}), [width]);
+
+  const {theme} = React.useContext(ThemeContext);
+  const stylesProps = React.useMemo(() => tileStyles({width}), [width]);
+  const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
 
   return (
     <Pressable
@@ -103,19 +108,21 @@ const imageStyles = StyleSheet.create<{
     width: '100%',
   },
   transparent: {
-    opacity: 0.7,
+    opacity: 0.8,
   },
 });
-const tileStyles = ({width}: {width: number}) =>
-  StyleSheet.create<{container: ViewStyle}>({
-    container: {
-      alignItems: 'center',
-      display: 'flex',
-      height: (width - 8 * 3 - 8) / 9,
-      justifyContent: 'center',
-      padding: 4,
-      width: (width - 8 * 3 - 8) / 9,
-    },
-  });
+const tileStyles =
+  ({width}: {width: number}) =>
+  (theme: Theming.Theme) =>
+    StyleSheet.create<{container: ViewStyle}>({
+      container: {
+        alignItems: 'center',
+        display: 'flex',
+        height: (width - theme.spacing.smallest * 6 - theme.spacing.normal) / 9,
+        justifyContent: 'center',
+        padding: theme.spacing.smallest,
+        width: (width - theme.spacing.smallest * 6 - theme.spacing.normal) / 9,
+      },
+    });
 
 export default Tile;

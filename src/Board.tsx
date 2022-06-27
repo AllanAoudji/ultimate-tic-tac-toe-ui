@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  GestureResponderEvent,
-  ImageBackground,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {GestureResponderEvent} from 'react-native';
 import {
   getSections,
   getActiveSection,
@@ -13,6 +7,8 @@ import {
   Mode,
   SectionState,
 } from 'ultimate-tic-tac-toe-algorithm';
+
+import Container from './Container';
 import Section from './Section';
 
 interface Props {
@@ -42,10 +38,12 @@ const Board: React.FC<Props> = ({
   );
 
   return (
-    <View testID="board__container">
-      <ImageBackground
+    <Container testID="board__container">
+      <Container
+        flexDirection="row"
+        flexWrap="wrap"
+        padding="normal"
         source={require('../assets/images/boardGrid.png')}
-        style={styles.container}
         testID="board__image--grid">
         {getSections(history).map((section, index) => (
           <Section
@@ -63,17 +61,9 @@ const Board: React.FC<Props> = ({
             }
           />
         ))}
-      </ImageBackground>
-    </View>
+      </Container>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create<{container: ViewStyle}>({
-  container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: 4,
-  },
-});
 
 export default Board;

@@ -3,13 +3,14 @@ import {
   GestureResponderEvent,
   Pressable,
   StyleSheet,
-  Text,
-  TextStyle,
   useWindowDimensions,
-  View,
   ViewStyle,
 } from 'react-native';
 import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
+
+import Container from './Container';
+import {ThemeContext} from './Theme.context';
+import Typography from './Typography';
 
 interface TitleProps {
   winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
@@ -23,35 +24,35 @@ interface WinningModalProps {
 
 const generateColor: (
   winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw,
-) => string = winner => {
+) => keyof Theming.ColorTheme = winner => {
   switch (winner) {
     case TileState.Player1:
-      return '#0012ff';
+      return 'playerX';
     case TileState.Player2:
-      return '#ed1327';
+      return 'playerO';
     case WinningLine.Draw:
     default:
-      return '#333333';
+      return 'onSurface';
   }
 };
 
 const Title: React.FC<TitleProps> = ({winner}) => {
-  const styles = React.useMemo(() => titleStyles({winner}), [winner]);
+  const color = React.useMemo<keyof Theming.ColorTheme>(
+    () => (winner === TileState.Player1 ? 'playerX' : 'playerO'),
+    [winner],
+  );
 
   if (winner === WinningLine.Draw) {
-    return (
-      <Text style={[styles.winnerText, styles.winnerTextPlayer]}>
-        it's a draw
-      </Text>
-    );
+    return <Typography fontSize="large">it's a draw</Typography>;
   }
+
   return (
-    <Text style={styles.winnerText}>
-      <Text style={styles.winnerTextPlayer}>
-        player {winner === TileState.Player1 ? 'x' : 'o'}
-      </Text>{' '}
+    <Typography fontSize="large">
+      <Typography color={color} fontSize="large" textTransform="capitalize">
+        player {winner === TileState.Player1 ? 'x ' : 'o '}
+      </Typography>
       won the game
-    </Text>
+    </Typography>
   );
 };
 
@@ -62,124 +63,77 @@ const WinningModal: React.FC<WinningModalProps> = ({
   winner,
 }) => {
   const {width} = useWindowDimensions();
+  const {theme} = React.useContext(ThemeContext);
 
-  const styles = React.useMemo(
-    () => winningModalStyles({width, winner}),
-    [width, winner],
-  );
+  const styles = React.useMemo(() => stylesWinningModal(theme), [theme]);
+
+  const winnerColor = React.useMemo(() => generateColor(winner), [winner]);
 
   return (
-    <View style={styles.container} testID="winningModal__container">
-      <View
-        style={styles.innerContainer}
+    <Container
+      alignItems="center"
+      backgroundColor="blackTransparent"
+      height="100%"
+      justifyContent="center"
+      position="absolute"
+      testID="winningModal__container"
+      width="100%">
+      <Container
+        alignItems="center"
+        backgroundColor="surface"
+        borderColor={winnerColor}
+        borderRadius={16}
+        borderWidth={4}
+        paddingBottom="largest"
+        paddingHorizontal="large"
+        paddingTop="large"
+        shadow="base"
+        shadowColor={winnerColor}
+        width={width - theme.spacing.large}
         testID="winningModal__container--inner">
         <Title winner={winner} />
-        <View style={styles.separator} testID="winningModal__separator" />
-        <View style={styles.buttonsContainer}>
+        <Container
+          backgroundColor={winnerColor}
+          borderRadius={2}
+          height={4}
+          marginBottom="largest"
+          marginTop="large"
+          width="33%"
+          testID="winningModal__separator"
+        />
+        <Container
+          flexDirection="row"
+          justifyContent="space-between"
+          width="100%">
           <Pressable
             disabled={disabled}
             onPress={onPressNewGame}
             style={styles.button}>
-            <Text style={styles.buttonText}>new game</Text>
+            <Typography>new game</Typography>
           </Pressable>
           <Pressable
             disabled={disabled}
             onPress={onPressQuit}
             style={[styles.button, styles.buttonRight]}>
-            <Text style={styles.buttonText}>quit</Text>
+            <Typography>quit</Typography>
           </Pressable>
-        </View>
-      </View>
-    </View>
+        </Container>
+      </Container>
+    </Container>
   );
 };
 
-const titleStyles = ({
-  winner,
-}: {
-  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
-}) =>
-  StyleSheet.create<{
-    winnerTextPlayer: TextStyle;
-    winnerText: TextStyle;
-  }>({
-    winnerText: {
-      color: '#000',
-      fontSize: 27,
-      fontWeight: 'bold',
-    },
-    winnerTextPlayer: {
-      color: generateColor(winner),
-      textTransform: 'capitalize',
-    },
-  });
-
-const winningModalStyles = ({
-  width,
-  winner,
-}: {
-  width: number;
-  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
-}) =>
+const stylesWinningModal = (theme: Theming.Theme) =>
   StyleSheet.create<{
     button: ViewStyle;
     buttonRight: ViewStyle;
-    buttonText: TextStyle;
-    buttonsContainer: ViewStyle;
-    container: ViewStyle;
-    innerContainer: ViewStyle;
-    separator: ViewStyle;
   }>({
     button: {
-      paddingVertical: 10,
+      paddingVertical: theme.spacing.normal,
       width: 100,
     },
     buttonRight: {
       alignItems: 'flex-end',
-    },
-    buttonText: {
-      color: '#000',
-      fontSize: 18,
-    },
-    buttonsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
-    },
-    container: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(0,0,0,0.7)',
-      height: '100%',
-      justifyContent: 'center',
-      position: 'absolute',
-      width: '100%',
-    },
-    innerContainer: {
-      alignItems: 'center',
-      backgroundColor: '#fff',
-      borderColor: generateColor(winner),
-      borderRadius: 13,
-      borderWidth: 5,
-      elevation: 19,
-      paddingBottom: 15,
-      paddingHorizontal: 30,
-      paddingTop: 25,
-      shadowColor: generateColor(winner),
-      shadowOffset: {
-        width: 0,
-        height: 9,
-      },
-      shadowOpacity: 0.5,
-      shadowRadius: 12.35,
-      width: width - 20,
-    },
-    separator: {
-      backgroundColor: generateColor(winner),
-      borderRadius: 2,
-      height: 4,
-      marginBottom: 28,
-      marginTop: 24,
-      width: '30%',
     },
   });
 

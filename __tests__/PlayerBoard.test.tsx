@@ -1,8 +1,10 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import PlayerBoard from '../src/PlayerBoard';
+import {getStyle} from './testUtils';
 
 describe('<PlayerBoard />', () => {
   const NO_TEXT = 'no',
@@ -26,7 +28,7 @@ describe('<PlayerBoard />', () => {
     onPress.mockRestore();
   });
 
-  it('renders a <View />', () => {
+  it('renders a <Container />', () => {
     const {queryByTestId} = render(<PlayerBoard />);
     expect(queryByTestId(PLAYER_BOARD_CONTAINER_TEST_ID)).not.toBeNull();
   });
@@ -53,14 +55,14 @@ describe('<PlayerBoard />', () => {
     const {getByTestId} = render(<PlayerBoard player={TileState.Player2} />);
     expect(
       getByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE).props.style.backgroundColor,
-    ).toBe('#ed1327');
+    ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
   });
 
   it('passes /player/ to <SurrendButton />', () => {
     const {getByTestId} = render(<PlayerBoard player={TileState.Player2} />);
     expect(
       getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).findAllByProps({
-        fill: '#ed1327',
+        fill: DEFAULT_LIGHT_THEME.color.playerO,
       }).length,
     ).toBe(1);
   });
@@ -135,11 +137,11 @@ describe('<PlayerBoard />', () => {
     ).toBe(true);
   });
 
-  it('set /opacity: 0.5/ if /disabledPlayButton === true/', () => {
+  it('set /opacity: 0.4/ if /disabledPlayButton === true/', () => {
     const {getByTestId} = render(<PlayerBoard disabledPlayButton={true} />);
     expect(
       getByTestId(PLAYER_BOARD_CONTAINER_OPACITY_TEST_ID).props.style.opacity,
-    ).toBe(0.5);
+    ).toBe(0.4);
   });
 
   it('set /opacity: 1/ if /disabled === false/', () => {
@@ -167,7 +169,11 @@ describe('<PlayerBoard />', () => {
     const {getByText} = render(
       <PlayerBoard player={TileState.Player2} visibleModal={true} />,
     );
-    expect(getByText(SURREND_TEXT).props.style.color).toBe('#ed1327');
+    expect(getStyle(getByText(SURREND_TEXT))).toEqual(
+      expect.objectContaining({
+        color: DEFAULT_LIGHT_THEME.color.playerO,
+      }),
+    );
   });
 
   it('disables <SurrendButton /> if /disabledSurrendButton === true/', () => {

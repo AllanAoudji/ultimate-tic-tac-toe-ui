@@ -12,6 +12,7 @@ import {
 } from './testUtils';
 
 import Game from '../src/Game';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 const renderer = (
   options: {
@@ -209,8 +210,6 @@ const renderer = (
 
 describe('<Game />', () => {
   const NEW_GAME_TEXT = 'new game',
-    PLAYER_O_COLOR = '#ed1327',
-    PLAYER_X_COLOR = '#0012ff',
     PLAY_TEXT = 'play',
     YES_TEXT = 'yes';
 
@@ -239,7 +238,7 @@ describe('<Game />', () => {
   it('choses player randomly', () => {
     const {playerTop} = renderer();
     expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
-      PLAYER_O_COLOR,
+      DEFAULT_LIGHT_THEME.color.playerO,
     );
   });
 
@@ -248,10 +247,10 @@ describe('<Game />', () => {
       firstPlayer: 'TOP',
     });
     expect(getStyle(playerBottom.get.playButton()).backgroundColor).toBe(
-      PLAYER_O_COLOR,
+      DEFAULT_LIGHT_THEME.color.playerO,
     );
     expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
-      PLAYER_X_COLOR,
+      DEFAULT_LIGHT_THEME.color.playerX,
     );
   });
 
@@ -360,7 +359,7 @@ describe('<Game />', () => {
       expect(players.query.surrendModal()).not.toBeNull();
       expect(
         getStyle(players.get.surrendModalInnerContainer()).borderColor,
-      ).toBe(PLAYER_O_COLOR);
+      ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
     });
 
     it('of the BOTTOM player when <SurrendButton /> is pressed', () => {
@@ -369,7 +368,7 @@ describe('<Game />', () => {
       expect(players.query.surrendModal()).not.toBeNull();
       expect(
         getStyle(players.get.surrendModalInnerContainer()).borderColor,
-      ).toBe(PLAYER_X_COLOR);
+      ).toBe(DEFAULT_LIGHT_THEME.color.playerX);
     });
   });
 
@@ -385,7 +384,7 @@ describe('<Game />', () => {
       setFirstPlayer('BOTTOM');
       playerBottom.press.newGameAfterSurrend();
       expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
-        PLAYER_X_COLOR,
+        DEFAULT_LIGHT_THEME.color.playerX,
       );
     });
 

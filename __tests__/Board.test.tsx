@@ -17,7 +17,7 @@ describe('<Board />', () => {
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection').mockRestore();
   });
 
-  it('renders a <View />', () => {
+  it('renders a <Container />', () => {
     const {queryByTestId} = render(<Board />);
     expect(queryByTestId('board__container')).toBeTruthy();
   });

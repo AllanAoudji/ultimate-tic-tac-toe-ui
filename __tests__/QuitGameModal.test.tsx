@@ -19,7 +19,7 @@ describe('<QuitGameModal />', () => {
     onPress.mockRestore();
   });
 
-  it('renders a <View />', () => {
+  it('renders a <Container />', () => {
     const {queryByTestId} = render(<QuitGameModal />);
     expect(queryByTestId(QUIT_GAME_CONTAINER_TEST_ID)).not.toBeNull();
   });

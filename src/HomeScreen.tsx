@@ -1,7 +1,7 @@
 import React from 'react';
-import {View} from 'react-native';
 import {Mode} from 'ultimate-tic-tac-toe-algorithm';
 
+import Container from './Container';
 import Logo from './Logo';
 import PlayGameButton from './PlayGameButton';
 
@@ -14,17 +14,29 @@ const HomeScreen: React.FC<Screen.RootStack.HomeNavigationProps> = ({
   );
 
   return (
-    <View testID="homeScreen__container">
-      <Logo />
-      <PlayGameButton
-        onPress={handlePress(Mode.Normal)}
-        title="play normal game"
-      />
-      <PlayGameButton
-        onPress={handlePress(Mode.Continue)}
-        title="play continue game"
-      />
-    </View>
+    <Container
+      alignItems="center"
+      flex={1}
+      justifyContent="center"
+      backgroundColor="background"
+      testID="homeScreen__container">
+      <Logo width={180} />
+      <Container paddingHorizontal="larger" marginTop="larger" width="100%">
+        <PlayGameButton
+          backgroundColor="playerX"
+          color="onPlayerX"
+          marginBottom="largest"
+          onPress={handlePress(Mode.Normal)}
+          title="play normal game"
+        />
+        <PlayGameButton
+          backgroundColor="playerO"
+          color="onPlayerO"
+          onPress={handlePress(Mode.Continue)}
+          title="play continue game"
+        />
+      </Container>
+    </Container>
   );
 };
 
