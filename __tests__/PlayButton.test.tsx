@@ -137,7 +137,7 @@ describe('<PlayButton />', () => {
     const {container} = renderer();
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        opacity: 1,
+        opacity: undefined,
       }),
     );
   });
