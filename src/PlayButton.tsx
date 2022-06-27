@@ -30,8 +30,8 @@ const PlayButton: React.FC<Props> = ({
   );
 
   const stylesProps = React.useMemo(
-    () => playerButtonStyles({active, player}),
-    [active, player],
+    () => playerButtonStyles({active, disabled, player}),
+    [active, disabled, player],
   );
   const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
 
@@ -51,9 +51,11 @@ const PlayButton: React.FC<Props> = ({
 const playerButtonStyles =
   ({
     active,
+    disabled,
     player,
   }: {
     active: boolean;
+    disabled: boolean;
     player: TileState.Player1 | TileState.Player2;
   }) =>
   (theme: Theming.Theme) => {
@@ -71,6 +73,7 @@ const playerButtonStyles =
         backgroundColor: active ? backgroundColor : theme.color.grey,
         borderRadius: 6,
         justifyContent: 'center',
+        opacity: !active || disabled ? 0.4 : undefined,
         padding: theme.spacing.normal,
       },
     });

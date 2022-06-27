@@ -132,4 +132,31 @@ describe('<PlayButton />', () => {
       }),
     );
   });
+
+  it('sets /opacity: undefined/ by default', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        opacity: 1,
+      }),
+    );
+  });
+
+  it('sets /opacity: 0.4/ if /active === false/', () => {
+    const {container} = renderer({active: false});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        opacity: 0.4,
+      }),
+    );
+  });
+
+  it('sets /opacity: 0.4/ if /disabled === true/', () => {
+    const {container} = renderer({disabled: true});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        opacity: 0.4,
+      }),
+    );
+  });
 });
