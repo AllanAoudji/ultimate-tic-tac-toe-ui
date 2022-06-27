@@ -149,11 +149,8 @@ const Game: React.FC<Props> = ({
   return (
     <>
       <PlayerBoard
-        disabledPlayButton={
-          getActivePlayer(history) !== players[0] ||
-          selectedTileIndex === null ||
-          disabled
-        }
+        activePlayButton={getActivePlayer(history) === players[0]}
+        disabledPlayButton={selectedTileIndex === null || disabled}
         disabledSurrendButton={normalizeGameIsDone(winner) || disabled}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[1])}
@@ -172,11 +169,8 @@ const Game: React.FC<Props> = ({
         selectedTileIndex={selectedTileIndex}
       />
       <PlayerBoard
-        disabledPlayButton={
-          getActivePlayer(history) !== players[1] ||
-          selectedTileIndex === null ||
-          disabled
-        }
+        activePlayButton={getActivePlayer(history) === players[1]}
+        disabledPlayButton={selectedTileIndex === null || disabled}
         disabledSurrendButton={normalizeGameIsDone(winner) || disabled}
         onPressPlay={onPressPlay}
         onSurrend={onSurrend(players[0])}
