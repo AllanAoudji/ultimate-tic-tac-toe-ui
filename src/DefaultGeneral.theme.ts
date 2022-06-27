@@ -1,7 +1,11 @@
 const DEFAULT_FONT_SIZE: Theming.FontSizeTheme = {
-  large: 32,
+  large: 24,
+  larger: 28,
+  largest: 20,
   normal: 16,
   small: 8,
+  smaller: 4,
+  smallest: 12,
 };
 
 const DEFAULT_SHADOW_THEME: Theming.ShadowTheme = {

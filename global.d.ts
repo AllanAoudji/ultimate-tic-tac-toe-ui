@@ -29,8 +29,12 @@ declare global {
     }
     interface FontSizeTheme {
       large: number;
+      larger: number;
+      largest: number;
       normal: number;
       small: number;
+      smaller: number;
+      smallest: number;
     }
     interface Shadow {
       elevation: number;
