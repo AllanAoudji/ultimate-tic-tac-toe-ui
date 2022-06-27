@@ -46,25 +46,27 @@ const SurrendModal: React.FC<Props> = ({
   return (
     <Container
       height={(height - width) / 2}
-      padding="normal"
+      padding="largest"
       position="absolute"
       testID="surrendModal__container"
       width={width}>
       <Container
         alignItems="center"
-        backgroundColor="onSurface"
+        backgroundColor="surface"
         borderColor={player === TileState.Player1 ? 'playerX' : 'playerO'}
         borderRadius={8}
         borderWidth={2}
         flex={1}
         justifyContent="space-between"
-        paddingBottom="normal"
-        paddingHorizontal="normal"
+        paddingBottom="largest"
+        paddingHorizontal="large"
         paddingTop="normal"
         shadow="base"
         shadowColor={player === TileState.Player1 ? 'playerX' : 'playerO'}
         testID="surrendModal__container--inner">
-        <Typography color={playerColor}>Surrend?</Typography>
+        <Typography color={playerColor} fontSize="large">
+          Surrend?
+        </Typography>
         <Container
           flexDirection="row"
           justifyContent="space-between"
