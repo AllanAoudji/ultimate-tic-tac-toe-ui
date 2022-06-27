@@ -236,9 +236,11 @@ describe('<Game />', () => {
   });
 
   it('choses player randomly', () => {
-    const {playerTop} = renderer();
-    expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
-      DEFAULT_LIGHT_THEME.color.playerO,
+    const {playerBottom} = renderer();
+    expect(getStyle(playerBottom.get.playButton())).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
+      }),
     );
   });
 
@@ -246,11 +248,15 @@ describe('<Game />', () => {
     const {playerBottom, playerTop} = renderer({
       firstPlayer: 'TOP',
     });
-    expect(getStyle(playerBottom.get.playButton()).backgroundColor).toBe(
-      DEFAULT_LIGHT_THEME.color.playerO,
+    expect(getStyle(playerBottom.get.playButton())).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
+      }),
     );
-    expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
-      DEFAULT_LIGHT_THEME.color.playerX,
+    expect(getStyle(playerTop.get.playButton())).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
+      }),
     );
   });
 
@@ -334,6 +340,21 @@ describe('<Game />', () => {
     const {container, playerBottom} = renderer();
     playerBottom.press.play();
     expect(container.query.sectionImagePlayers()).toHaveLength(9);
+  });
+
+  it("deactivates <PlayButton /> of a player if it's not his turn", () => {
+    const {playerBottom, playerTop} = renderer();
+    expect(getStyle(playerTop.get.playButton())).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
+      }),
+    );
+    playerBottom.press.play();
+    expect(getStyle(playerBottom.get.playButton())).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
+      }),
+    );
   });
 
   describe('renders <WinningModal /> with', () => {

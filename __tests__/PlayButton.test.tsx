@@ -9,6 +9,7 @@ import {getStyle} from './testUtils';
 describe('<PlayButton />', () => {
   const renderer = (
     options: {
+      active?: boolean;
       disabled?: boolean;
       onPress?: () => {};
       player?: TileState.Player1 | TileState.Player2;
@@ -16,6 +17,7 @@ describe('<PlayButton />', () => {
   ) => {
     const renderPlayButton = render(
       <PlayButton
+        active={options.active}
         disabled={options.disabled}
         onPress={options.onPress}
         player={options.player}
@@ -112,6 +114,48 @@ describe('<PlayButton />', () => {
     expect(getStyle(container.get.playText())).toEqual(
       expect.objectContaining({
         color: DEFAULT_LIGHT_THEME.color.onPlayerO,
+      }),
+    );
+  });
+
+  it('not calls /onPress/ if /active === false/', () => {
+    const {container} = renderer({active: false, onPress});
+    container.press.button();
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.grey}/ if /active === false/`, () => {
+    const {container} = renderer({active: false});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
+      }),
+    );
+  });
+
+  it('sets /opacity: undefined/ by default', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        opacity: undefined,
+      }),
+    );
+  });
+
+  it('sets /opacity: 0.4/ if /active === false/', () => {
+    const {container} = renderer({active: false});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        opacity: 0.4,
+      }),
+    );
+  });
+
+  it('sets /opacity: 0.4/ if /disabled === true/', () => {
+    const {container} = renderer({disabled: true});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        opacity: 0.4,
       }),
     );
   });

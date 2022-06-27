@@ -8,6 +8,8 @@ const DEFAULT_DARK_COLOR_THEME: Theming.ColorTheme = {
   background: '#3f3f3f',
   black: '#000',
   blackTransparent: 'rgba(0,0,0,0.6)',
+  grey: 'rgb(163, 163, 163)',
+  greyTransparent: 'rgba(163, 163, 163,0.6)',
   onPlayerO: '#fff',
   onPlayerX: '#fff',
   onPrimary: '#fff',

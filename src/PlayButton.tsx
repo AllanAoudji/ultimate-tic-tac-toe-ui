@@ -11,12 +11,14 @@ import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 
 interface Props {
+  active?: boolean;
   disabled?: boolean;
   onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
   player?: TileState.Player1 | TileState.Player2;
 }
 
 const PlayButton: React.FC<Props> = ({
+  active = true,
   disabled = false,
   onPress = () => {},
   player = TileState.Player1,
@@ -28,14 +30,14 @@ const PlayButton: React.FC<Props> = ({
   );
 
   const stylesProps = React.useMemo(
-    () => playerButtonStyles({player}),
-    [player],
+    () => playerButtonStyles({active, disabled, player}),
+    [active, disabled, player],
   );
   const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
 
   return (
     <Pressable
-      disabled={disabled}
+      disabled={disabled || !active}
       onPress={onPress}
       style={styles.container}
       testID="playButton__container--pressable">
@@ -47,19 +49,34 @@ const PlayButton: React.FC<Props> = ({
 };
 
 const playerButtonStyles =
-  ({player}: {player: TileState.Player1 | TileState.Player2}) =>
-  (theme: Theming.Theme) =>
-    StyleSheet.create<{container: ViewStyle}>({
+  ({
+    active,
+    disabled,
+    player,
+  }: {
+    active: boolean;
+    disabled: boolean;
+    player: TileState.Player1 | TileState.Player2;
+  }) =>
+  (theme: Theming.Theme) => {
+    let backgroundColor;
+    if (player === TileState.Player1) {
+      backgroundColor = theme.color.playerX;
+    }
+    if (player === TileState.Player2) {
+      backgroundColor = theme.color.playerO;
+    }
+
+    return StyleSheet.create<{container: ViewStyle}>({
       container: {
         alignItems: 'center',
-        backgroundColor:
-          player === TileState.Player1
-            ? theme.color.playerX
-            : theme.color.playerO,
+        backgroundColor: active ? backgroundColor : theme.color.grey,
         borderRadius: 6,
         justifyContent: 'center',
+        opacity: !active || disabled ? 0.4 : undefined,
         padding: theme.spacing.normal,
       },
     });
+  };
 
 export default PlayButton;
