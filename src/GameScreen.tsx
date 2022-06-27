@@ -1,8 +1,8 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
 import {BackHandler} from 'react-native';
-import Container from './Container';
 
+import Container from './Container';
 import Game from './Game';
 import QuitGameModalWrapper from './QuitGameModalWrapper';
 

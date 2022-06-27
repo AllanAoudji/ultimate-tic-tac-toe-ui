@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native';
+
 import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 

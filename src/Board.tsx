@@ -7,6 +7,7 @@ import {
   Mode,
   SectionState,
 } from 'ultimate-tic-tac-toe-algorithm';
+
 import Container from './Container';
 import Section from './Section';
 

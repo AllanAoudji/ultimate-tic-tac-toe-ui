@@ -1,6 +1,7 @@
 import React from 'react';
 import Svg, {G, Path} from 'react-native-svg';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+
 import {ThemeContext} from './Theme.context';
 
 interface Props {

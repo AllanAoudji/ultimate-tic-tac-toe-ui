@@ -1,7 +1,7 @@
 import React from 'react';
 import {Mode} from 'ultimate-tic-tac-toe-algorithm';
-import Container from './Container';
 
+import Container from './Container';
 import Logo from './Logo';
 import PlayGameButton from './PlayGameButton';
 

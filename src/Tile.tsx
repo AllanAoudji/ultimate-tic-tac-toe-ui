@@ -120,7 +120,7 @@ const tileStyles =
         display: 'flex',
         height: (width - theme.spacing.base * 3 - theme.spacing.base) / 9,
         justifyContent: 'center',
-        padding: 4,
+        padding: theme.spacing.base,
         width: (width - theme.spacing.base * 3 - theme.spacing.base) / 9,
       },
     });

@@ -5,11 +5,4 @@ save game button
 
 <SplashScren />
 
-shadowColor: string,
-
 <PlayButton /> should be grey if it's not the player turn
-
-default <Container /> backgroundColor should be transparent
-
-remove all plain color and plain padding
-=> new PlayGameButton

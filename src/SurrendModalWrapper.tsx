@@ -1,6 +1,7 @@
 import React from 'react';
 import {GestureResponderEvent} from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+
 import SurrendModal from './SurrendModal';
 
 interface Props {

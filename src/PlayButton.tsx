@@ -6,6 +6,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+
 import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 

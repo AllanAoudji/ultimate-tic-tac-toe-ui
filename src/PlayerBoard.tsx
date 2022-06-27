@@ -1,8 +1,8 @@
 import React from 'react';
 import {GestureResponderEvent, useWindowDimensions} from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
-import Container from './Container';
 
+import Container from './Container';
 import PlayButton from './PlayButton';
 import SurrendButton from './SurrendButton';
 import SurrendModalWrapper from './SurrendModalWrapper';

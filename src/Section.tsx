@@ -15,9 +15,9 @@ import {
   WinningLine,
   checkIfSectionIsFull,
 } from 'ultimate-tic-tac-toe-algorithm';
+
 import Container from './Container';
 import {ThemeContext} from './Theme.context';
-
 import Tile from './Tile';
 
 interface LineImageProps {
