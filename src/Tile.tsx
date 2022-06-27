@@ -108,7 +108,7 @@ const imageStyles = StyleSheet.create<{
     width: '100%',
   },
   transparent: {
-    opacity: 0.8,
+    opacity: 0.4,
   },
 });
 const tileStyles =
