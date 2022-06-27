@@ -294,10 +294,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /margin/', () => {
-    const {container} = renderer({margin: 'base'});
+    const {container} = renderer({margin: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        margin: DEFAULT_LIGHT_THEME.spacing.base,
+        margin: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -312,10 +312,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /marginHorizontal/', () => {
-    const {container} = renderer({marginHorizontal: 'base'});
+    const {container} = renderer({marginHorizontal: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        marginHorizontal: DEFAULT_LIGHT_THEME.spacing.base,
+        marginHorizontal: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -330,10 +330,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /marginVertical/', () => {
-    const {container} = renderer({marginVertical: 'base'});
+    const {container} = renderer({marginVertical: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        marginVertical: DEFAULT_LIGHT_THEME.spacing.base,
+        marginVertical: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -348,10 +348,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /marginBottom/', () => {
-    const {container} = renderer({marginBottom: 'base'});
+    const {container} = renderer({marginBottom: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        marginBottom: DEFAULT_LIGHT_THEME.spacing.base,
+        marginBottom: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -366,10 +366,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /marginLeft/', () => {
-    const {container} = renderer({marginLeft: 'base'});
+    const {container} = renderer({marginLeft: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        marginLeft: DEFAULT_LIGHT_THEME.spacing.base,
+        marginLeft: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -384,10 +384,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /marginRight/', () => {
-    const {container} = renderer({marginRight: 'base'});
+    const {container} = renderer({marginRight: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        marginRight: DEFAULT_LIGHT_THEME.spacing.base,
+        marginRight: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -402,10 +402,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /marginTop/', () => {
-    const {container} = renderer({marginTop: 'base'});
+    const {container} = renderer({marginTop: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        marginTop: DEFAULT_LIGHT_THEME.spacing.base,
+        marginTop: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -420,10 +420,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /padding/', () => {
-    const {container} = renderer({padding: 'base'});
+    const {container} = renderer({padding: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        padding: DEFAULT_LIGHT_THEME.spacing.base,
+        padding: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -438,10 +438,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /paddingHorizontal/', () => {
-    const {container} = renderer({paddingHorizontal: 'base'});
+    const {container} = renderer({paddingHorizontal: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        paddingHorizontal: DEFAULT_LIGHT_THEME.spacing.base,
+        paddingHorizontal: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -456,10 +456,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /paddingVertical/', () => {
-    const {container} = renderer({paddingVertical: 'base'});
+    const {container} = renderer({paddingVertical: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        paddingVertical: DEFAULT_LIGHT_THEME.spacing.base,
+        paddingVertical: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -474,10 +474,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /paddingBottom/', () => {
-    const {container} = renderer({paddingBottom: 'base'});
+    const {container} = renderer({paddingBottom: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        paddingBottom: DEFAULT_LIGHT_THEME.spacing.base,
+        paddingBottom: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -492,10 +492,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /paddingLeft/', () => {
-    const {container} = renderer({paddingLeft: 'base'});
+    const {container} = renderer({paddingLeft: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        paddingLeft: DEFAULT_LIGHT_THEME.spacing.base,
+        paddingLeft: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -510,10 +510,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /paddingRight/', () => {
-    const {container} = renderer({paddingRight: 'base'});
+    const {container} = renderer({paddingRight: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        paddingRight: DEFAULT_LIGHT_THEME.spacing.base,
+        paddingRight: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
@@ -528,10 +528,10 @@ describe('<Container />', () => {
   });
 
   it('sets another /paddingTop/', () => {
-    const {container} = renderer({paddingTop: 'base'});
+    const {container} = renderer({paddingTop: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        paddingTop: DEFAULT_LIGHT_THEME.spacing.base,
+        paddingTop: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
