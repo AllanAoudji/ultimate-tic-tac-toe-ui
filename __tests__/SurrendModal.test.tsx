@@ -8,8 +8,6 @@ import {getStyle} from './testUtils';
 
 describe('<SurrendModal />', () => {
   const NO_TEXT = 'no',
-    PLAYER_1_COLOR = '#0012ff',
-    PLAYER_2_COLOR = '#ed1327',
     SURREND_MODAL_BUTTON_NO_TEST_ID = 'surrendModal__button--no',
     SURREND_MODAL_BUTTON_YES_TEST_ID = 'surrendModal__button--yes',
     SURREND_MODAL_CONTAINER_INNER_TEST_ID = 'surrendModal__container--inner',
@@ -118,23 +116,23 @@ describe('<SurrendModal />', () => {
     );
   });
 
-  it(`set /backgroundColor: ${PLAYER_2_COLOR}/ on the "yes" <Button /> if /player === Player2/`, () => {
+  it(`set /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ on the "yes" <Button /> if /player === Player2/`, () => {
     const {getByTestId} = render(<SurrendModal player={TileState.Player2} />);
     expect(getByTestId(SURREND_MODAL_BUTTON_YES_TEST_ID).props.style).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          backgroundColor: PLAYER_2_COLOR,
+          backgroundColor: DEFAULT_LIGHT_THEME.color.playerO,
         }),
       ]),
     );
   });
 
-  it(`set /backgroundColor: ${PLAYER_1_COLOR}/ on the "yes" <Button /> if /player === Player1/`, () => {
+  it(`set /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on the "yes" <Button /> if /player === Player1/`, () => {
     const {getByTestId} = render(<SurrendModal />);
     expect(getByTestId(SURREND_MODAL_BUTTON_YES_TEST_ID).props.style).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          backgroundColor: PLAYER_1_COLOR,
+          backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
         }),
       ]),
     );
@@ -158,23 +156,23 @@ describe('<SurrendModal />', () => {
     );
   });
 
-  it(`set /borderColor: ${PLAYER_2_COLOR}/ on the "no" <Button /> if /Player === Player2/`, () => {
+  it(`set /borderColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ on the "no" <Button /> if /Player === Player2/`, () => {
     const {getByTestId} = render(<SurrendModal player={TileState.Player2} />);
     expect(getByTestId(SURREND_MODAL_BUTTON_NO_TEST_ID).props.style).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          borderColor: PLAYER_2_COLOR,
+          borderColor: DEFAULT_LIGHT_THEME.color.playerO,
         }),
       ]),
     );
   });
 
-  it(`set /borderColor: ${PLAYER_1_COLOR}/ on the "no" <Button /> if /Player === Player1/`, () => {
+  it(`set /borderColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ on the "no" <Button /> if /Player === Player1/`, () => {
     const {getByTestId} = render(<SurrendModal />);
     expect(getByTestId(SURREND_MODAL_BUTTON_NO_TEST_ID).props.style).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          borderColor: PLAYER_1_COLOR,
+          borderColor: DEFAULT_LIGHT_THEME.color.playerX,
         }),
       ]),
     );

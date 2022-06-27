@@ -9,6 +9,7 @@ import {
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import Container from './Container';
+import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 
 interface Props {
@@ -25,19 +26,22 @@ const SurrendModal: React.FC<Props> = ({
   player = TileState.Player1,
 }) => {
   const {width, height} = useWindowDimensions();
+  const {theme} = React.useContext(ThemeContext);
 
-  const playerColor = React.useMemo(
-    () => (player === TileState.Player1 ? 'playerX' : 'playerO'),
-    [player],
-  );
-  const styles = React.useMemo(
-    () => surrendModalStyles({height, player, width}),
-    [height, player, width],
-  );
   const onPlayerColor = React.useMemo(
     () => (player === TileState.Player1 ? 'onPlayerX' : 'onPlayerO'),
     [player],
   );
+  const playerColor = React.useMemo(
+    () => (player === TileState.Player1 ? 'playerX' : 'playerO'),
+    [player],
+  );
+
+  const stylesProps = React.useMemo(
+    () => surrendModalStyles({height, player, width}),
+    [height, player, width],
+  );
+  const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
 
   return (
     <Container
@@ -85,31 +89,39 @@ const SurrendModal: React.FC<Props> = ({
   );
 };
 
-const surrendModalStyles = ({
-  player,
-}: {
-  height: number;
-  player: TileState.Player1 | TileState.Player2;
-  width: number;
-}) =>
-  StyleSheet.create<{
-    button: ViewStyle;
-    buttonNo: ViewStyle;
-    buttonYes: ViewStyle;
-  }>({
-    button: {
-      alignItems: 'center',
-      borderRadius: 4,
-      padding: 8,
-      width: 120,
-    },
-    buttonNo: {
-      borderColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
-      borderWidth: 2,
-    },
-    buttonYes: {
-      backgroundColor: player === TileState.Player2 ? '#ed1327' : '#0012ff',
-    },
-  });
+const surrendModalStyles =
+  ({
+    player,
+  }: {
+    height: number;
+    player: TileState.Player1 | TileState.Player2;
+    width: number;
+  }) =>
+  (theme: Theming.Theme) =>
+    StyleSheet.create<{
+      button: ViewStyle;
+      buttonNo: ViewStyle;
+      buttonYes: ViewStyle;
+    }>({
+      button: {
+        alignItems: 'center',
+        borderRadius: 4,
+        padding: 8,
+        width: 120,
+      },
+      buttonNo: {
+        borderColor:
+          player === TileState.Player1
+            ? theme.color.playerX
+            : theme.color.playerO,
+        borderWidth: 2,
+      },
+      buttonYes: {
+        backgroundColor:
+          player === TileState.Player1
+            ? theme.color.playerX
+            : theme.color.playerO,
+      },
+    });
 
 export default SurrendModal;
