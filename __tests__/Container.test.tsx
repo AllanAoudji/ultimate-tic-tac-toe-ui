@@ -158,11 +158,11 @@ describe('<Container />', () => {
     expect(container.get.container().props.pointerEvents).toBeUndefined();
   });
 
-  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.background}/ by default`, () => {
+  it('sets /backgroundColor: undefined/ by default', () => {
     const {container} = renderer();
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.surface,
+        backgroundColor: undefined,
       }),
     );
   });

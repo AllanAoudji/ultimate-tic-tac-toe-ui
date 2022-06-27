@@ -68,7 +68,7 @@ interface Props {
 
 const Container: React.FC<Props> = ({
   alignItems,
-  backgroundColor = 'surface',
+  backgroundColor,
   borderColor,
   borderRadius,
   borderWidth,
@@ -230,7 +230,7 @@ const stylesContainer =
     width,
   }: {
     alignItems?: FlexAlignType;
-    backgroundColor: keyof Theming.ColorTheme;
+    backgroundColor?: keyof Theming.ColorTheme;
     borderColor?: keyof Theming.ColorTheme;
     borderRadius?: borderRadius;
     borderWidth?: borderWidth;
@@ -272,7 +272,9 @@ const stylesContainer =
     return StyleSheet.create<{container: ViewStyle}>({
       container: {
         alignItems,
-        backgroundColor: theme.color[backgroundColor],
+        backgroundColor: backgroundColor
+          ? theme.color[backgroundColor]
+          : undefined,
         borderColor: borderColor ? theme.color[borderColor] : undefined,
         borderRadius,
         borderWidth,
