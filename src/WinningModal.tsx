@@ -7,6 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
+
 import Container from './Container';
 import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
@@ -64,12 +65,14 @@ const WinningModal: React.FC<WinningModalProps> = ({
   const {width} = useWindowDimensions();
   const {theme} = React.useContext(ThemeContext);
 
+  const styles = React.useMemo(() => stylesWinningModal(theme), [theme]);
+
   const winnerColor = React.useMemo(() => generateColor(winner), [winner]);
 
   return (
     <Container
       alignItems="center"
-      // should be 'rgba(0,0,0,0.7)'
+      // TODO: should be 'rgba(0,0,0,0.7)'
       backgroundColor="onSurface"
       height="100%"
       justifyContent="center"
@@ -121,17 +124,18 @@ const WinningModal: React.FC<WinningModalProps> = ({
   );
 };
 
-const styles = StyleSheet.create<{
-  button: ViewStyle;
-  buttonRight: ViewStyle;
-}>({
-  button: {
-    paddingVertical: 10,
-    width: 100,
-  },
-  buttonRight: {
-    alignItems: 'flex-end',
-  },
-});
+const stylesWinningModal = (theme: Theming.Theme) =>
+  StyleSheet.create<{
+    button: ViewStyle;
+    buttonRight: ViewStyle;
+  }>({
+    button: {
+      paddingVertical: theme.spacing.double,
+      width: 100,
+    },
+    buttonRight: {
+      alignItems: 'flex-end',
+    },
+  });
 
 export default WinningModal;
