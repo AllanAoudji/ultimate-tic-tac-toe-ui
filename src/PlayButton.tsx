@@ -22,6 +22,11 @@ const PlayButton: React.FC<Props> = ({
   player = TileState.Player1,
 }) => {
   const {theme} = React.useContext(ThemeContext);
+  const color = React.useMemo<keyof Theming.ColorTheme>(
+    () => (player === TileState.Player1 ? 'onPlayerX' : 'onPlayerO'),
+    [player],
+  );
+
   const stylesProps = React.useMemo(
     () => playerButtonStyles({player}),
     [player],
@@ -34,7 +39,9 @@ const PlayButton: React.FC<Props> = ({
       onPress={onPress}
       style={styles.container}
       testID="playButton__container--pressable">
-      <Typography>play</Typography>
+      <Typography color={color} textTransform="uppercase">
+        play
+      </Typography>
     </Pressable>
   );
 };
