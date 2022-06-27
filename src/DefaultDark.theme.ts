@@ -13,7 +13,7 @@ const DEFAULT_DARK_COLOR_THEME: Theming.ColorTheme = {
   onPrimary: '#fff',
   onSurface: '#fff',
   playerO: '#f41f03',
-  playerX: '#f41f03',
+  playerX: '#3689ff',
   primary: '#03a9f4',
   surface: '#545454',
   white: '#fff',

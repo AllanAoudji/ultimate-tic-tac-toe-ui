@@ -13,7 +13,7 @@ const DEFAULT_LIGHT_COLOR_THEME: Theming.ColorTheme = {
   onPrimary: '#fff',
   onSurface: '#000',
   playerO: '#f41f03',
-  playerX: '#f41f03',
+  playerX: '#3689ff',
   primary: '#03a9f4',
   surface: '#fff',
   white: '#fff',
