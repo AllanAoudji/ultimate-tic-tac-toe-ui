@@ -4,20 +4,100 @@ import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import PlayerBoard from '../src/PlayerBoard';
-import {getStyle} from './testUtils';
+import {getDisabled, getStyle} from './testUtils';
 
 describe('<PlayerBoard />', () => {
-  const NO_TEXT = 'no',
-    PLAY_BUTTON_CONTAINER_PRESSABLE = 'playButton__container--pressable',
-    PLAY_TEXT = 'play',
-    PLAYER_BOARD_CONTAINER_TEST_ID = 'playerBoard__container',
-    PLAYER_BOARD_CONTAINER_OPACITY_TEST_ID = 'playerBoard__container--opacity',
-    SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
-      'surrendButton__container--pressable',
-    SURRENDER_MODAL_BUTTON_NO_TEST_ID = 'surrendModal__button--no',
-    SURRENDER_MODAL_BUTTON_YES_TEST_ID = 'surrendModal__button--yes',
-    SURREND_TEXT = 'Surrend?',
-    YES_TEXT = 'yes';
+  const renderer = (
+    options: {
+      activePlayButton?: boolean;
+      disabledPlayButton?: boolean;
+      disabledSurrendButton?: boolean;
+      disabledSurrendModal?: boolean;
+      onPressPlay?: () => void;
+      onSurrend?: () => void;
+      player?: TileState.Player1 | TileState.Player2;
+      position?: 'BOTTOM' | 'TOP';
+      setVisibleModal?: () => void;
+      visibleModal?: boolean;
+    } = {},
+  ) => {
+    const renderPlayerBoard = render(
+      <PlayerBoard
+        activePlayButton={options.activePlayButton}
+        disabledPlayButton={options.disabledPlayButton}
+        disabledSurrendButton={options.disabledSurrendButton}
+        disabledSurrendModal={options.disabledSurrendModal}
+        onPressPlay={options.onPressPlay}
+        onSurrend={options.onSurrend}
+        player={options.player}
+        position={options.position}
+        setVisibleModal={options.setVisibleModal}
+        visibleModal={options.visibleModal}
+      />,
+    );
+
+    const {getByTestId, getByText, queryByTestId, queryByText} =
+      renderPlayerBoard;
+
+    const getContainer = () => getByTestId('playerBoard__container');
+    const getNoButton = () => getByText('no');
+    const getPlayButton = () => getByText('play');
+    const getPlayButtonContainer = () =>
+      getByTestId('playButton__container--pressable');
+    const getSurrendButton = () =>
+      getByTestId('surrendButton__container--pressable');
+    const getSurrendModalText = () => getByText('Surrend?');
+    const getYesButton = () => getByText('yes');
+
+    const queryContainer = () => queryByTestId('playerBoard__container');
+    const queryNoButton = () => queryByText('no');
+    const queryPlayButton = () => queryByText('play');
+    const queryPlayButtonContainer = () =>
+      queryByTestId('playButton__container--pressable');
+    const querySurrendButton = () =>
+      queryByTestId('surrendButton__container--pressable');
+    const querySurrendModalText = () => queryByText('Surrend?');
+    const queryYesButton = () => queryByText('yes');
+
+    return {
+      container: {
+        get: {
+          container: getContainer,
+          no: getNoButton,
+          playButton: getPlayButton,
+          playButtonContainer: getPlayButtonContainer,
+          surrendButton: getSurrendButton,
+          surrendModalText: getSurrendModalText,
+          yesButton: getYesButton,
+        },
+        press: {
+          noButton: () => {
+            fireEvent.press(getNoButton());
+          },
+          playButton: () => {
+            fireEvent.press(getPlayButton());
+          },
+          surrendButton: () => {
+            fireEvent.press(getSurrendButton());
+          },
+          yesButton: () => {
+            fireEvent.press(getYesButton());
+          },
+        },
+        query: {
+          container: queryContainer,
+          no: queryNoButton,
+          playButton: queryPlayButton,
+          playButtonContainer: queryPlayButtonContainer,
+          surrendButton: querySurrendButton,
+          surrendModalText: querySurrendModalText,
+          yesButton: queryYesButton,
+        },
+      },
+      render: renderPlayerBoard,
+    };
+  };
+
   let onPress: jest.Mock;
 
   beforeEach(() => {
@@ -29,158 +109,185 @@ describe('<PlayerBoard />', () => {
   });
 
   it('renders a <Container />', () => {
-    const {queryByTestId} = render(<PlayerBoard />);
-    expect(queryByTestId(PLAYER_BOARD_CONTAINER_TEST_ID)).not.toBeNull();
+    const {container} = renderer();
+    expect(container.query.container()).not.toBeNull();
   });
 
   it('renders a <PlayButton />', () => {
-    const {queryByText} = render(<PlayerBoard />);
-    expect(queryByText(PLAY_TEXT)).not.toBeNull();
+    const {container} = renderer();
+    expect(container.query.playButton()).not.toBeNull();
   });
 
   it('renders a <SurrendButton />', () => {
-    const {queryByTestId} = render(<PlayerBoard />);
-    expect(
-      queryByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID),
-    ).not.toBeNull();
-  });
-
-  it('passes /onPressPlay/ to <PlayButton />', () => {
-    const {getByText} = render(<PlayerBoard onPressPlay={onPress} />);
-    fireEvent.press(getByText(PLAY_TEXT));
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  it('passes /player/ to <PlayButton />', () => {
-    const {getByTestId} = render(<PlayerBoard player={TileState.Player2} />);
-    expect(
-      getByTestId(PLAY_BUTTON_CONTAINER_PRESSABLE).props.style.backgroundColor,
-    ).toBe(DEFAULT_LIGHT_THEME.color.playerO);
-  });
-
-  it('passes /player/ to <SurrendButton />', () => {
-    const {getByTestId} = render(<PlayerBoard player={TileState.Player2} />);
-    expect(
-      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).findAllByProps({
-        fill: DEFAULT_LIGHT_THEME.color.playerO,
-      }).length,
-    ).toBe(1);
+    const {container} = renderer();
+    expect(container.query.surrendButton()).not.toBeNull();
   });
 
   it('renders <SurrendModal /> if /visibleModal === true/', () => {
-    const {queryByText} = render(<PlayerBoard visibleModal={true} />);
-    expect(queryByText(SURREND_TEXT)).not.toBeNull();
+    const {container} = renderer({visibleModal: true});
+    expect(container.query.surrendModalText).not.toBeNull();
   });
 
-  it('calls /setVisibleModal/ with /false/ when "yes" <Button /> is pressed', () => {
-    const {getByText} = render(
-      <PlayerBoard setVisibleModal={onPress} visibleModal={true} />,
-    );
-    fireEvent.press(getByText(YES_TEXT));
-    expect(onPress).toHaveBeenCalledWith(false);
-  });
-
-  it('calls /setVisibleModal/ with /false/ when "no" <Button /> is pressed', () => {
-    const {getByText} = render(
-      <PlayerBoard setVisibleModal={onPress} visibleModal={true} />,
-    );
-    fireEvent.press(getByText(NO_TEXT));
-    expect(onPress).toHaveBeenCalledWith(false);
-  });
-
-  it('calls /onSurrend/ when "yes" <Button /> is Pressed', () => {
-    const {getByText} = render(
-      <PlayerBoard onSurrend={onPress} visibleModal={true} />,
-    );
-    fireEvent.press(getByText(YES_TEXT));
+  it('passes /onPressPlay/ to <PlayButton />', () => {
+    const {container} = renderer({onPressPlay: onPress});
+    container.press.playButton();
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('disables <PlayButton /> if /disabledPlayButton === true/', () => {
-    const {getByText} = render(
-      <PlayerBoard disabledPlayButton={true} onPressPlay={onPress} />,
-    );
-    fireEvent.press(getByText(PLAY_TEXT));
+  it('calls /onSurrend/ when "yes" <Button /> is Pressed', () => {
+    const {container} = renderer({onSurrend: onPress, visibleModal: true});
+    container.press.yesButton();
+    expect(onPress).toHaveBeenCalled();
+  });
+
+  it('disables <Pressable /> from <SurrendModal /> if /disabledSurrendModal === true/', () => {
+    const {container} = renderer({
+      disabledSurrendModal: true,
+      setVisibleModal: onPress,
+      visibleModal: true,
+    });
+    container.press.yesButton();
+    container.press.noButton();
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it('disables <PlayButton /> if <SurrendModal /> is visible', () => {
-    const {getByText} = render(
-      <PlayerBoard onPressPlay={onPress} visibleModal={true} />,
-    );
-    fireEvent.press(getByText(PLAY_TEXT));
-    expect(onPress).not.toHaveBeenCalled();
-  });
-
-  it('disables <SurrendButton /> if <SurrendModal /> is visible', () => {
-    const {getByTestId} = render(
-      <PlayerBoard onPressPlay={onPress} visibleModal={true} />,
-    );
-    expect(
-      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props
-        .accessibilityState.disabled,
-    ).toBe(true);
-  });
-
-  it('disabled <Pressable /> from <SurrendModal /> if /disabledSurrendModal === true/', () => {
-    const {getByTestId} = render(
-      <PlayerBoard disabledSurrendModal={true} visibleModal={true} />,
-    );
-    fireEvent.press(getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID));
-    expect(
-      getByTestId(SURRENDER_MODAL_BUTTON_NO_TEST_ID).props.accessibilityState
-        .disabled,
-    ).toBe(true);
-    expect(
-      getByTestId(SURRENDER_MODAL_BUTTON_YES_TEST_ID).props.accessibilityState
-        .disabled,
-    ).toBe(true);
-  });
-
-  it('set /opacity: 0.4/ if /disabledPlayButton === true/', () => {
-    const {getByTestId} = render(<PlayerBoard disabledPlayButton={true} />);
-    expect(
-      getByTestId(PLAYER_BOARD_CONTAINER_OPACITY_TEST_ID).props.style.opacity,
-    ).toBe(0.4);
-  });
-
-  it('set /opacity: 1/ if /disabled === false/', () => {
-    const {getByTestId} = render(<PlayerBoard />);
-    expect(
-      getByTestId(PLAYER_BOARD_CONTAINER_OPACITY_TEST_ID).props.style.opacity,
-    ).toBe(1);
-  });
-
-  it('set /rotate: 180deg/ if /position === TOP/', () => {
-    const {getByTestId} = render(<PlayerBoard position="TOP" />);
-    expect(
-      getByTestId(PLAYER_BOARD_CONTAINER_TEST_ID).props.style.transform,
-    ).toEqual([{rotate: '180deg'}]);
-  });
-
-  it('set /rotate: 0def/ if /position === BOTTOM/', () => {
-    const {getByTestId} = render(<PlayerBoard />);
-    expect(
-      getByTestId(PLAYER_BOARD_CONTAINER_TEST_ID).props.style.transform,
-    ).toEqual([{rotate: '0deg'}]);
-  });
-
-  it('passes /player/ on <SurrendModalWrapper />', () => {
-    const {getByText} = render(
-      <PlayerBoard player={TileState.Player2} visibleModal={true} />,
-    );
-    expect(getStyle(getByText(SURREND_TEXT))).toEqual(
+  it('sets /rotate: 180deg/ if /position === TOP/', () => {
+    const {container} = renderer({position: 'TOP'});
+    expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        color: DEFAULT_LIGHT_THEME.color.playerO,
+        transform: [{rotate: '180deg'}],
       }),
     );
   });
 
-  it('disables <SurrendButton /> if /disabledSurrendButton === true/', () => {
-    const {getByTestId} = render(<PlayerBoard disabledSurrendButton={true} />);
-    expect(
-      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID).props
-        .accessibilityState.disabled,
-    ).toBe(true);
+  it('sets /rotate: 0deg/ if /position === BOTTOM/', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        transform: [{rotate: '0deg'}],
+      }),
+    );
+  });
+
+  describe('calls /setVisibleModal/ with /false/ when', () => {
+    it('"yes" <Button /> is pressed', () => {
+      const {container} = renderer({
+        setVisibleModal: onPress,
+        visibleModal: true,
+      });
+      container.press.yesButton();
+      expect(onPress).toHaveBeenCalledWith(false);
+    });
+
+    it('"no" <Button /> is pressed', () => {
+      const {container} = renderer({
+        setVisibleModal: onPress,
+        visibleModal: true,
+      });
+      container.press.noButton();
+      expect(onPress).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('sets <PlayButton />', () => {
+    it('/opacity: 0.4/ if /disabledPlayButton === true/', () => {
+      const {container} = renderer({disabledPlayButton: true});
+      expect(getStyle(container.get.playButtonContainer())).toEqual(
+        expect.objectContaining({
+          opacity: 0.4,
+        }),
+      );
+    });
+
+    it('/opacity: undefined/ if /disabledPlayButton === false || undefined/', () => {
+      const {container} = renderer();
+      expect(getStyle(container.get.playButtonContainer())).toEqual(
+        expect.objectContaining({
+          opacity: undefined,
+        }),
+      );
+    });
+
+    it(`/opacity: 0.4; backgroundColor: ${DEFAULT_LIGHT_THEME.color.grey}/ if /activePlayButton === false/`, () => {
+      const {container} = renderer({activePlayButton: false});
+      expect(getStyle(container.get.playButtonContainer())).toEqual(
+        expect.objectContaining({
+          backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
+          opacity: 0.4,
+        }),
+      );
+    });
+
+    it('/opacity: 1/ if /activePlayButton === true || undefined/', () => {
+      const {container} = renderer({activePlayButton: true});
+      expect(getStyle(container.get.playButtonContainer())).toEqual(
+        expect.objectContaining({
+          backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
+          opacity: undefined,
+        }),
+      );
+    });
+  });
+
+  describe('disables <PlayButton /> if', () => {
+    it('/disabledPlayButton === true/', () => {
+      const {container} = renderer({
+        disabledPlayButton: true,
+        onPressPlay: onPress,
+      });
+      container.press.playButton();
+      expect(onPress).not.toHaveBeenCalled();
+    });
+
+    it('<SurrendModal /> is visible', () => {
+      const {container} = renderer({onPressPlay: onPress, visibleModal: true});
+      container.press.playButton();
+      expect(onPress).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('disables <SurrendButton /> if', () => {
+    it('<SurrendModal /> is visible', () => {
+      const {container} = renderer({onSurrend: onPress, visibleModal: true});
+      container.press.surrendButton();
+      expect(onPress).not.toHaveBeenCalled();
+    });
+
+    it('/disabledSurrendButton === true/', () => {
+      const {container} = renderer({disabledSurrendButton: true});
+      expect(getDisabled(container.get.surrendButton())).toBe(true);
+    });
+  });
+
+  describe('passes /player/ to', () => {
+    it('<PlayButton />', () => {
+      const {container} = renderer({player: TileState.Player2});
+      expect(getStyle(container.get.playButtonContainer())).toEqual(
+        expect.objectContaining({
+          backgroundColor: DEFAULT_LIGHT_THEME.color.playerO,
+        }),
+      );
+    });
+
+    it('<SurrendButton />', () => {
+      const {container} = renderer({player: TileState.Player2});
+      expect(
+        container.get
+          .surrendButton()
+          .findAllByProps({fill: DEFAULT_LIGHT_THEME.color.playerO}),
+      ).toHaveLength(1);
+    });
+
+    it('<SurrendModalWrapper />', () => {
+      const {container} = renderer({
+        player: TileState.Player2,
+        visibleModal: true,
+      });
+      expect(getStyle(container.get.surrendModalText())).toEqual(
+        expect.objectContaining({
+          color: DEFAULT_LIGHT_THEME.color.playerO,
+        }),
+      );
+    });
   });
 });

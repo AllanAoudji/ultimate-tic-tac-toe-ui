@@ -8,6 +8,7 @@ import SurrendButton from './SurrendButton';
 import SurrendModalWrapper from './SurrendModalWrapper';
 
 interface Props {
+  activePlayButton?: boolean;
   disabledPlayButton?: boolean;
   disabledSurrendButton?: boolean;
   disabledSurrendModal?: boolean;
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const PlayerBoard: React.FC<Props> = ({
+  activePlayButton = true,
   disabledPlayButton = false,
   disabledSurrendButton = false,
   disabledSurrendModal = false,
@@ -53,10 +55,9 @@ const PlayerBoard: React.FC<Props> = ({
       paddingVertical="largest"
       rotate={position === 'TOP' ? '180deg' : '0deg'}
       testID="playerBoard__container">
-      <Container
-        opacity={disabledPlayButton ? 0.4 : 1}
-        testID="playerBoard__container--opacity">
+      <Container testID="playerBoard__container--opacity">
         <PlayButton
+          active={activePlayButton}
           disabled={disabledPlayButton || visibleModal}
           onPress={onPressPlay}
           player={player}
