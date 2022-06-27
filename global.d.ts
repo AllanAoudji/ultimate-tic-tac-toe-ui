@@ -27,6 +27,11 @@ declare global {
       white: string;
       whiteTransparent: string;
     }
+    interface FontSizeTheme {
+      large: number;
+      normal: number;
+      small: number;
+    }
     interface Shadow {
       elevation: number;
       shadowOffset: {
@@ -52,6 +57,7 @@ declare global {
     interface Theme {
       id: string;
       color: ColorTheme;
+      fontSize: FontSizeTheme;
       shadow: ShadowTheme;
       spacing: SpacingTheme;
     }

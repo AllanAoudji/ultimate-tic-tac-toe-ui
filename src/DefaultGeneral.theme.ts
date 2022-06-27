@@ -1,3 +1,9 @@
+const DEFAULT_FONT_SIZE: Theming.FontSizeTheme = {
+  large: 32,
+  normal: 16,
+  small: 8,
+};
+
 const DEFAULT_SHADOW_THEME: Theming.ShadowTheme = {
   base: {
     elevation: 5,
@@ -29,4 +35,4 @@ const DEFAULT_SPACING_THEME: Theming.SpacingTheme = {
   smallest: 4,
 };
 
-export {DEFAULT_SHADOW_THEME, DEFAULT_SPACING_THEME};
+export {DEFAULT_FONT_SIZE, DEFAULT_SHADOW_THEME, DEFAULT_SPACING_THEME};

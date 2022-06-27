@@ -1,4 +1,5 @@
 import {
+  DEFAULT_FONT_SIZE,
   DEFAULT_SHADOW_THEME,
   DEFAULT_SPACING_THEME,
 } from './DefaultGeneral.theme';
@@ -24,6 +25,7 @@ export const DEFAULT_LIGHT_THEME_ID = 'default-light';
 export const DEFAULT_LIGHT_THEME: Theming.Theme = {
   id: DEFAULT_LIGHT_THEME_ID,
   color: DEFAULT_LIGHT_COLOR_THEME,
+  fontSize: DEFAULT_FONT_SIZE,
   shadow: DEFAULT_SHADOW_THEME,
   spacing: DEFAULT_SPACING_THEME,
 };
