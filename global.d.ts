@@ -16,6 +16,8 @@ declare global {
       background: string;
       black: string;
       blackTransparent: string;
+      grey: string;
+      greyTransparent: string;
       onPlayerO: string;
       onPlayerX: string;
       onPrimary: string;
