@@ -126,7 +126,7 @@ const PlayerImage: React.FC<PlayerImageProps> = ({state}) => {
 const WinningImage: React.FC<WinningImageProps> = ({mode, state}) => (
   <Container
     height="100%"
-    padding="base"
+    padding="normal"
     position="absolute"
     width="100%"
     pointerEvents="none">
@@ -165,9 +165,9 @@ const Section: React.FC<SectionProps> = ({
         <Container
           flexDirection="row"
           flexWrap="wrap"
-          height={(width - theme.spacing.base) / 3}
-          padding="base"
-          width={(width - theme.spacing.base) / 3}
+          height={(width - theme.spacing.normal) / 3}
+          padding="normal"
+          width={(width - theme.spacing.normal) / 3}
           resizeMode="cover"
           source={require('../assets/images/SectionGrid.png')}
           testID="section__image--grid">

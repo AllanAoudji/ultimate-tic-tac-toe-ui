@@ -46,7 +46,7 @@ const SurrendModal: React.FC<Props> = ({
   return (
     <Container
       height={(height - width) / 2}
-      padding="double"
+      padding="normal"
       position="absolute"
       testID="surrendModal__container"
       width={width}>
@@ -58,9 +58,9 @@ const SurrendModal: React.FC<Props> = ({
         borderWidth={2}
         flex={1}
         justifyContent="space-between"
-        paddingBottom="double"
-        paddingHorizontal="double"
-        paddingTop="base"
+        paddingBottom="normal"
+        paddingHorizontal="normal"
+        paddingTop="normal"
         shadow="base"
         shadowColor={player === TileState.Player1 ? 'playerX' : 'playerO'}
         testID="surrendModal__container--inner">
@@ -106,7 +106,7 @@ const surrendModalStyles =
       button: {
         alignItems: 'center',
         borderRadius: 4,
-        padding: theme.spacing.base,
+        padding: theme.spacing.normal,
         width: 120,
       },
       buttonNo: {

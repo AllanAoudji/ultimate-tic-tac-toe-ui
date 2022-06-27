@@ -85,20 +85,20 @@ const WinningModal: React.FC<WinningModalProps> = ({
         borderColor={winnerColor}
         borderRadius={16}
         borderWidth={4}
-        paddingBottom="double"
-        paddingHorizontal="double"
-        paddingTop="double"
-        shadow="double"
+        paddingBottom="normal"
+        paddingHorizontal="normal"
+        paddingTop="normal"
+        shadow="base"
         shadowColor={winnerColor}
-        width={width - theme.spacing.double}
+        width={width - theme.spacing.normal}
         testID="winningModal__container--inner">
         <Title winner={winner} />
         <Container
           backgroundColor={winnerColor}
           borderRadius={2}
           height={4}
-          marginBottom="double"
-          marginTop="double"
+          marginBottom="normal"
+          marginTop="normal"
           width="33%"
           testID="winningModal__separator"
         />
@@ -130,7 +130,7 @@ const stylesWinningModal = (theme: Theming.Theme) =>
     buttonRight: ViewStyle;
   }>({
     button: {
-      paddingVertical: theme.spacing.double,
+      paddingVertical: theme.spacing.normal,
       width: 100,
     },
     buttonRight: {

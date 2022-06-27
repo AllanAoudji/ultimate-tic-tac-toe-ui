@@ -49,8 +49,8 @@ const PlayerBoard: React.FC<Props> = ({
     <Container
       height={(height - width) / 2}
       justifyContent="space-between"
-      paddingHorizontal="double"
-      paddingVertical="double"
+      paddingHorizontal="normal"
+      paddingVertical="normal"
       rotate={position === 'TOP' ? '180deg' : '0deg'}
       testID="playerBoard__container">
       <Container

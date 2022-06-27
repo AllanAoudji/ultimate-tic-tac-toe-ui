@@ -118,10 +118,10 @@ const tileStyles =
       container: {
         alignItems: 'center',
         display: 'flex',
-        height: (width - theme.spacing.base * 3 - theme.spacing.base) / 9,
+        height: (width - theme.spacing.normal * 3 - theme.spacing.normal) / 9,
         justifyContent: 'center',
-        padding: theme.spacing.base,
-        width: (width - theme.spacing.base * 3 - theme.spacing.base) / 9,
+        padding: theme.spacing.normal,
+        width: (width - theme.spacing.normal * 3 - theme.spacing.normal) / 9,
       },
     });
 

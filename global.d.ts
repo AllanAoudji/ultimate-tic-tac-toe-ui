@@ -37,8 +37,13 @@ declare global {
       double: Shadow;
     }
     interface SpacingTheme {
-      base: number;
-      double: number;
+      large: number;
+      larger: number;
+      largest: number;
+      normal: number;
+      small: number;
+      smaller: number;
+      smallest: number;
     }
     interface Theme {
       id: string;

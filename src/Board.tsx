@@ -42,7 +42,7 @@ const Board: React.FC<Props> = ({
       <Container
         flexDirection="row"
         flexWrap="wrap"
-        padding="base"
+        padding="normal"
         source={require('../assets/images/boardGrid.png')}
         testID="board__image--grid">
         {getSections(history).map((section, index) => (

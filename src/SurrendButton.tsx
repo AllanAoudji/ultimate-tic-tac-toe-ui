@@ -52,7 +52,7 @@ const surrendButtonStyles =
         borderWidth: 4,
         borderRadius: 50,
         justifyContent: 'center',
-        padding: theme.spacing.base,
+        padding: theme.spacing.normal,
       },
     });
 

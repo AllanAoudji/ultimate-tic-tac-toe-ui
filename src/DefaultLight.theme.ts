@@ -32,8 +32,13 @@ const DEFAULT_LIGHT_SHADOW_THEME: Theming.ShadowTheme = {
 };
 
 const DEFAULT_LIGHT_SPACING_THEME: Theming.SpacingTheme = {
-  base: 8,
-  double: 16,
+  large: 32,
+  larger: 64,
+  largest: 16,
+  normal: 8,
+  small: 2,
+  smaller: 1,
+  smallest: 4,
 };
 
 export const DEFAULT_LIGHT_THEME_ID = 'default-light';

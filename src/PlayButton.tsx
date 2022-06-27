@@ -51,7 +51,7 @@ const playerButtonStyles =
             : theme.color.playerO,
         borderRadius: 6,
         justifyContent: 'center',
-        padding: theme.spacing.base,
+        padding: theme.spacing.normal,
       },
     });
 
