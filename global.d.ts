@@ -14,6 +14,7 @@ declare global {
   namespace Theming {
     interface ColorTheme {
       background: string;
+      black: string;
       onPlayerO: string;
       onPlayerX: string;
       onPrimary: string;
@@ -22,6 +23,7 @@ declare global {
       playerX: string;
       primary: string;
       surface: string;
+      white: string;
     }
     interface Shadow {
       elevation: number;
