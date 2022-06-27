@@ -42,9 +42,11 @@ describe('<PlayGameButton />', () => {
     const {getByTestId} = render(
       <PlayGameButton disabled={true} title={TITLE_TEXT} />,
     );
-    expect(
-      getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE).props.style.opacity,
-    ).toBe(0.5);
+    expect(getStyle(getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE))).toEqual(
+      expect.objectContaining({
+        opacity: 0.4,
+      }),
+    );
   });
 
   it('sets /opacity: 1/ if /disabled === false/', () => {
@@ -54,34 +56,35 @@ describe('<PlayGameButton />', () => {
     ).toBe(1);
   });
 
-  it('sets /backgroundColor: #eb34e8/ if /backgroundColor === #eb34e8/', () => {
-    const backgroundColor = '#eb34e8';
+  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.onPrimary}/ if /backgroundColor === onPrimary/`, () => {
     const {getByTestId} = render(
-      <PlayGameButton backgroundColor={backgroundColor} title={TITLE_TEXT} />,
+      <PlayGameButton backgroundColor="onPrimary" title={TITLE_TEXT} />,
     );
-    expect(
-      getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE).props.style
-        .backgroundColor,
-    ).toBe(backgroundColor);
+    expect(getStyle(getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE))).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.onPrimary,
+      }),
+    );
   });
 
-  it('sets /backgroundColor: #3af043/ if /backgroundColor === #3af043/', () => {
-    const backgroundColor = '#3af043';
+  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.background}/ if /backgroundColor === background/`, () => {
     const {getByTestId} = render(
-      <PlayGameButton backgroundColor={backgroundColor} title={TITLE_TEXT} />,
+      <PlayGameButton backgroundColor="background" title={TITLE_TEXT} />,
     );
-    expect(
-      getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE).props.style
-        .backgroundColor,
-    ).toBe(backgroundColor);
+    expect(getStyle(getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE))).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.background,
+      }),
+    );
   });
 
-  it('sets /backgroundColor: #0012ff/ if /backgroundColor === undefined/', () => {
+  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ if /backgroundColor === undefined/`, () => {
     const {getByTestId} = render(<PlayGameButton title={TITLE_TEXT} />);
-    expect(
-      getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE).props.style
-        .backgroundColor,
-    ).toBe('#0012ff');
+    expect(getStyle(getByTestId(PLAY_GAME_BUTTON_CONTAINER_PRESSABLE))).toEqual(
+      expect.objectContaining({
+        backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
+      }),
+    );
   });
 
   it(`sets /color: ${DEFAULT_LIGHT_THEME.color.onSurface}/ if /color === undefined/`, () => {
