@@ -165,9 +165,9 @@ const Section: React.FC<SectionProps> = ({
         <Container
           flexDirection="row"
           flexWrap="wrap"
-          height={(width - theme.spacing.normal) / 3}
-          padding="normal"
-          width={(width - theme.spacing.normal) / 3}
+          height={(width - theme.spacing.largest) / 3}
+          padding="small"
+          width={(width - theme.spacing.largest) / 3}
           resizeMode="cover"
           source={require('../assets/images/SectionGrid.png')}
           testID="section__image--grid">
