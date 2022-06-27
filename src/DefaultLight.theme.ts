@@ -6,6 +6,7 @@ import {
 const DEFAULT_LIGHT_COLOR_THEME: Theming.ColorTheme = {
   background: '#dedede',
   black: '#000',
+  blackTransparent: 'rgba(0,0,0,0.6)',
   onPlayerO: '#fff',
   onPlayerX: '#fff',
   onPrimary: '#fff',
@@ -15,6 +16,7 @@ const DEFAULT_LIGHT_COLOR_THEME: Theming.ColorTheme = {
   primary: '#03a9f4',
   surface: '#fff',
   white: '#fff',
+  whiteTransparent: 'rgba(255,255,255,0.6)',
 };
 
 export const DEFAULT_LIGHT_THEME_ID = 'default-light';

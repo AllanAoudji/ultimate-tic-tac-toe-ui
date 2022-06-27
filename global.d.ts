@@ -15,6 +15,7 @@ declare global {
     interface ColorTheme {
       background: string;
       black: string;
+      blackTransparent: string;
       onPlayerO: string;
       onPlayerX: string;
       onPrimary: string;
@@ -24,6 +25,7 @@ declare global {
       primary: string;
       surface: string;
       white: string;
+      whiteTransparent: string;
     }
     interface Shadow {
       elevation: number;
