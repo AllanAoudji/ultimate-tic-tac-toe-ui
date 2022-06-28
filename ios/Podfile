@@ -21,6 +21,8 @@ target 'ultimateTicTacToeUI' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
   target 'ultimateTicTacToeUITests' do
     inherit! :complete
     # Pods for testing
