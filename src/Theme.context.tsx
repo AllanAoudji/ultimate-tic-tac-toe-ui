@@ -27,10 +27,9 @@ const ThemeProvider: React.FC<Props> = ({children, initialTheme}) => {
   const [localThemeIsSet, setLocalThemeIsSet] = React.useState<boolean>(true);
   const [theme, setTheme] = React.useState<Theming.Theme>(initialTheme);
 
-  let [isMount, setIsMount] = React.useState<boolean>(true);
+  const firstUpdate = React.useRef(true);
 
   const toggleTheme = React.useCallback(() => {
-    setIsMount(false);
     setTheme(currentTheme => {
       if (currentTheme.id === DEFAULT_LIGHT_THEME_ID) {
         return DEFAULT_DARK_THEME;
@@ -61,10 +60,12 @@ const ThemeProvider: React.FC<Props> = ({children, initialTheme}) => {
         setLocalThemeIsSet(true);
       }
     };
-    if (!isMount) {
-      setLocalTheme();
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
     }
-  }, [isMount, theme]);
+    setLocalTheme();
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={value}>
