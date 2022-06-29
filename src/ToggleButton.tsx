@@ -19,7 +19,7 @@ interface Props {
   marginRight?: keyof Theming.SpacingTheme;
   marginTop?: keyof Theming.SpacingTheme;
   marginVertical?: keyof Theming.SpacingTheme;
-  onPress?: (state: boolean) => void;
+  onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
   state?: boolean;
 }
 
@@ -67,16 +67,6 @@ const ToggleButton: React.FC<Props> = ({
     }
   }, [activeTrackBackgroundColor, inactiveTrackBackgroundColor, state]);
 
-  const handlePress = React.useCallback(() => {
-    if (onPress) {
-      if (state) {
-        onPress(false);
-      } else {
-        onPress(true);
-      }
-    }
-  }, [onPress, state]);
-
   return (
     <Container
       margin={margin}
@@ -91,7 +81,7 @@ const ToggleButton: React.FC<Props> = ({
       {label && <Typography>{label}</Typography>}
       <Pressable
         disabled={disabled}
-        onPress={handlePress}
+        onPress={onPress}
         testID="toggleButton__pressable">
         <Container
           backgroundColor={trackBackgroundColor}

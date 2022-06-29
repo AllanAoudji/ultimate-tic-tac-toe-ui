@@ -391,18 +391,6 @@ describe('<ToggleButton />', () => {
     );
   });
 
-  it('calls /onPress/ with true if /state === false | undefined/', () => {
-    const {container} = renderer({onPress});
-    container.press.pressable();
-    expect(onPress).toHaveBeenCalledWith(true);
-  });
-
-  it('calls /onPress/ with false if /state === true/', () => {
-    const {container} = renderer({onPress, state: true});
-    container.press.pressable();
-    expect(onPress).toHaveBeenCalledWith(false);
-  });
-
   it('sets /opacity: 0.4/ if /onPress === undefined/', () => {
     const {container} = renderer();
     expect(getStyle(container.get.container())).toEqual(
