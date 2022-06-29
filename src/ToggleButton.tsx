@@ -1,5 +1,11 @@
 import React from 'react';
-import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  GestureResponderEvent,
+  Pressable,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import Container from './Container';
 import {ThemeContext} from './Theme.context';
@@ -26,7 +32,7 @@ interface Props {
 const ToggleButton: React.FC<Props> = ({
   activeThumbBackgroundColor,
   activeTrackBackgroundColor,
-  disabled,
+  disabled = false,
   inactiveThumbBackgroundColor,
   inactiveTrackBackgroundColor,
   label,
@@ -43,11 +49,11 @@ const ToggleButton: React.FC<Props> = ({
   const {theme} = React.useContext(ThemeContext);
 
   const containerOpacity = React.useMemo(() => {
-    if (disabled || !onPress) {
+    if (!onPress) {
       return 0.4;
     }
     return undefined;
-  }, [disabled, onPress]);
+  }, [onPress]);
   const propsStyles = React.useMemo(
     () =>
       toggleButtonStyles({
@@ -69,6 +75,8 @@ const ToggleButton: React.FC<Props> = ({
 
   return (
     <Container
+      alignItems="center"
+      flexDirection="row"
       margin={margin}
       marginBottom={marginBottom}
       marginHorizontal={marginHorizontal}
@@ -76,19 +84,24 @@ const ToggleButton: React.FC<Props> = ({
       marginRight={marginRight}
       marginTop={marginTop}
       marginVertical={marginVertical}
-      opacity={containerOpacity}
       testID="toggleButton__container">
       {label && <Typography>{label}</Typography>}
-      <Pressable
-        disabled={disabled}
-        onPress={onPress}
-        testID="toggleButton__pressable">
-        <Container
-          backgroundColor={trackBackgroundColor}
-          testID="toggleButton__track">
-          <View style={styles.track} testID="toggleButton__thumb" />
-        </Container>
-      </Pressable>
+      <Container marginLeft="normal" opacity={containerOpacity}>
+        <Pressable
+          disabled={disabled}
+          onPress={onPress}
+          style={styles.pressable}
+          testID="toggleButton__pressable">
+          <Container
+            backgroundColor={trackBackgroundColor}
+            borderRadius={8}
+            height={14}
+            testID="toggleButton__track"
+            width="100%">
+            <View style={styles.thumb} testID="toggleButton__thumb" />
+          </Container>
+        </Pressable>
+      </Container>
     </Container>
   );
 };
@@ -111,10 +124,24 @@ const toggleButtonStyles =
       trackBackgroundColor = inactiveThumbBackgroundColor || 'white';
     }
 
-    return StyleSheet.create<{track: ViewStyle}>({
-      track: {
+    return StyleSheet.create<{
+      pressable: ViewStyle;
+      thumb: ViewStyle;
+    }>({
+      pressable: {
+        height: 20,
+        justifyContent: 'center',
+        width: 50,
+      },
+      thumb: {
+        ...theme.shadow.base,
         backgroundColor: theme.color[trackBackgroundColor],
-        left: state ? 100 : 0,
+        borderRadius: 10,
+        height: 20,
+        left: state ? 30 : 0,
+        position: 'absolute',
+        top: -3,
+        width: 20,
       },
     });
   };
