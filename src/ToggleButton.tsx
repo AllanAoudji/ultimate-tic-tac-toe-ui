@@ -86,7 +86,10 @@ const ToggleButton: React.FC<Props> = ({
       marginVertical={marginVertical}
       testID="toggleButton__container">
       {label && <Typography>{label}</Typography>}
-      <Container marginLeft="normal" opacity={containerOpacity}>
+      <Container
+        marginLeft="normal"
+        opacity={containerOpacity}
+        testID="toggleButton__container--inner">
         <Pressable
           disabled={disabled}
           onPress={onPress}

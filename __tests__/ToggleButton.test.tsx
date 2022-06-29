@@ -49,12 +49,16 @@ describe('<ToggleButton />', () => {
       renderToggleButton;
 
     const getContainer = () => getByTestId('toggleButton__container');
+    const getInnerContainer = () =>
+      getByTestId('toggleButton__container--inner');
     const getPressable = () => getByTestId('toggleButton__pressable');
     const getText = (text: string) => getByText(text);
     const getThumb = () => getByTestId('toggleButton__thumb');
     const getTrack = () => getByTestId('toggleButton__track');
 
     const queryContainer = () => queryByTestId('toggleButton__container');
+    const queyInnerContainer = () =>
+      queryByTestId('toggleButton__container--inner');
     const queryPresable = () => queryByTestId('toggleButton__pressable');
     const queryText = (text: string) => queryByText(text);
     const queryThumb = () => queryByTestId('toggleButton__thumb');
@@ -64,6 +68,7 @@ describe('<ToggleButton />', () => {
       container: {
         get: {
           container: getContainer,
+          innerContainer: getInnerContainer,
           pressable: getPressable,
           text: getText,
           thumb: getThumb,
@@ -76,6 +81,7 @@ describe('<ToggleButton />', () => {
         },
         query: {
           container: queryContainer,
+          innerContainer: queyInnerContainer,
           pressable: queryPresable,
           text: queryText,
           thumb: queryThumb,
@@ -269,15 +275,6 @@ describe('<ToggleButton />', () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it('sets /opacity: 0.4/ if /disabled === true/', () => {
-    const {container} = renderer({disabled: true});
-    expect(getStyle(container.get.container())).toEqual(
-      expect.objectContaining({
-        opacity: 0.4,
-      }),
-    );
-  });
-
   it('sets /opacity: undefined/ if /disabled === false/', () => {
     const {container} = renderer({onPress});
     expect(getStyle(container.get.container())).toEqual(
@@ -382,18 +379,18 @@ describe('<ToggleButton />', () => {
     );
   });
 
-  it('sets "thumb" /left: 100/ if  /state === true/', () => {
+  it('sets "thumb" /left: 30/ if  /state === true/', () => {
     const {container} = renderer({state: true});
     expect(getStyle(container.get.thumb())).toEqual(
       expect.objectContaining({
-        left: 100,
+        left: 30,
       }),
     );
   });
 
   it('sets /opacity: 0.4/ if /onPress === undefined/', () => {
     const {container} = renderer();
-    expect(getStyle(container.get.container())).toEqual(
+    expect(getStyle(container.get.innerContainer())).toEqual(
       expect.objectContaining({
         opacity: 0.4,
       }),
