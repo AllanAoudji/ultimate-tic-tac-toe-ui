@@ -492,20 +492,6 @@ describe('<Game />', () => {
       expect(getDisabled(playerTop.get.surrendButton())).toBe(true);
     });
 
-    it('closes BOTTOM <SurrendModal />', () => {
-      const {playerBottom, players, rerender} = renderer();
-      playerBottom.press.surrendButton();
-      rerender({disabled: true});
-      expect(players.query.surrendModal()).toBeNull();
-    });
-
-    it('closes TOP <SurrendModal />', () => {
-      const {playerTop, players, rerender} = renderer();
-      playerTop.press.surrendButton();
-      rerender({disabled: true});
-      expect(players.query.surrendModal()).toBeNull();
-    });
-
     it('disables <Board />', () => {
       const {container} = renderer({disabled: true});
       expect(getDisabled(container.get.tile(0))).toBe(true);
@@ -584,7 +570,7 @@ describe('<Game />', () => {
       const setGameIsDone = jest.fn();
       const {playerBottom} = renderer({setGameIsDone});
       playerBottom.press.surrendGame();
-      expect(setGameIsDone).toHaveBeenCalledWith(false);
+      expect(setGameIsDone).toHaveBeenCalledWith(true);
     });
   });
 
