@@ -66,7 +66,7 @@ describe('<ToggleThemeButton />', () => {
     const {container} = renderer({initialTheme: DEFAULT_DARK_THEME});
     expect(getStyle(container.get.thumb())).toEqual(
       expect.objectContaining({
-        left: 100,
+        left: 30,
       }),
     );
   });
@@ -87,7 +87,7 @@ describe('<ToggleThemeButton />', () => {
     });
     expect(getStyle(container.get.thumb())).toEqual(
       expect.objectContaining({
-        left: 100,
+        left: 30,
       }),
     );
   });
