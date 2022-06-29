@@ -4,6 +4,7 @@ import {Mode} from 'ultimate-tic-tac-toe-algorithm';
 import Container from './Container';
 import Logo from './Logo';
 import PlayGameButton from './PlayGameButton';
+import ToggleThemeButton from './ToggleThemeButton';
 
 const HomeScreen: React.FC<Screen.RootStack.HomeNavigationProps> = ({
   navigation,
@@ -15,26 +16,33 @@ const HomeScreen: React.FC<Screen.RootStack.HomeNavigationProps> = ({
 
   return (
     <Container
-      alignItems="center"
+      alignItems="flex-end"
       flex={1}
-      justifyContent="center"
       backgroundColor="background"
+      padding="largest"
       testID="homeScreen__container">
-      <Logo width={180} />
-      <Container paddingHorizontal="larger" marginTop="larger" width="100%">
-        <PlayGameButton
-          backgroundColor="playerX"
-          color="onPlayerX"
-          marginBottom="largest"
-          onPress={handlePress(Mode.Normal)}
-          title="play normal game"
-        />
-        <PlayGameButton
-          backgroundColor="playerO"
-          color="onPlayerO"
-          onPress={handlePress(Mode.Continue)}
-          title="play continue game"
-        />
+      <ToggleThemeButton />
+      <Container
+        alignItems="center"
+        flex={1}
+        justifyContent="center"
+        width="100%">
+        <Logo width={180} />
+        <Container paddingHorizontal="larger" marginTop="larger" width="100%">
+          <PlayGameButton
+            backgroundColor="playerX"
+            color="onPlayerX"
+            marginBottom="largest"
+            onPress={handlePress(Mode.Normal)}
+            title="play normal game"
+          />
+          <PlayGameButton
+            backgroundColor="playerO"
+            color="onPlayerO"
+            onPress={handlePress(Mode.Continue)}
+            title="play continue game"
+          />
+        </Container>
       </Container>
     </Container>
   );
