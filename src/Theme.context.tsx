@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
+import {StatusBar} from 'react-native';
 
 import {DEFAULT_DARK_THEME, DEFAULT_DARK_THEME_ID} from './DefaultDark.theme';
 import {
@@ -66,7 +67,13 @@ const ThemeProvider: React.FC<Props> = ({children, initialTheme}) => {
   }, [isMount, theme]);
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>
+      <StatusBar
+        backgroundColor={theme.color.background}
+        barStyle="dark-content"
+      />
+      {children}
+    </ThemeContext.Provider>
   );
 };
 
