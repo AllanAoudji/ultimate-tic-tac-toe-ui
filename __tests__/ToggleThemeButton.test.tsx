@@ -1,5 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
+import {act} from 'react-test-renderer';
 import {DEFAULT_DARK_THEME} from '../src/DefaultDark.theme';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
@@ -79,9 +80,11 @@ describe('<ToggleThemeButton />', () => {
     );
   });
 
-  it('toggles theme when <ToggleButton /> is pressed', () => {
+  it('toggles theme when <ToggleButton /> is pressed', async () => {
     const {container} = renderer();
-    container.press.toggleButton();
+    await act(async () => {
+      container.press.toggleButton();
+    });
     expect(getStyle(container.get.thumb())).toEqual(
       expect.objectContaining({
         left: 100,
