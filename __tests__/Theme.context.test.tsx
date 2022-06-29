@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {
@@ -8,12 +9,19 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {act} from 'react-test-renderer';
 
-import {DEFAULT_DARK_THEME} from '../src/DefaultDark.theme';
-import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
-
-import {ThemeProvider, ThemeContext} from '../src/Theme.context';
 import {getStyle} from './testUtils';
+
+import {
+  DEFAULT_DARK_THEME,
+  DEFAULT_DARK_THEME_ID,
+} from '../src/DefaultDark.theme';
+import {
+  DEFAULT_LIGHT_THEME,
+  DEFAULT_LIGHT_THEME_ID,
+} from '../src/DefaultLight.theme';
+import {ThemeProvider, ThemeContext} from '../src/Theme.context';
 
 const renderer = (
   initialTheme:
@@ -21,12 +29,13 @@ const renderer = (
     | typeof DEFAULT_DARK_THEME = DEFAULT_LIGHT_THEME,
 ) => {
   const Component = () => {
-    const {theme, toggleTheme} = React.useContext(ThemeContext);
+    const {localThemeIsSet, theme, toggleTheme} =
+      React.useContext(ThemeContext);
     const style = React.useMemo(() => styleComponent(theme), [theme]);
     return (
       <View style={style.viewStyle} testID="view">
         <Text style={style.textStyle}>text</Text>
-        <Pressable onPress={toggleTheme}>
+        <Pressable disabled={!localThemeIsSet} onPress={toggleTheme}>
           <Text>toggle</Text>
         </Pressable>
       </View>
@@ -41,7 +50,7 @@ const renderer = (
       viewStyle: {
         backgroundColor: theme.color.background,
         borderColor: theme.color.surface,
-        padding: theme.spacing.base,
+        padding: theme.spacing.normal,
       },
     });
 
@@ -80,7 +89,7 @@ describe('<Theme />', () => {
       expect.objectContaining({
         backgroundColor: DEFAULT_DARK_THEME.color.background,
         borderColor: DEFAULT_DARK_THEME.color.surface,
-        padding: DEFAULT_DARK_THEME.spacing.base,
+        padding: DEFAULT_DARK_THEME.spacing.normal,
       }),
     );
     expect(getStyle(container.get.text())).toEqual(
@@ -94,7 +103,7 @@ describe('<Theme />', () => {
       expect.objectContaining({
         backgroundColor: DEFAULT_LIGHT_THEME.color.background,
         borderColor: DEFAULT_LIGHT_THEME.color.surface,
-        padding: DEFAULT_LIGHT_THEME.spacing.base,
+        padding: DEFAULT_LIGHT_THEME.spacing.normal,
       }),
     );
     expect(getStyle(container.get.text())).toEqual(
@@ -103,6 +112,29 @@ describe('<Theme />', () => {
       }),
     );
   };
+
+  it('do not calls AsyncStoraga.setItem on mount', () => {
+    renderer();
+    expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+  });
+
+  it('calls AsyncStorage.setItem when toggleTheme is pressed with new theme.id', async () => {
+    const {container} = renderer();
+    await act(async () => {
+      container.press.toggle();
+    });
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      'THEME_ID',
+      DEFAULT_DARK_THEME_ID,
+    );
+    await act(async () => {
+      container.press.toggle();
+    });
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      'THEME_ID',
+      DEFAULT_LIGHT_THEME_ID,
+    );
+  });
 
   describe('renders children with', () => {
     it('lightTheme', () => {
@@ -117,15 +149,19 @@ describe('<Theme />', () => {
   });
 
   describe('toggle between', () => {
-    it('light and dark theme', () => {
+    it('light and dark theme', async () => {
       const {container} = renderer();
-      container.press.toggle();
+      await act(async () => {
+        container.press.toggle();
+      });
       expectDarkTheme(container);
     });
 
-    it('dark and light theme', () => {
+    it('dark and light theme', async () => {
       const {container} = renderer(DEFAULT_DARK_THEME);
-      container.press.toggle();
+      await act(async () => {
+        container.press.toggle();
+      });
       expectLightTheme(container);
     });
   });

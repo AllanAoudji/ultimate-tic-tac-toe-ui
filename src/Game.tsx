@@ -66,6 +66,9 @@ const Game: React.FC<Props> = ({
   const [selectedTileIndex, setSelectedTilIndex] = React.useState<
     number | null
   >(null);
+
+  const firstUpdate = React.useRef(true);
+
   const [visibleModalPlayerBottom, setVisibleModalPlayerBottom] =
     React.useState<boolean>(false);
   const [visibleModalPlayerTop, setVisibleModalPlayerTop] =
@@ -118,7 +121,7 @@ const Game: React.FC<Props> = ({
   );
 
   React.useEffect(() => {
-    if (normalizeGameIsDone(winner) || disabled) {
+    if (normalizeGameIsDone(winner)) {
       if (visibleModalPlayerBottom) {
         setVisibleModalPlayerBottom(false);
       }
@@ -127,7 +130,11 @@ const Game: React.FC<Props> = ({
       }
     }
   }, [disabled, visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
     if (history.length === 0) {
       if (setGameIsDone) {
         setGameIsDone(false);

@@ -42,17 +42,17 @@ const GameScreen: React.FC<Screen.RootStack.GameNavigationProps> = ({
   );
 
   return (
-    <Container testID="gameScreen__container">
-      <QuitGameModalWrapper
-        onPressNo={onPressNo}
-        onPressYes={onQuit}
-        visible={quitGameModalVisible}
-      />
+    <Container backgroundColor="background" testID="gameScreen__container">
       <Game
         disabled={quitGameModalVisible}
         setGameIsDone={setGameIsDone}
         mode={route.params.mode}
         onPressQuit={onQuit}
+      />
+      <QuitGameModalWrapper
+        onPressNo={onPressNo}
+        onPressYes={onQuit}
+        visible={quitGameModalVisible}
       />
     </Container>
   );
