@@ -12,7 +12,7 @@ const ToggleThemeButton: React.FC = () => {
 
   return (
     <ToggleButton
-      disabled={localThemeIsSet}
+      disabled={!localThemeIsSet}
       label="dark theme"
       onPress={toggleTheme}
       state={state}
