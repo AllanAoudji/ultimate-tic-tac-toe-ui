@@ -10,31 +10,21 @@
 
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {StatusBar, StyleSheet, View, ViewStyle} from 'react-native';
-import SplashScreen from 'react-native-splash-screen';
 
+import Container from './src/Container';
+import Loader from './src/Loader';
 import Navigation from './src/Navigation';
 
 const App = () => {
-  React.useEffect(() => {
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 500);
-  }, []);
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="#dedede" barStyle="dark-content" />
-      <NavigationContainer>
-        <Navigation />
-      </NavigationContainer>
-    </View>
+    <Loader>
+      <Container flex={1}>
+        <NavigationContainer>
+          <Navigation />
+        </NavigationContainer>
+      </Container>
+    </Loader>
   );
 };
-
-const styles = StyleSheet.create<{container: ViewStyle}>({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
