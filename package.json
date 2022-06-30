@@ -20,7 +20,7 @@
     "react-native-screens": "^3.13.1",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^12.3.0",
-    "ultimate-tic-tac-toe-algorithm": "4.0.2"
+    "ultimate-tic-tac-toe-algorithm": "5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
