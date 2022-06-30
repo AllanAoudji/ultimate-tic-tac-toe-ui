@@ -6,31 +6,31 @@ import {
   useWindowDimensions,
   ViewStyle,
 } from 'react-native';
-import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
+import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import Container from './Container';
 import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 
 interface TitleProps {
-  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
+  winner: TileState.Player1 | TileState.Player2 | TileState.Draw;
 }
 interface WinningModalProps {
   disabled?: boolean;
   onPressNewGame?: ((event: GestureResponderEvent) => void) | null | undefined;
   onPressQuit?: ((event: GestureResponderEvent) => void) | null | undefined;
-  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw;
+  winner: TileState.Player1 | TileState.Player2 | TileState.Draw;
 }
 
 const generateColor: (
-  winner: TileState.Player1 | TileState.Player2 | WinningLine.Draw,
+  winner: TileState.Player1 | TileState.Player2 | TileState.Draw,
 ) => keyof Theming.ColorTheme = winner => {
   switch (winner) {
     case TileState.Player1:
       return 'playerX';
     case TileState.Player2:
       return 'playerO';
-    case WinningLine.Draw:
+    case TileState.Draw:
     default:
       return 'onSurface';
   }
@@ -42,7 +42,7 @@ const Title: React.FC<TitleProps> = ({winner}) => {
     [winner],
   );
 
-  if (winner === WinningLine.Draw) {
+  if (winner === TileState.Draw) {
     return <Typography fontSize="large">it's a draw</Typography>;
   }
 

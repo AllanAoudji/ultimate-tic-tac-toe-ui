@@ -1,6 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
-import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
+import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import WinningModal from '../src/WinningModal';
@@ -160,12 +160,12 @@ describe('<WinningModal />', () => {
   });
 
   it('displays a draw', () => {
-    const {queryByText} = render(<WinningModal winner={WinningLine.Draw} />);
+    const {queryByText} = render(<WinningModal winner={TileState.Draw} />);
     expect(queryByText(DRAW_TEXT)).not.toBeNull();
   });
 
   it(`sets /borderColor: ${DEFAULT_LIGHT_THEME.color.onSurface}/ on innerContainer if it's a draw`, () => {
-    const {getByTestId} = render(<WinningModal winner={WinningLine.Draw} />);
+    const {getByTestId} = render(<WinningModal winner={TileState.Draw} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
         .borderColor,
@@ -173,7 +173,7 @@ describe('<WinningModal />', () => {
   });
 
   it(`sets /shadowColor: ${DEFAULT_LIGHT_THEME.color.onSurface}/ on innerContainer if it's a draw`, () => {
-    const {getByTestId} = render(<WinningModal winner={WinningLine.Draw} />);
+    const {getByTestId} = render(<WinningModal winner={TileState.Draw} />);
     expect(
       getByTestId(WINNING_MODAL_CONTAINER_INNER_TEST_ID).props.style
         .shadowColor,
@@ -181,14 +181,14 @@ describe('<WinningModal />', () => {
   });
 
   it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.onSurface}/ on "${WINNING_MODAL_SEPARATOR_TEST_ID}" if it's a draw`, () => {
-    const {getByTestId} = render(<WinningModal winner={WinningLine.Draw} />);
+    const {getByTestId} = render(<WinningModal winner={TileState.Draw} />);
     expect(
       getByTestId(WINNING_MODAL_SEPARATOR_TEST_ID).props.style.backgroundColor,
     ).toBe(DEFAULT_LIGHT_THEME.color.onSurface);
   });
 
   it(`sets /color: ${DEFAULT_LIGHT_THEME.color.onSurface}/ on winner <Text /> if it's a draw`, () => {
-    const {getByText} = render(<WinningModal winner={WinningLine.Draw} />);
+    const {getByText} = render(<WinningModal winner={TileState.Draw} />);
     expect(getStyle(getByText(DRAW_TEXT))).toEqual(
       expect.objectContaining({
         color: DEFAULT_LIGHT_THEME.color.onSurface,
