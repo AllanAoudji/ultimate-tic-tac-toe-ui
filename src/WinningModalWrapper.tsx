@@ -1,6 +1,6 @@
 import React from 'react';
 import {GestureResponderEvent} from 'react-native';
-import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
+import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import WinningModal from './WinningModal';
 
@@ -8,7 +8,7 @@ interface Props {
   disabled?: boolean;
   onPressQuit?: ((event: GestureResponderEvent) => void) | null | undefined;
   onPressNewGame?: ((event: GestureResponderEvent) => void) | null | undefined;
-  winner?: TileState | WinningLine.Draw;
+  winner?: TileState;
 }
 
 const WinningModalWrapper: React.FC<Props> = ({

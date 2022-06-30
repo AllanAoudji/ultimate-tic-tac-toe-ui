@@ -37,10 +37,7 @@ const spyPlay: () => {
           ultimateTicTactToAlgorithm.TileState.Empty,
           null,
         ]),
-        winner: [
-          ultimateTicTactToAlgorithm.TileState.Empty,
-          ultimateTicTactToAlgorithm.WinningLine.Draw,
-        ],
+        winner: [ultimateTicTactToAlgorithm.TileState.Draw, null],
       });
     },
     mockRestore: () => spy.mockRestore(),

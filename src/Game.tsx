@@ -30,14 +30,7 @@ const arrayEquals = (a: any, b: any) =>
   a.every((val, index) => val === b[index]);
 
 const normalizeGameIsDone: (winner: SectionState) => boolean = winner =>
-  winner[0] !== TileState.Empty || winner[1] === WinningLine.Draw;
-
-const normalizeWinner = (winner: SectionState) => {
-  if (winner[1] === WinningLine.Draw) {
-    return winner[1];
-  }
-  return winner[0];
-};
+  winner[0] !== TileState.Empty;
 
 const randomizePlayer: () => [
   TileState.Player1 | TileState.Player2,
@@ -188,7 +181,7 @@ const Game: React.FC<Props> = ({
       <WinningModalWrapper
         onPressNewGame={onPressNewGame}
         onPressQuit={onPressQuit}
-        winner={normalizeWinner(winner)}
+        winner={winner[0]}
       />
     </>
   );
