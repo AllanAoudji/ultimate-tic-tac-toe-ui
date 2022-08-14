@@ -10,6 +10,7 @@ import {
   TileState,
   WinningLine,
 } from 'ultimate-tic-tac-toe-algorithm';
+import {v4 as uuidv4} from 'uuid';
 
 import Board from './Board';
 import PlayerBoard from './PlayerBoard';
@@ -115,6 +116,8 @@ const Game: React.FC<Props> = ({
   );
 
   // Trigger when game is won by a player
+  // Clear hide surrend modals
+  // and save game in local storage
   React.useEffect(() => {
     if (normalizeGameIsDone(winner)) {
       if (visibleModalPlayerBottom) {
@@ -129,7 +132,8 @@ const Game: React.FC<Props> = ({
           history,
           winner,
         };
-        AsyncStorage.setItem('game', JSON.stringify(game));
+        const uniqueID = uuidv4();
+        await AsyncStorage.setItem(uniqueID, JSON.stringify(game));
       };
       saveGameInHistory();
     }
@@ -141,8 +145,9 @@ const Game: React.FC<Props> = ({
     winner,
   ]);
 
-  // Clear useLayourEffect
-  // Reset all state
+  // Reset all state when history.length === 0
+  // (when game reset)
+  // Do not trigger on first mount
   React.useLayoutEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;

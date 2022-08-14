@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fireEvent, render} from '@testing-library/react-native';
 import {mockRandom, resetMockRandom} from 'jest-mock-random';
 import React from 'react';
@@ -13,7 +14,6 @@ import {
 
 import Game from '../src/Game';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const renderer = (
   options: {
@@ -371,7 +371,16 @@ describe('<Game />', () => {
     expect(AsyncStorage.setItem).not.toHaveBeenCalled();
   });
 
-  it('saves game in local storage with a unique uuid', () => {})
+  it('saves game in local storage with a unique uuid', () => {
+    const {playerTop} = renderer();
+    playerTop.press.surrendGame();
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      expect.stringMatching(
+        /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi,
+      ),
+      expect.anything(),
+    );
+  });
 
   describe('renders <WinningModal /> with', () => {
     it('/winner === Player1/ if Player2 surrend', () => {
