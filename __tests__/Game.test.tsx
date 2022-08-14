@@ -13,6 +13,7 @@ import {
 
 import Game from '../src/Game';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const renderer = (
   options: {
@@ -214,6 +215,7 @@ describe('<Game />', () => {
     YES_TEXT = 'yes';
 
   beforeEach(() => {
+    jest.clearAllMocks();
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
     jest.spyOn(ultimateTicTactToAlgorithm, 'play');
   });
@@ -356,6 +358,20 @@ describe('<Game />', () => {
       }),
     );
   });
+
+  it('saves game in local storage when it won', () => {
+    const {playerTop} = renderer();
+    playerTop.press.surrendGame();
+    expect(AsyncStorage.setItem).toHaveBeenCalled();
+  });
+
+  it('does not save game in local storage if game is not won', () => {
+    const {playerTop} = renderer();
+    playerTop.press.play();
+    expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+  });
+
+  it('saves game in local storage with a unique uuid', () => {})
 
   describe('renders <WinningModal /> with', () => {
     it('/winner === Player1/ if Player2 surrend', () => {

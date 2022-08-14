@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 import React from 'react';
 import {
   generateAssets,
@@ -113,6 +114,7 @@ const Game: React.FC<Props> = ({
     [winner],
   );
 
+  // Trigger when game is won by a player
   React.useEffect(() => {
     if (normalizeGameIsDone(winner)) {
       if (visibleModalPlayerBottom) {
@@ -121,8 +123,26 @@ const Game: React.FC<Props> = ({
       if (visibleModalPlayerTop) {
         setVisibleModalPlayerTop(false);
       }
+      const saveGameInHistory = async () => {
+        const game = {
+          date: new Date(),
+          history,
+          winner,
+        };
+        AsyncStorage.setItem('game', JSON.stringify(game));
+      };
+      saveGameInHistory();
     }
-  }, [disabled, visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
+  }, [
+    disabled,
+    history,
+    visibleModalPlayerBottom,
+    visibleModalPlayerTop,
+    winner,
+  ]);
+
+  // Clear useLayourEffect
+  // Reset all state
   React.useLayoutEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
@@ -138,6 +158,8 @@ const Game: React.FC<Props> = ({
       setWinner([TileState.Empty, null]);
     }
   }, [history, setGameIsDone]);
+
+  // Call setGameIsDone (props) when game is done
   React.useEffect(() => {
     if (normalizeGameIsDone(winner)) {
       if (setGameIsDone) {
