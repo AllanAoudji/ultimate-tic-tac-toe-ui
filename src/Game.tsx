@@ -146,10 +146,10 @@ const Game: React.FC<Props> = ({
     winner,
   ]);
 
-  // Reset all state when history.length === 0
+  // Reset all states when history.length === 0
   // (when game reset)
-  // Do not trigger on first mount
   React.useLayoutEffect(() => {
+    // Do not trigger on first mount
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
@@ -165,7 +165,8 @@ const Game: React.FC<Props> = ({
     }
   }, [history, setGameIsDone]);
 
-  // Call setGameIsDone (props) when game is done
+  // Call setGameIsDone (Component props) when game is done
+  // Use to show/hide BackHandler
   React.useEffect(() => {
     if (normalizeGameIsDone(winner)) {
       if (setGameIsDone) {
