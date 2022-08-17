@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 import React from 'react';
 import {
   generateAssets,
@@ -10,11 +9,11 @@ import {
   TileState,
   WinningLine,
 } from 'ultimate-tic-tac-toe-algorithm';
-import {v4 as uuidv4} from 'uuid';
 
 import Board from './Board';
 import PlayerBoard from './PlayerBoard';
 import WinningModalWrapper from './WinningModalWrapper';
+import useGameHistory from './useGameHistory.hook';
 
 interface Props {
   disabled?: boolean;
@@ -25,15 +24,18 @@ interface Props {
 
 const initialAssets = generateAssets();
 
+// -------------------------------
+// -------------------------------
+// utile functions
+// -------------------------------
+// -------------------------------
 const arrayEquals = (a: any, b: any) =>
   Array.isArray(a) &&
   Array.isArray(b) &&
   a.length === b.length &&
   a.every((val, index) => val === b[index]);
-
 const normalizeGameIsDone: (winner: SectionState) => boolean = winner =>
   winner[0] !== TileState.Empty;
-
 const randomizePlayer: () => [
   TileState.Player1 | TileState.Player2,
   TileState.Player1 | TileState.Player2,
@@ -42,12 +44,19 @@ const randomizePlayer: () => [
     ? [TileState.Player1, TileState.Player2]
     : [TileState.Player2, TileState.Player1];
 
+// -------------------------------
+// -------------------------------
+// Component
+// -------------------------------
+// -------------------------------
 const Game: React.FC<Props> = ({
   disabled = false,
   setGameIsDone,
   mode = Mode.Normal,
   onPressQuit = () => {},
 }) => {
+  // -------------------------------
+  // states
   const [history, setHistory] = React.useState<number[]>(initialAssets.history);
   const [players, setPlayers] = React.useState<
     [
@@ -61,9 +70,6 @@ const Game: React.FC<Props> = ({
   const [selectedTileIndex, setSelectedTilIndex] = React.useState<
     number | null
   >(null);
-
-  const firstUpdate = React.useRef(true);
-
   const [visibleModalPlayerBottom, setVisibleModalPlayerBottom] =
     React.useState<boolean>(false);
   const [visibleModalPlayerTop, setVisibleModalPlayerTop] =
@@ -71,6 +77,10 @@ const Game: React.FC<Props> = ({
   const [winner, setWinner] = React.useState<SectionState>(
     initialAssets.winner,
   );
+
+  const firstUpdate = React.useRef(true);
+
+  const {saveGame} = useGameHistory();
 
   const onPressBoard = React.useCallback(
     (tileIndex: number) => () => {
@@ -126,20 +136,11 @@ const Game: React.FC<Props> = ({
       if (visibleModalPlayerTop) {
         setVisibleModalPlayerTop(false);
       }
-      const saveGameInHistory = async () => {
-        const game = {
-          date: new Date(),
-          history,
-          winner,
-        };
-        const uniqueID = uuidv4();
-        await AsyncStorage.setItem(uniqueID, JSON.stringify(game));
-      };
-      saveGameInHistory();
+      saveGame({history, winner});
     }
   }, [
-    disabled,
     history,
+    saveGame,
     visibleModalPlayerBottom,
     visibleModalPlayerTop,
     winner,
