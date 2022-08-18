@@ -14,6 +14,7 @@ import {
 import Game from '../src/Game';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 import * as useGameHistory from '../src/useGameHistory.hook';
+import {HistoryProvider} from '../src/History.context';
 
 const renderer = (
   options: {
@@ -36,6 +37,7 @@ const renderer = (
       mode={options.mode}
       setGameIsDone={options.setGameIsDone}
     />,
+    {wrapper: HistoryProvider},
   );
   resetMockRandom();
 

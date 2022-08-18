@@ -13,7 +13,7 @@ import {
 import Board from './Board';
 import PlayerBoard from './PlayerBoard';
 import WinningModalWrapper from './WinningModalWrapper';
-import useGameHistory from './useGameHistory.hook';
+import {HistoryContext} from './History.context';
 
 interface Props {
   disabled?: boolean;
@@ -80,7 +80,7 @@ const Game: React.FC<Props> = ({
 
   const firstUpdate = React.useRef(true);
 
-  const {saveGame} = useGameHistory();
+  const {addGameToHistory} = React.useContext(HistoryContext);
 
   const onPressBoard = React.useCallback(
     (tileIndex: number) => () => {
@@ -136,11 +136,11 @@ const Game: React.FC<Props> = ({
       if (visibleModalPlayerTop) {
         setVisibleModalPlayerTop(false);
       }
-      saveGame({history, winner});
+      addGameToHistory({history, winner});
     }
   }, [
+    addGameToHistory,
     history,
-    saveGame,
     visibleModalPlayerBottom,
     visibleModalPlayerTop,
     winner,
