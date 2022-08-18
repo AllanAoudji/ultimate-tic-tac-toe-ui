@@ -28,7 +28,7 @@ describe('<Tile />', () => {
     expect(handlePress).toHaveBeenCalled();
   });
 
-  it('not call /onPress/ if /valid === false/', () => {
+  it('not calls /onPress/ if /valid === false/', () => {
     const {getByTestId} = render(<Tile onPress={handlePress} valid={false} />);
     fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
     expect(handlePress).not.toHaveBeenCalled();
