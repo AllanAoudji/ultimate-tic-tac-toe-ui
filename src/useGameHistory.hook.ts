@@ -28,7 +28,7 @@ type getGames = () => Promise<
 >;
 type useGameHistory = () => {saveGame: saveGame; getGames: getGames};
 
-const ITEM_STORAGE_NAME = 'GAME_HISTORY';
+const ITEM_STORAGE_KEY = 'GAME_HISTORY';
 
 const checkIfGame: (game: any) => boolean = game => {
   if (
@@ -37,7 +37,8 @@ const checkIfGame: (game: any) => boolean = game => {
     !validate(game._id) ||
     !moment(game.createdAt).isValid() ||
     !checkIfHistory(game.history) ||
-    !checkIfSectionState(game.winner)
+    !checkIfSectionState(game.winner) ||
+    game.winner[0] === TileState.Empty
   ) {
     return false;
   }
@@ -48,7 +49,7 @@ const useGameHistory: useGameHistory = () => {
   const getGames: getGames = React.useCallback(async () => {
     let gamesHistory: string | null;
     try {
-      gamesHistory = await AsyncStorage.getItem(ITEM_STORAGE_NAME);
+      gamesHistory = await AsyncStorage.getItem(ITEM_STORAGE_KEY);
     } catch {
       return {
         OK: false,
@@ -56,9 +57,9 @@ const useGameHistory: useGameHistory = () => {
       };
     }
     if (gamesHistory) {
-      let gameHistoryParse: Ressource.Game[];
+      let gameHistoryParsed: Ressource.Game[];
       try {
-        gameHistoryParse = JSON.parse(gamesHistory);
+        gameHistoryParsed = JSON.parse(gamesHistory);
       } catch {
         // Return an empty array if gamesHistory failed to parse
         return {
@@ -66,18 +67,18 @@ const useGameHistory: useGameHistory = () => {
           history: [],
         };
       }
-      if (!Array.isArray(gameHistoryParse)) {
+      if (!Array.isArray(gameHistoryParsed)) {
         return {
           OK: true,
           history: [],
         };
       }
-      const gameHistoryParseFiltered = gameHistoryParse.filter(game =>
+      const gameHistoryParsedFiltered = gameHistoryParsed.filter(game =>
         checkIfGame(game),
       );
       return {
         OK: true,
-        history: gameHistoryParseFiltered,
+        history: gameHistoryParsedFiltered,
       };
     } else {
       return {
@@ -93,29 +94,31 @@ const useGameHistory: useGameHistory = () => {
       return {OK: false, error: 'invalid game'};
     }
     let gamesHistory: string | null;
-    let gamesHistoryArray: any[];
+    let gamesHistoryParsedFiltered: any[];
 
     try {
-      gamesHistory = await AsyncStorage.getItem(ITEM_STORAGE_NAME);
+      gamesHistory = await AsyncStorage.getItem(ITEM_STORAGE_KEY);
     } catch {
       return {OK: false, error: 'failed to fetch history'};
     }
 
     if (gamesHistory) {
-      let gamesHistoryParse: Ressource.Game[];
+      let gamesHistoryParsed: Ressource.Game[];
       try {
-        gamesHistoryParse = JSON.parse(gamesHistory);
+        gamesHistoryParsed = JSON.parse(gamesHistory);
       } catch {
         // Use an empty array if gamesHistory failed to parse
-        gamesHistoryParse = [];
+        gamesHistoryParsed = [];
       }
-      if (!Array.isArray(gamesHistoryParse)) {
-        gamesHistoryArray = [];
+      if (!Array.isArray(gamesHistoryParsed)) {
+        gamesHistoryParsedFiltered = [];
       } else {
-        gamesHistoryArray = gamesHistoryParse;
+        gamesHistoryParsedFiltered = gamesHistoryParsed.filter(game =>
+          checkIfGame(game),
+        );
       }
     } else {
-      gamesHistoryArray = [];
+      gamesHistoryParsedFiltered = [];
     }
 
     const _id = uuidv4();
@@ -127,10 +130,10 @@ const useGameHistory: useGameHistory = () => {
     };
     const history: Ressource.Game[] = [
       game,
-      ...(gamesHistoryArray as Ressource.Game[]),
+      ...(gamesHistoryParsedFiltered as Ressource.Game[]),
     ].slice(0, 20);
     try {
-      await AsyncStorage.setItem(ITEM_STORAGE_NAME, JSON.stringify(history));
+      await AsyncStorage.setItem(ITEM_STORAGE_KEY, JSON.stringify(history));
     } catch {
       return {OK: false, error: 'failed to save in local storage'};
     }

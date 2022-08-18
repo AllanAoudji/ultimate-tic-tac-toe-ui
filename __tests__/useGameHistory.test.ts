@@ -128,7 +128,7 @@ describe('useGameHistory.saveGame', () => {
 
     it('pushes game to an array', async () => {
       (AsyncStorage.getItem as jest.Mock).mockImplementationOnce(() =>
-        Promise.resolve('[1]'),
+        Promise.resolve(`[${JSON.stringify(generateGame())}]`),
       );
       const {result} = renderHook(() => useGameHistory());
       await result.current.saveGame({
@@ -139,7 +139,7 @@ describe('useGameHistory.saveGame', () => {
     });
 
     it('save only the last 20th games', async () => {
-      const fullHistory = new Array(20).fill(0);
+      const fullHistory = new Array(20).fill(generateGame());
       (AsyncStorage.getItem as jest.Mock).mockImplementationOnce(() =>
         Promise.resolve(JSON.stringify(fullHistory)),
       );
