@@ -1,41 +1,150 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SectionState, TileState} from 'ultimate-tic-tac-toe-algorithm';
-import {v4 as uuidv4} from 'uuid';
+import React from 'react';
+import moment from 'moment';
+import {
+  SectionState,
+  TileState,
+  checkIfHistory,
+  checkIfSectionState,
+} from 'ultimate-tic-tac-toe-algorithm';
+import {v4 as uuidv4, validate} from 'uuid';
 
 type saveGameProps = {
   history: number[];
   winner: SectionState;
 };
-type saveGameReturn = {OK: true} | {OK: false; error: string};
-type saveGame = (props: saveGameProps) => Promise<saveGameReturn>;
+interface Game extends saveGameProps {
+  _id: string;
+  createdAt: string;
+}
+
+type saveGame = (
+  props: saveGameProps,
+) => Promise<{OK: true; history: Game[]} | {OK: false; error: string}>;
+type getGames = () => Promise<
+  | {
+      OK: true;
+      history: Game[];
+    }
+  | {OK: false; error: string}
+>;
+type useGameHistory = () => {saveGame: saveGame; getGames: getGames};
 
 const ITEM_STORAGE_NAME = 'GAME_HISTORY';
 
-const useGameHistory: () => {saveGame: saveGame} = () => {
-  const saveGame: saveGame = async props => {
-    if (props.winner[0] === TileState.Empty) {
-      return {OK: false, error: 'the game is not saved'};
+const checkIfGame: (game: any) => boolean = game => {
+  if (
+    typeof game !== 'object' ||
+    Object.keys(game).length !== 4 ||
+    !validate(game._id) ||
+    !moment(game.createdAt).isValid() ||
+    !checkIfHistory(game.history) ||
+    !checkIfSectionState(game.winner)
+  ) {
+    return false;
+  }
+  return true;
+};
+
+const useGameHistory: useGameHistory = () => {
+  const getGames: getGames = React.useCallback(async () => {
+    let gamesHistory: string | null;
+    try {
+      gamesHistory = await AsyncStorage.getItem(ITEM_STORAGE_NAME);
+    } catch {
+      return {
+        OK: false,
+        error: 'failed to fetch history',
+      };
     }
-    const uniqueId = uuidv4();
+    if (gamesHistory) {
+      let gameHistoryParse: Game[];
+      try {
+        gameHistoryParse = JSON.parse(gamesHistory);
+      } catch {
+        // Return an empty array if gamesHistory failed to parse
+        return {
+          OK: true,
+          history: [],
+        };
+      }
+      if (!Array.isArray(gameHistoryParse)) {
+        return {
+          OK: true,
+          history: [],
+        };
+      }
+      const gameHistoryParseFiltered = gameHistoryParse.filter(game =>
+        checkIfGame(game),
+      );
+      return {
+        OK: true,
+        history: gameHistoryParseFiltered,
+      };
+    } else {
+      return {
+        OK: true,
+        history: [],
+      };
+    }
+  }, []);
+
+  const saveGame: saveGame = React.useCallback(async props => {
+    // Return an error if the game is not won
+    if (props.winner[0] === TileState.Empty) {
+      return {OK: false, error: 'invalid game'};
+    }
+    let gamesHistory: string | null;
+    let gamesHistoryArray: any[];
+
+    try {
+      gamesHistory = await AsyncStorage.getItem(ITEM_STORAGE_NAME);
+    } catch {
+      return {OK: false, error: 'failed to fetch history'};
+    }
+
+    if (gamesHistory) {
+      let gamesHistoryParse: Game[];
+      try {
+        gamesHistoryParse = JSON.parse(gamesHistory);
+      } catch {
+        // Use an empty array if gamesHistory failed to parse
+        gamesHistoryParse = [];
+      }
+      if (!Array.isArray(gamesHistoryParse)) {
+        gamesHistoryArray = [];
+      } else {
+        gamesHistoryArray = gamesHistoryParse;
+      }
+    } else {
+      gamesHistoryArray = [];
+    }
+
+    const _id = uuidv4();
+    const createdAt = new Date().toISOString();
     const game = {
-      date: new Date(),
-      uniqueId,
+      _id,
+      createdAt,
       ...props,
     };
-    const games = [game];
+    const history: Game[] = [game, ...(gamesHistoryArray as Game[])].slice(
+      0,
+      20,
+    );
     try {
-      await AsyncStorage.setItem(ITEM_STORAGE_NAME, JSON.stringify(games));
+      await AsyncStorage.setItem(ITEM_STORAGE_NAME, JSON.stringify(history));
     } catch {
       return {OK: false, error: 'failed to save in local storage'};
     }
-    return {OK: true};
-  };
+    return {OK: true, history};
+  }, []);
 
-  return {saveGame};
+  const returnValue = React.useMemo(
+    () => ({saveGame, getGames}),
+    [saveGame, getGames],
+  );
+
+  return returnValue;
 };
 
 export default useGameHistory;
-
-// Should get saves games
-// push saveGame to array
-// save only the last 20 games
