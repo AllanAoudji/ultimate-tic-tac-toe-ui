@@ -3,13 +3,6 @@ import {SectionState} from 'ultimate-tic-tac-toe-algorithm';
 
 import useGameHistory from './useGameHistory.hook';
 
-type Game = {
-  _id: string;
-  createdAt: string;
-  history: number[];
-  winner: SectionState;
-};
-
 type addGameToHistory = (props: {
   history: number[];
   winner: SectionState;
@@ -19,7 +12,7 @@ type ProvidedValue = {
   addGameToHistory: addGameToHistory;
   failed: boolean;
   fetchGamesFromHistory: () => void;
-  games: Game[];
+  games: Ressource.Game[];
   loadingGames: boolean;
 };
 
@@ -35,7 +28,7 @@ const HistoryProvider: React.FC = ({children}) => {
   const {getGames, saveGame} = useGameHistory();
 
   const [failed, setFailed] = React.useState<boolean>(false);
-  const [games, setGames] = React.useState<Game[]>([]);
+  const [games, setGames] = React.useState<Ressource.Game[]>([]);
   const [loadingGames, setLoadingGames] = React.useState<boolean>(false);
 
   const mounted = React.useRef(false);

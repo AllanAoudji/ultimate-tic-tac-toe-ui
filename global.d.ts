@@ -1,6 +1,15 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {SectionState} from 'ultimate-tic-tac-toe-algorithm';
 
 declare global {
+  namespace Ressource {
+    type Game = {
+      _id: string;
+      createdAt: string;
+      history: number[];
+      winner: SectionState;
+    };
+  }
   namespace Screen {
     namespace RootStack {
       type ParamList = {

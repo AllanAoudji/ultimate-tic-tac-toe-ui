@@ -13,18 +13,16 @@ type saveGameProps = {
   history: number[];
   winner: SectionState;
 };
-interface Game extends saveGameProps {
-  _id: string;
-  createdAt: string;
-}
 
 type saveGame = (
   props: saveGameProps,
-) => Promise<{OK: true; history: Game[]} | {OK: false; error: string}>;
+) => Promise<
+  {OK: true; history: Ressource.Game[]} | {OK: false; error: string}
+>;
 type getGames = () => Promise<
   | {
       OK: true;
-      history: Game[];
+      history: Ressource.Game[];
     }
   | {OK: false; error: string}
 >;
@@ -58,7 +56,7 @@ const useGameHistory: useGameHistory = () => {
       };
     }
     if (gamesHistory) {
-      let gameHistoryParse: Game[];
+      let gameHistoryParse: Ressource.Game[];
       try {
         gameHistoryParse = JSON.parse(gamesHistory);
       } catch {
@@ -104,7 +102,7 @@ const useGameHistory: useGameHistory = () => {
     }
 
     if (gamesHistory) {
-      let gamesHistoryParse: Game[];
+      let gamesHistoryParse: Ressource.Game[];
       try {
         gamesHistoryParse = JSON.parse(gamesHistory);
       } catch {
@@ -127,10 +125,10 @@ const useGameHistory: useGameHistory = () => {
       createdAt,
       ...props,
     };
-    const history: Game[] = [game, ...(gamesHistoryArray as Game[])].slice(
-      0,
-      20,
-    );
+    const history: Ressource.Game[] = [
+      game,
+      ...(gamesHistoryArray as Ressource.Game[]),
+    ].slice(0, 20);
     try {
       await AsyncStorage.setItem(ITEM_STORAGE_NAME, JSON.stringify(history));
     } catch {
