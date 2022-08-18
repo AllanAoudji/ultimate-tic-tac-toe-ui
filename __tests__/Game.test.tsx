@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fireEvent, render} from '@testing-library/react-native';
 import {mockRandom, resetMockRandom} from 'jest-mock-random';
 import React from 'react';
@@ -14,6 +13,7 @@ import {
 
 import Game from '../src/Game';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
+import * as useGameHistory from '../src/useGameHistory.hook';
 
 const renderer = (
   options: {
@@ -210,18 +210,25 @@ const renderer = (
 };
 
 describe('<Game />', () => {
-  const NEW_GAME_TEXT = 'new game',
-    PLAY_TEXT = 'play',
-    YES_TEXT = 'yes';
+  const NEW_GAME_TEXT = 'new game';
+  const PLAY_TEXT = 'play';
+  const YES_TEXT = 'yes';
+  const saveGameMocked = jest.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
     jest.spyOn(ultimateTicTactToAlgorithm, 'play');
+    jest.spyOn(useGameHistory, 'default').mockImplementation(() => ({
+      getGames: saveGameMocked,
+      saveGame: saveGameMocked,
+    }));
   });
 
   afterEach(() => {
+    jest.clearAllMocks();
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection').mockRestore();
+    jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockRestore();
+    jest.spyOn(useGameHistory, 'default').mockRestore();
     spyPlay().mockRestore();
   });
 
@@ -362,22 +369,13 @@ describe('<Game />', () => {
   it('saves game in local storage when it won', () => {
     const {playerTop} = renderer();
     playerTop.press.surrendGame();
-    expect(AsyncStorage.setItem).toHaveBeenCalled();
+    expect(saveGameMocked).toHaveBeenCalled();
   });
 
   it('does not save game in local storage if game is not won', () => {
     const {playerTop} = renderer();
     playerTop.press.play();
-    expect(AsyncStorage.setItem).not.toHaveBeenCalled();
-  });
-
-  it('saves game in local storage with a unique uuid', () => {
-    const {playerTop} = renderer();
-    playerTop.press.surrendGame();
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-      expect.stringMatching('GAME_HISTORY'),
-      expect.anything(),
-    );
+    expect(saveGameMocked).not.toHaveBeenCalled();
   });
 
   describe('renders <WinningModal /> with', () => {
