@@ -10,7 +10,7 @@ type Props = {
   history: number[];
   onPress?: (_id: string) => void;
   surrend?: boolean;
-  winner: TileState.Player1 | TileState.Player2;
+  winner: TileState.Player1 | TileState.Player2 | TileState.Draw;
 };
 
 const GameHistory: React.FC<Props> = ({
