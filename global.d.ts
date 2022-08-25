@@ -15,9 +15,14 @@ declare global {
     namespace RootStack {
       type ParamList = {
         Game: {mode: Mode};
+        GamesHistory: undefined;
         Home: undefined;
       };
       type GameNavigationProps = NativeStackScreenProps<ParamList, 'Game'>;
+      type GamesHistoryNavigationProps = NativeStackScreenProps<
+        ParamList,
+        'GamesHistory'
+      >;
       type HomeNavigationProps = NativeStackScreenProps<ParamList, 'Home'>;
     }
   }

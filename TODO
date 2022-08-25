@@ -15,3 +15,4 @@ L'historique charge l'entièreté des parties d'un coup (20 au maximum). Mais da
 
 HistoryBoard = add a board, a GameConsole (play/pause timer), a quitButton
 HistoryBoardScreen = screen to display HistoryBoard
+Add a header to GamesHistoryScreen
