@@ -13,6 +13,8 @@ import {
 
 import Game from '../src/Game';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
+import * as useGameHistory from '../src/useGameHistory.hook';
+import {HistoryProvider} from '../src/History.context';
 
 const renderer = (
   options: {
@@ -35,6 +37,7 @@ const renderer = (
       mode={options.mode}
       setGameIsDone={options.setGameIsDone}
     />,
+    {wrapper: HistoryProvider},
   );
   resetMockRandom();
 
@@ -209,17 +212,25 @@ const renderer = (
 };
 
 describe('<Game />', () => {
-  const NEW_GAME_TEXT = 'new game',
-    PLAY_TEXT = 'play',
-    YES_TEXT = 'yes';
+  const NEW_GAME_TEXT = 'new game';
+  const PLAY_TEXT = 'play';
+  const YES_TEXT = 'yes';
+  const saveGameMocked = jest.fn();
 
   beforeEach(() => {
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
     jest.spyOn(ultimateTicTactToAlgorithm, 'play');
+    jest.spyOn(useGameHistory, 'default').mockImplementation(() => ({
+      getGames: saveGameMocked,
+      saveGame: saveGameMocked,
+    }));
   });
 
   afterEach(() => {
+    jest.clearAllMocks();
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection').mockRestore();
+    jest.spyOn(ultimateTicTactToAlgorithm, 'play').mockRestore();
+    jest.spyOn(useGameHistory, 'default').mockRestore();
     spyPlay().mockRestore();
   });
 
@@ -355,6 +366,18 @@ describe('<Game />', () => {
         backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
       }),
     );
+  });
+
+  it('saves game in local storage when it won', () => {
+    const {playerTop} = renderer();
+    playerTop.press.surrendGame();
+    expect(saveGameMocked).toHaveBeenCalled();
+  });
+
+  it('does not save game in local storage if game is not won', () => {
+    const {playerTop} = renderer();
+    playerTop.press.play();
+    expect(saveGameMocked).not.toHaveBeenCalled();
   });
 
   describe('renders <WinningModal /> with', () => {

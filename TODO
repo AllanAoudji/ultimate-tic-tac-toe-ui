@@ -1,2 +1,18 @@
 OptionButton Component quit game button restart game button save game button
 yarn remove remove "@react-native-community/hooks" package
+
+
+Probleme avec la gestion de l'erreur de fetching de l'history
+Si il y a un probleme, un modal apparait, puis disparait au bout de X secondes
+Ou si l'utilisateur clique dessus
+Sur ce modal y est pour l'instant le seul bouton (try again?) permettant de fetch une nouvelle fois l'history
+Si le modal disparait, l'utilisateur est laissé seul avec un écran blanc.
+=>
+Implémenter un pull to refresh
+Meme si l'historique dépend uniquement de l'activité de l'utilisateur, un pull to refresh permetterait d'avoir de 1, une option logique a avoir avec une flatList et de deux, lui permet de rafraîchir les données en cas d'erreur.
+Si il y a une erreur (state === ERROR) et qu'il n'y a pas de game (games.length === 0), afficher un écran d'erreur, fonctionnant de la même manière que le modal d'erreur, avec un message et un bouton pour recharger l'historique.
+L'historique charge l'entièreté des parties d'un coup (20 au maximum). Mais dans l'avenir, il est possible que l'historique se charge en plusieurs fois (quand l'utilisateur arrive à la fin de la flatList, un chargement automatique arrive pour charger les prochaines parties). dans ce cas, il ne sera pas possible d'afficher une pleine page pour indiquer l'erreur de chargement, il serait plus judicieux que le modal recharge l'historique dès que l'on appuie dessus ou dès que le timer le fasse disparaitre, le message ne serait plus "try again?" mais "try again"
+
+HistoryBoard = add a board, a GameConsole (play/pause timer), a quitButton
+HistoryBoardScreen = screen to display HistoryBoard
+Add a header to GamesHistoryScreen

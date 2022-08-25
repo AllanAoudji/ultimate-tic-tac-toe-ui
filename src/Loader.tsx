@@ -9,6 +9,7 @@ import {
 } from './DefaultLight.theme';
 
 import {ThemeProvider} from '../src/Theme.context';
+import {HistoryProvider} from './History.context';
 
 const Loader: React.FC = ({children}) => {
   const [assetsLoading, setAssetLoading] = React.useState<boolean>(true);
@@ -54,7 +55,7 @@ const Loader: React.FC = ({children}) => {
 
   return (
     <ThemeProvider initialTheme={initialTheme || DEFAULT_LIGHT_THEME}>
-      {children}
+      <HistoryProvider>{children}</HistoryProvider>
     </ThemeProvider>
   );
 };

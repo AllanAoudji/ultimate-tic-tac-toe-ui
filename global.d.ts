@@ -1,13 +1,28 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 declare global {
+  namespace Ressource {
+    type Game = {
+      _id: string;
+      createdAt: string;
+      history: number[];
+      winner:
+        | [TileState.Player1 | TileState.Player2, WinningLine]
+        | [TileState.Draw, null];
+    };
+  }
   namespace Screen {
     namespace RootStack {
       type ParamList = {
         Game: {mode: Mode};
+        GamesHistory: undefined;
         Home: undefined;
       };
       type GameNavigationProps = NativeStackScreenProps<ParamList, 'Game'>;
+      type GamesHistoryNavigationProps = NativeStackScreenProps<
+        ParamList,
+        'GamesHistory'
+      >;
       type HomeNavigationProps = NativeStackScreenProps<ParamList, 'Home'>;
     }
   }

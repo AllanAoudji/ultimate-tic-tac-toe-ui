@@ -1,4 +1,5 @@
 import React from 'react';
+import {Pressable, Text} from 'react-native';
 import {Mode} from 'ultimate-tic-tac-toe-algorithm';
 
 import Container from './Container';
@@ -9,10 +10,13 @@ import ToggleThemeButton from './ToggleThemeButton';
 const HomeScreen: React.FC<Screen.RootStack.HomeNavigationProps> = ({
   navigation,
 }) => {
-  const handlePress = React.useCallback(
+  const handlePressGame = React.useCallback(
     (mode: Mode) => () => navigation.navigate('Game', {mode}),
     [navigation],
   );
+  const handlePressGamesHistory = React.useCallback(() => {
+    navigation.navigate('GamesHistory');
+  }, [navigation]);
 
   return (
     <Container
@@ -33,15 +37,20 @@ const HomeScreen: React.FC<Screen.RootStack.HomeNavigationProps> = ({
             backgroundColor="playerX"
             color="onPlayerX"
             marginBottom="largest"
-            onPress={handlePress(Mode.Normal)}
+            onPress={handlePressGame(Mode.Normal)}
             title="play normal game"
           />
           <PlayGameButton
             backgroundColor="playerO"
             color="onPlayerO"
-            onPress={handlePress(Mode.Continue)}
+            onPress={handlePressGame(Mode.Continue)}
             title="play continue game"
           />
+          <Pressable
+            onPress={handlePressGamesHistory}
+            testID="homeScreen__pressable--history">
+            <Text>games history</Text>
+          </Pressable>
         </Container>
       </Container>
     </Container>

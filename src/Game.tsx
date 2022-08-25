@@ -13,6 +13,7 @@ import {
 import Board from './Board';
 import PlayerBoard from './PlayerBoard';
 import WinningModalWrapper from './WinningModalWrapper';
+import {HistoryContext} from './History.context';
 
 interface Props {
   disabled?: boolean;
@@ -23,15 +24,18 @@ interface Props {
 
 const initialAssets = generateAssets();
 
+// -------------------------------
+// -------------------------------
+// utile functions
+// -------------------------------
+// -------------------------------
 const arrayEquals = (a: any, b: any) =>
   Array.isArray(a) &&
   Array.isArray(b) &&
   a.length === b.length &&
   a.every((val, index) => val === b[index]);
-
 const normalizeGameIsDone: (winner: SectionState) => boolean = winner =>
   winner[0] !== TileState.Empty;
-
 const randomizePlayer: () => [
   TileState.Player1 | TileState.Player2,
   TileState.Player1 | TileState.Player2,
@@ -40,12 +44,19 @@ const randomizePlayer: () => [
     ? [TileState.Player1, TileState.Player2]
     : [TileState.Player2, TileState.Player1];
 
+// -------------------------------
+// -------------------------------
+// Component
+// -------------------------------
+// -------------------------------
 const Game: React.FC<Props> = ({
   disabled = false,
   setGameIsDone,
   mode = Mode.Normal,
   onPressQuit = () => {},
 }) => {
+  // -------------------------------
+  // states
   const [history, setHistory] = React.useState<number[]>(initialAssets.history);
   const [players, setPlayers] = React.useState<
     [
@@ -59,9 +70,6 @@ const Game: React.FC<Props> = ({
   const [selectedTileIndex, setSelectedTilIndex] = React.useState<
     number | null
   >(null);
-
-  const firstUpdate = React.useRef(true);
-
   const [visibleModalPlayerBottom, setVisibleModalPlayerBottom] =
     React.useState<boolean>(false);
   const [visibleModalPlayerTop, setVisibleModalPlayerTop] =
@@ -69,6 +77,10 @@ const Game: React.FC<Props> = ({
   const [winner, setWinner] = React.useState<SectionState>(
     initialAssets.winner,
   );
+
+  const firstUpdate = React.useRef(true);
+
+  const {addGameToHistory} = React.useContext(HistoryContext);
 
   const onPressBoard = React.useCallback(
     (tileIndex: number) => () => {
@@ -113,6 +125,9 @@ const Game: React.FC<Props> = ({
     [winner],
   );
 
+  // Trigger when game is won by a player
+  // Clear hide surrend modals
+  // and save game in local storage
   React.useEffect(() => {
     if (normalizeGameIsDone(winner)) {
       if (visibleModalPlayerBottom) {
@@ -121,9 +136,20 @@ const Game: React.FC<Props> = ({
       if (visibleModalPlayerTop) {
         setVisibleModalPlayerTop(false);
       }
+      addGameToHistory({history, winner});
     }
-  }, [disabled, visibleModalPlayerBottom, visibleModalPlayerTop, winner]);
+  }, [
+    addGameToHistory,
+    history,
+    visibleModalPlayerBottom,
+    visibleModalPlayerTop,
+    winner,
+  ]);
+
+  // Reset all states when history.length === 0
+  // (when game reset)
   React.useLayoutEffect(() => {
+    // Do not trigger on first mount
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
@@ -138,6 +164,9 @@ const Game: React.FC<Props> = ({
       setWinner([TileState.Empty, null]);
     }
   }, [history, setGameIsDone]);
+
+  // Call setGameIsDone (Component props) when game is done
+  // Use to show/hide BackHandler
   React.useEffect(() => {
     if (normalizeGameIsDone(winner)) {
       if (setGameIsDone) {
