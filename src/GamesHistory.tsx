@@ -1,5 +1,6 @@
 import React from 'react';
 import {FlatList} from 'react-native';
+import {WinningLine} from 'ultimate-tic-tac-toe-algorithm';
 import GameHistory from './GameHistory';
 
 type props = {
@@ -17,6 +18,7 @@ const GamesHistory: React.FC<props> = ({games}) => {
         _id={item._id}
         date={item.createdAt}
         history={item.history}
+        surrend={item.winner[1] === WinningLine.Surrender}
         winner={item.winner[0]}
       />
     ),

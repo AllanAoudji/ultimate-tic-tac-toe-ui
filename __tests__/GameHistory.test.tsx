@@ -122,9 +122,9 @@ describe('<GameHistory />', () => {
   });
 
   it('displays /history.length/ with /moves/', () => {
-    const history: number[] = [1];
+    const history: number[] = [1, 1];
     const {container} = renderer({history});
-    expect(container.get.text('number of moves: 1')).not.toBeNull();
+    expect(container.get.text('number of moves: 2')).not.toBeNull();
   });
 
   it('displays /(surrend)/ if /surrend === true/', () => {

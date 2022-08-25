@@ -13,6 +13,10 @@ Meme si l'historique dépend uniquement de l'activité de l'utilisateur, un pull
 Si il y a une erreur (state === ERROR) et qu'il n'y a pas de game (games.length === 0), afficher un écran d'erreur, fonctionnant de la même manière que le modal d'erreur, avec un message et un bouton pour recharger l'historique.
 L'historique charge l'entièreté des parties d'un coup (20 au maximum). Mais dans l'avenir, il est possible que l'historique se charge en plusieurs fois (quand l'utilisateur arrive à la fin de la flatList, un chargement automatique arrive pour charger les prochaines parties). dans ce cas, il ne sera pas possible d'afficher une pleine page pour indiquer l'erreur de chargement, il serait plus judicieux que le modal recharge l'historique dès que l'on appuie dessus ou dès que le timer le fasse disparaitre, le message ne serait plus "try again?" mais "try again"
 
+GamesHistoryScreen => 3 View
+1 all GamesHistory
+2 Empty History
+3 Failed to fetch
 HistoryBoard = add a board, a GameConsole (play/pause timer), a quitButton
 HistoryBoardScreen = screen to display HistoryBoard
 Add a header to GamesHistoryScreen
