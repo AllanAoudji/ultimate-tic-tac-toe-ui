@@ -161,7 +161,7 @@ describe('<GamesHistoryScreen />', () => {
     expect(container.query.fetchingErrorModal()).toBeNull();
   });
 
-  it.only('fetch one more time history when press on the "try again?" <Pressable />', async () => {
+  it('fetch one more time history when press on the "try again?" <Pressable />', async () => {
     (AsyncStorage.getItem as jest.Mock).mockImplementationOnce(() =>
       Promise.reject('fail'),
     );
