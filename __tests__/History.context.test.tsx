@@ -16,9 +16,13 @@ const renderer = () => {
       fetchGamesFromHistory,
       games,
       loadingGames,
+      status,
     } = React.useContext(HistoryContext);
 
-    const [gamesHasLoaded, setGamesHasLoaded] = React.useState<Boolean>(false);
+    const [gamesHaveLoaded, setGamesHaveLoaded] =
+      React.useState<boolean>(false);
+    const [gamesStateHasLoaded, setGamesStateHasLoaded] =
+      React.useState<boolean>(false);
 
     const handlePressAddGame = React.useCallback(
       () =>
@@ -31,20 +35,27 @@ const renderer = () => {
 
     React.useEffect(() => {
       if (loadingGames) {
-        setGamesHasLoaded(true);
+        setGamesHaveLoaded(true);
       }
     }, [loadingGames]);
+    React.useEffect(() => {
+      if (status === 'LOADING') {
+        setGamesStateHasLoaded(true);
+      }
+    }, [status]);
 
     return (
       <>
         {loadingGames && <Text>loading</Text>}
-        {gamesHasLoaded && <Text>games has loaded</Text>}
+        {gamesHaveLoaded && <Text>games has loaded</Text>}
         {failed && <Text>failed</Text>}
         <Pressable testID="addGame" onPress={handlePressAddGame} />
         <Pressable testID="fetchGame" onPress={fetchGamesFromHistory} />
         {games.map(game => (
           <View testID="game" key={game._id} />
         ))}
+        <Text>{status}</Text>
+        {gamesStateHasLoaded && <Text>games state has loaded</Text>}
       </>
     );
   };
@@ -55,26 +66,30 @@ const renderer = () => {
     </HistoryProvider>,
   );
 
-  const {getByTestId, queryAllByTestId, queryByText} = renderHistory;
+  const {getByTestId, getByText, queryAllByTestId, queryByText} = renderHistory;
 
   const getAddGamePressable = () => getByTestId('addGame');
   const getFetchGamesPressable = () => getByTestId('fetchGame');
+  const getText = (text: string) => getByText(text);
 
   const queryFailed = () => queryByText('failed');
   const queryGame = () => queryAllByTestId('game');
   const queryLoading = () => queryByText('loading');
   const queryGamesHasLoaded = () => queryByText('games has loaded');
+  const queryGamesStateHasLoaded = () => queryByText('games state has loaded');
 
   return {
     container: {
       get: {
         addGamePressable: getAddGamePressable,
         fetchGamePressable: getFetchGamesPressable,
+        text: getText,
       },
       query: {
         failed: queryFailed,
         games: queryGame,
         gamesHasLoaded: queryGamesHasLoaded,
+        gamesStateHasLoaded: queryGamesStateHasLoaded,
         loading: queryLoading,
       },
       press: {
@@ -168,6 +183,73 @@ describe('<History />', () => {
         container.press.fetchGames();
       });
       expect(container.query.failed()).not.toBeNull();
+    });
+  });
+
+  describe('renders /status ===', () => {
+    it('"PENDING"/ on mount', () => {
+      const {container} = renderer();
+      expect(container.get.text('PENDING')).not.toBeNull();
+    });
+
+    describe('"LOADING"/ when', () => {
+      it('games are fetching', async () => {
+        const {container} = renderer();
+        await act(async () => {
+          container.press.fetchGames();
+        });
+        expect(container.query.gamesStateHasLoaded()).not.toBeNull();
+      });
+
+      it('game is added to history', async () => {
+        const {container} = renderer();
+        await act(async () => {
+          container.press.addGame();
+        });
+        expect(container.query.gamesStateHasLoaded()).not.toBeNull();
+      });
+    });
+
+    describe('"SUCCESS"/ after', () => {
+      it('fetching games', async () => {
+        const {container} = renderer();
+        await act(async () => {
+          container.press.fetchGames();
+        });
+        expect(container.get.text('SUCCESS')).not.toBeNull();
+      });
+
+      it('adding game to history', async () => {
+        const {container} = renderer();
+        await act(async () => {
+          container.press.fetchGames();
+        });
+        expect(container.get.text('SUCCESS')).not.toBeNull();
+      });
+    });
+
+    describe('"ERROR"/ if', () => {
+      it('fetching games failed', async () => {
+        (AsyncStorage.getItem as jest.Mock).mockImplementationOnce(() =>
+          Promise.reject('failed'),
+        );
+        const {container} = renderer();
+        await act(async () => {
+          container.press.fetchGames();
+        });
+        expect(container.get.text('ERROR')).not.toBeNull();
+      });
+
+      it('adding game to history failed', async () => {
+        (AsyncStorage.setItem as jest.Mock).mockImplementationOnce(() =>
+          Promise.reject('failed'),
+        );
+        const {container} = renderer();
+        await act(async () => {
+          container.press.addGame();
+        });
+        expect(container.get.text('ERROR')).not.toBeNull();
+      });
     });
   });
 });

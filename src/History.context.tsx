@@ -14,7 +14,10 @@ type ProvidedValue = {
   fetchGamesFromHistory: () => void;
   games: Ressource.Game[];
   loadingGames: boolean;
+  status: status;
 };
+
+type status = 'PENDING' | 'LOADING' | 'SUCCESS' | 'ERROR';
 
 const HistoryContext = React.createContext<ProvidedValue>({
   addGameToHistory: () => {},
@@ -22,6 +25,7 @@ const HistoryContext = React.createContext<ProvidedValue>({
   fetchGamesFromHistory: () => {},
   games: [],
   loadingGames: false,
+  status: 'PENDING',
 });
 
 const HistoryProvider: React.FC = ({children}) => {
@@ -30,16 +34,19 @@ const HistoryProvider: React.FC = ({children}) => {
   const [failed, setFailed] = React.useState<boolean>(false);
   const [games, setGames] = React.useState<Ressource.Game[]>([]);
   const [loadingGames, setLoadingGames] = React.useState<boolean>(false);
+  const [status, setStatus] = React.useState<status>('PENDING');
 
   const mounted = React.useRef(false);
 
   const addGameToHistory = React.useCallback<addGameToHistory>(
     async props => {
+      setFailed(false);
       setLoadingGames(true);
       const history = await saveGame(props);
       if (mounted.current) {
         if (history.OK) {
           setGames(history.history);
+          setStatus('SUCCESS');
         } else {
           setFailed(true);
         }
@@ -50,11 +57,13 @@ const HistoryProvider: React.FC = ({children}) => {
   );
 
   const fetchGamesFromHistory = React.useCallback<() => void>(async () => {
+    setFailed(false);
     setLoadingGames(true);
     const history = await getGames();
     if (mounted.current) {
       if (history.OK) {
         setGames(history.history);
+        setStatus('SUCCESS');
       } else {
         setFailed(true);
       }
@@ -69,9 +78,28 @@ const HistoryProvider: React.FC = ({children}) => {
       fetchGamesFromHistory,
       games,
       loadingGames,
+      status,
     }),
-    [addGameToHistory, failed, fetchGamesFromHistory, games, loadingGames],
+    [
+      addGameToHistory,
+      failed,
+      fetchGamesFromHistory,
+      games,
+      loadingGames,
+      status,
+    ],
   );
+
+  React.useEffect(() => {
+    if (loadingGames) {
+      setStatus('LOADING');
+    }
+  }, [loadingGames]);
+  React.useEffect(() => {
+    if (failed) {
+      setStatus('ERROR');
+    }
+  }, [failed]);
 
   // Cleanup effect to prevent leaks
   React.useEffect(() => {
