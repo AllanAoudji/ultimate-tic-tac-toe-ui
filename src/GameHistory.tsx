@@ -29,7 +29,7 @@ const GameHistory: React.FC<Props> = ({
   }, [_id, history, onPress]);
 
   const formattedHistory = React.useMemo(() => {
-    return `number of move${history.length > 0 ? 's' : ''}: ${history.length} ${
+    return `number of move${history.length > 1 ? 's' : ''}: ${history.length} ${
       surrend ? '(surrend)' : ''
     }`;
   }, [history, surrend]);
