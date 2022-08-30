@@ -7,6 +7,7 @@ const getSource = (instance: ReactTestInstance) => instance.props.source;
 const getStyle = (instance: ReactTestInstance) => instance.props.style;
 
 const imageSource = (image: string) => `../assets/images/${image}.png`;
+const jsonSource = (json: string) => `../assets/jsons/${json}.json`;
 
 const spyPlay: () => {
   mockDraw: () => void;
@@ -92,4 +93,4 @@ const spyPlay: () => {
   };
 };
 
-export {getDisabled, getSource, getStyle, imageSource, spyPlay};
+export {getDisabled, getSource, getStyle, imageSource, jsonSource, spyPlay};
