@@ -766,27 +766,24 @@ describe('<Container />', () => {
   });
 
   describe('renders an <ImageBackground />', () => {
+    const source = require(imageSource('boardGrid'));
     it('if /props.source !== undefined/', () => {
-      const source = require(imageSource('X'));
       const {container} = renderer({source});
       expect(container.query.imageBackground()).not.toBeNull();
       expect(getSource(container.get.imageBackground())).toBe(source);
     });
 
     it(' with another testID', () => {
-      const source = require(imageSource('X'));
       const {container} = renderer({source, testID: 'anotherTestId'});
       expect(container.query.byTestId('anotherTestId')).not.toBeNull();
     });
 
     it('renders /children/', () => {
-      const source = require(imageSource('X'));
       const {container} = renderer({source});
       expect(container.query.byText('hello world')).not.toBeNull();
     });
 
     it('renders another /children/', () => {
-      const source = require(imageSource('X'));
       const {container} = renderer({
         source,
         children: <Text>another hello world</Text>,
@@ -795,25 +792,21 @@ describe('<Container />', () => {
     });
 
     it('with another source', () => {
-      const source = require(imageSource('O'));
       const {container} = renderer({source});
       expect(getSource(container.get.imageBackground())).toBe(source);
     });
 
     it('with props.resizeMode', () => {
-      const source = require(imageSource('O'));
       const {container} = renderer({resizeMode: 'contain', source});
       expect(container.get.imageBackground().props.resizeMode).toBe('contain');
     });
 
     it('with another resizeMode', () => {
-      const source = require(imageSource('O'));
       const {container} = renderer({resizeMode: 'repeat', source});
       expect(container.get.imageBackground().props.resizeMode).toBe('repeat');
     });
 
     it('and passes styles', () => {
-      const source = require(imageSource('O'));
       const {container} = renderer({
         height: '50%',
         source,
