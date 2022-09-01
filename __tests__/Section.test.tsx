@@ -14,6 +14,13 @@ import {getSource, getStyle, imageSource} from './testUtils';
 
 import Section from '../src/Section';
 
+const mockAsset = jest.fn();
+jest.mock('../src/Asset', () => (props: any) => {
+  const {View} = require('react-native');
+  mockAsset(props);
+  return <View {...props} />;
+});
+
 const renderer = (
   options: {
     activePlayer?: TileState.Player1 | TileState.Player2;
@@ -45,29 +52,21 @@ const renderer = (
   const {getAllByTestId, getByTestId, queryAllByTestId, queryByTestId} =
     renderSection;
 
-  const getContainer = () => getByTestId('section__container');
   const getGridImage = () => getByTestId('section__image--grid');
   const getImageLine = () => getByTestId('section__image--line');
-  const getImagePlayer = () => getByTestId('section__image--player');
   const getInnerContainer = () => getByTestId('section__container--inner');
   const getTiles = () => getAllByTestId('tile__container--pressable');
-  const getTileStateImages = () => getAllByTestId('tile__image--state');
-  const getTilesTempImages = () => getAllByTestId('tile__image--temp');
 
   const queryContainer = () => queryByTestId('section__container');
   const queryGridImage = () => queryByTestId('section__image--grid');
   const queryImageLine = () => queryByTestId('section__image--line');
-  const queryImagePlayer = () => queryByTestId('section__image--player');
   const queryInnerContainer = () => queryByTestId('section__container--inner');
   const queryTiles = () => queryAllByTestId('tile__container--pressable');
-  const queryTileStateImages = () => queryAllByTestId('tile__image--state');
-  const queryTileTempImages = () => queryAllByTestId('tile__image--temp');
 
   return {
     assets: {
       images: {
         grid: require(imageSource('SectionGrid')),
-        imgSource0: require(imageSource('O')),
         imgSourceOBottom: require(imageSource('LinePlayerOBottom')),
         imgSourceOLeft: require(imageSource('LinePlayerOLeft')),
         imgSourceOMiddleHorizontal: require(imageSource(
@@ -84,7 +83,6 @@ const renderer = (
         imgSourceOTopRightBottomLeft: require(imageSource(
           'LinePlayerOTopRightBottomLeft',
         )),
-        imgSourceX: require(imageSource('X')),
         imgSourceXBottom: require(imageSource('LinePlayerXBottom')),
         imgSourceXMiddleHorizontal: require(imageSource(
           'LinePlayerXMiddleHorizontal',
@@ -105,17 +103,11 @@ const renderer = (
     },
     container: {
       get: {
-        container: getContainer,
         gridImage: getGridImage,
         imageLine: getImageLine,
-        imagePlayer: getImagePlayer,
         innerContainer: getInnerContainer,
         tile: (index: number) => getTiles()[index],
         tiles: getTiles,
-        tileStateImage: (index: number) => getTileStateImages()[index],
-        tileStateImages: getTileStateImages,
-        tileTempImage: (index: number) => getTilesTempImages()[index],
-        tileTempImages: getTilesTempImages,
       },
       press: {
         tile: (index = 0) => {
@@ -126,11 +118,8 @@ const renderer = (
         container: queryContainer,
         gridImage: queryGridImage,
         imageLine: queryImageLine,
-        imagePlayer: queryImagePlayer,
         innerContainer: queryInnerContainer,
         tiles: queryTiles,
-        tileStateImages: queryTileStateImages,
-        tileTempImages: queryTileTempImages,
       },
     },
     render: renderSection,
@@ -142,6 +131,7 @@ describe('<Section/>', () => {
 
   beforeEach(() => {
     handlePress = jest.fn();
+    mockAsset.mockClear();
   });
 
   afterEach(() => {
@@ -168,13 +158,18 @@ describe('<Section/>', () => {
     const propsTiles = getSections([])[0].tiles;
     propsTiles[0][0].state = TileState.Player1;
     propsTiles[0][1].state = TileState.Player2;
-    const {assets, container} = renderer({tiles: propsTiles});
-    expect(container.query.tileStateImages()).toHaveLength(2);
-    expect(getSource(container.get.tileStateImage(0))).toBe(
-      assets.images.imgSourceX,
+    renderer({tiles: propsTiles});
+    expect(mockAsset).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        type: 'X1',
+      }),
     );
-    expect(getSource(container.get.tileStateImage(1))).toBe(
-      assets.images.imgSource0,
+    expect(mockAsset).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        type: 'O1',
+      }),
     );
   });
 
@@ -186,41 +181,55 @@ describe('<Section/>', () => {
   });
 
   it("renders tile's <TempImage /> if /selectedTileIndex === tile.index1D/", () => {
-    const {container} = renderer({selectedTileIndex: 2});
-    expect(container.query.tileTempImages()).toHaveLength(1);
+    renderer({selectedTileIndex: 2});
+    expect(mockAsset).toHaveBeenNthCalledWith(
+      3,
+      expect.objectContaining({
+        disabled: true,
+      }),
+    );
   });
 
   it('passes /activePlayer/ to <Tile />', () => {
-    const {assets, container} = renderer({
+    renderer({
       activePlayer: TileState.Player2,
       selectedTileIndex: 2,
     });
-    expect(getSource(container.get.tileTempImage(0))).toBe(
-      assets.images.imgSource0,
+    expect(mockAsset).toHaveBeenNthCalledWith(
+      3,
+      expect.objectContaining({
+        disabled: true,
+        type: 'O1',
+      }),
     );
   });
 
   it('displays a <PlayerImage /> if the <Section /> is won by a player', () => {
-    const {assets, container} = renderer({
+    renderer({
       sectionState: [TileState.Player1, WinningLine.BottomRow],
     });
-    expect(container.query.imagePlayer()).not.toBeNull();
-    expect(getSource(container.get.imagePlayer())).toBe(
-      assets.images.imgSourceX,
+    expect(mockAsset).toHaveBeenCalledTimes(10);
+    expect(mockAsset).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'X1',
+      }),
     );
   });
 
   it('do not displays a <PlayerImage /> if the <Section /> is not won', () => {
-    const {container} = renderer();
-    expect(container.query.imagePlayer()).toBeNull();
+    renderer();
+    expect(mockAsset).toHaveBeenCalledTimes(9);
   });
 
   it('<PlayerImage /> should be based on the player who won the section', () => {
-    const {assets, container} = renderer({
+    renderer({
       sectionState: [TileState.Player2, WinningLine.BottomRow],
     });
-    expect(getSource(container.get.imagePlayer())).toBe(
-      assets.images.imgSource0,
+    expect(mockAsset).toHaveBeenCalledTimes(10);
+    expect(mockAsset).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'O1',
+      }),
     );
   });
 
@@ -326,7 +335,7 @@ describe('<Section/>', () => {
         tile.map(t => ({...t, state: TileState.Player1})),
       );
       const {container} = renderer({
-        sectionState: [TileState.Empty, WinningLine.Draw],
+        sectionState: [TileState.Draw, null],
         tiles: fullSection,
       });
       expect(getStyle(container.get.innerContainer()).opacity).toBe(0.2);
@@ -353,11 +362,11 @@ describe('<Section/>', () => {
     });
 
     it('do not renders <PlayerImage />', () => {
-      const {container} = renderer({
+      renderer({
         mode: Mode.Continue,
         sectionState: [TileState.Player1, WinningLine.BottomRow],
       });
-      expect(container.query.imagePlayer()).toBeNull();
+      expect(mockAsset).toHaveBeenCalledTimes(9);
     });
   });
 

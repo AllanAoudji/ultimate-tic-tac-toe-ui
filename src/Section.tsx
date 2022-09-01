@@ -15,15 +15,13 @@ import {
   WinningLine,
   checkIfSectionIsFull,
 } from 'ultimate-tic-tac-toe-algorithm';
+import Asset from './Asset';
 
 import Container from './Container';
 import {ThemeContext} from './Theme.context';
 import Tile from './Tile';
 
 interface LineImageProps {
-  state: SectionState;
-}
-interface PlayerImageProps {
   state: SectionState;
 }
 interface SectionProps {
@@ -109,34 +107,26 @@ const LineImage: React.FC<LineImageProps> = ({state}) => {
   return null;
 };
 
-const PlayerImage: React.FC<PlayerImageProps> = ({state}) => {
-  const source =
-    state[0] === TileState.Player1
-      ? require('../assets/images/X.png')
-      : require('../assets/images/O.png');
+const WinningImage: React.FC<WinningImageProps> = ({mode, state}) => {
+  const type = React.useMemo(
+    () => (state[0] === TileState.Player1 ? 'X1' : 'O1'),
+    [state],
+  );
   return (
-    <Image
-      source={source}
-      style={winnerImageStyles.image}
-      testID="section__image--player"
-    />
+    <Container
+      height="100%"
+      padding="normal"
+      position="absolute"
+      width="100%"
+      pointerEvents="none">
+      {mode === Mode.Normal ? (
+        <Asset margin="small" type={type} state="PLAY" />
+      ) : (
+        <LineImage state={state} />
+      )}
+    </Container>
   );
 };
-
-const WinningImage: React.FC<WinningImageProps> = ({mode, state}) => (
-  <Container
-    height="100%"
-    padding="normal"
-    position="absolute"
-    width="100%"
-    pointerEvents="none">
-    {mode === Mode.Normal ? (
-      <PlayerImage state={state} />
-    ) : (
-      <LineImage state={state} />
-    )}
-  </Container>
-);
 
 const Section: React.FC<SectionProps> = ({
   activePlayer = TileState.Player1,
