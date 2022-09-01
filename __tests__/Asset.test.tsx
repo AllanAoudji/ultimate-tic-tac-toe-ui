@@ -28,11 +28,13 @@ jest.mock('lottie-react-native', () => {
 const renderer = (
   options: {
     disabled?: boolean;
-    padding?: keyof Theming.SpacingTheme;
+    margin?: keyof Theming.SpacingTheme;
     state?: 'EMPTY' | 'PLAY' | 'VISIBLE';
     type?:
       | 'LBottomBlue'
       | 'LBottomRed'
+      | 'LDiagonalTopLeftBottomRightBlue'
+      | 'LDiagonalTopLeftBottomRightRed'
       | 'LMiddleHorBlue'
       | 'LMiddleHorRed'
       | 'LTopBlue'
@@ -44,20 +46,25 @@ const renderer = (
   const renderAsset = render(
     <Asset
       disabled={options.disabled}
-      padding={options.padding}
+      margin={options.margin}
       state={options.state}
       type={options.type}
     />,
   );
 
-  const {getByTestId} = renderAsset;
+  const {getByTestId, queryByTestId} = renderAsset;
 
   const getContainer = () => getByTestId('asset__container--lottie');
+
+  const queryContainer = () => queryByTestId('asset__container--lottie');
 
   return {
     container: {
       get: {
         container: getContainer,
+      },
+      query: {
+        container: queryContainer,
       },
     },
     render: renderAsset,
@@ -66,6 +73,12 @@ const renderer = (
 
 const LBottomBlue = require(jsonSource('LBottomBlue'));
 const LBottomRed = require(jsonSource('LBottomRed'));
+const LDiagonalTopLeftBottomRightBlue = require(jsonSource(
+  'LDiagonalTopLeftBottomRightBlue',
+));
+const LDiagonalTopLeftBottomRightRed = require(jsonSource(
+  'LDiagonalTopLeftBottomRightRed',
+));
 const LMiddleHorBlue = require(jsonSource('LMiddleHorBlue'));
 const LMiddleHorRed = require(jsonSource('LMiddleHorRed'));
 const LTopBlue = require(jsonSource('LTopBlue'));
@@ -102,51 +115,31 @@ describe('<Asset />', () => {
     );
   });
 
-  it('displays the image by default', () => {
-    renderer();
-    expect(mockPlay).toHaveBeenCalledWith(26, 26);
+  it('does not render <Lottie /> if /state === "EMPTY"', () => {
+    const {container} = renderer({state: 'EMPTY'});
+    expect(container.query.container()).toBeNull();
   });
 
-  it('displays the image by default if /type === "O1"/', () => {
-    renderer({type: 'O1'});
-    expect(mockPlay).toHaveBeenCalledWith(28, 28);
-  });
-
-  it('triggers the animation if /state === "PLAY"/', () => {
-    renderer({state: 'PLAY'});
-    expect(mockPlay).toHaveBeenCalledWith(0, 26);
-  });
-
-  it('triggers the animation if /state === "PLAY"/ and /type === "O1"/', () => {
-    renderer({state: 'PLAY', type: 'O1'});
-    expect(mockPlay).toHaveBeenCalledWith(0, 28);
-  });
-
-  it('displays nothing if /state === "EMPTY"', () => {
-    renderer({state: 'EMPTY'});
-    expect(mockPlay).toHaveBeenCalledWith(0, 0);
-  });
-
-  it('displays with /padding === theme.spacing.smallest/ by default', () => {
+  it('displays with /margin === undefined/ by default', () => {
     const {container} = renderer();
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        padding: undefined,
+        margin: undefined,
       }),
     );
   });
 
-  it('displays with another /padding/', () => {
-    const {container} = renderer({padding: 'large'});
+  it('displays with another /margin/', () => {
+    const {container} = renderer({margin: 'large'});
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        padding: DEFAULT_LIGHT_THEME.spacing.large,
+        margin: DEFAULT_LIGHT_THEME.spacing.large,
       }),
     );
   });
 
   describe('renders with /source === ', () => {
-    it('LBottomBlue/', () => {
+    it('"LBottomBlue"/', () => {
       renderer({type: 'LBottomBlue'});
       expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -155,7 +148,7 @@ describe('<Asset />', () => {
       );
     });
 
-    it('LBottomRed/', () => {
+    it('"LBottomRed"/', () => {
       renderer({type: 'LBottomRed'});
       expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -164,7 +157,25 @@ describe('<Asset />', () => {
       );
     });
 
-    it('LMiddleHorBlue/', () => {
+    it('"LDiagonalTopLeftBottomRightBlue"', () => {
+      renderer({type: 'LDiagonalTopLeftBottomRightBlue'});
+      expect(mockLottie).toHaveBeenCalledWith(
+        expect.objectContaining({
+          source: LDiagonalTopLeftBottomRightBlue,
+        }),
+      );
+    });
+
+    it('"LDiagonalTopLeftBottomRightRed"', () => {
+      renderer({type: 'LDiagonalTopLeftBottomRightRed'});
+      expect(mockLottie).toHaveBeenCalledWith(
+        expect.objectContaining({
+          source: LDiagonalTopLeftBottomRightRed,
+        }),
+      );
+    });
+
+    it('"LMiddleHorBlue"/', () => {
       renderer({type: 'LMiddleHorBlue'});
       expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -173,7 +184,7 @@ describe('<Asset />', () => {
       );
     });
 
-    it('LMiddleHorRed/', () => {
+    it('"LMiddleHorRed"/', () => {
       renderer({type: 'LMiddleHorRed'});
       expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -182,7 +193,7 @@ describe('<Asset />', () => {
       );
     });
 
-    it('LTopBlue/', () => {
+    it('"LTopBlue"/', () => {
       renderer({type: 'LTopBlue'});
       expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -191,7 +202,7 @@ describe('<Asset />', () => {
       );
     });
 
-    it('LTopRed/', () => {
+    it('"LTopRed"/', () => {
       renderer({type: 'LTopRed'});
       expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -200,7 +211,7 @@ describe('<Asset />', () => {
       );
     });
 
-    it('O1/', () => {
+    it('"O1"/', () => {
       renderer({type: 'O1'});
       expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -209,13 +220,112 @@ describe('<Asset />', () => {
       );
     });
 
-    it('X1/', () => {
+    it('"X1"/', () => {
       renderer({type: 'X1'});
       expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
           source: X1,
         }),
       );
+    });
+  });
+
+  describe('displays the image by default if /type ===', () => {
+    it('"LBottomBlue"/', () => {
+      renderer({type: 'LBottomBlue'});
+      expect(mockPlay).toHaveBeenCalledWith(28, 28);
+    });
+
+    it('"LBottomRed"/', () => {
+      renderer({type: 'LBottomRed'});
+      expect(mockPlay).toHaveBeenCalledWith(28, 28);
+    });
+
+    it('"LDiagonalTopLeftBottomRightBlue"/', () => {
+      renderer({type: 'LDiagonalTopLeftBottomRightBlue'});
+      expect(mockPlay).toHaveBeenCalledWith(32, 32);
+    });
+
+    it('"LDiagonalTopLeftBottomRightRed"/', () => {
+      renderer({type: 'LDiagonalTopLeftBottomRightRed'});
+      expect(mockPlay).toHaveBeenCalledWith(32, 32);
+    });
+
+    it('"LMiddleHorBlue"/', () => {
+      renderer({type: 'LMiddleHorBlue'});
+      expect(mockPlay).toHaveBeenCalledWith(28, 28);
+    });
+
+    it('"LMiddleHorRed"/', () => {
+      renderer({type: 'LMiddleHorRed'});
+      expect(mockPlay).toHaveBeenCalledWith(28, 28);
+    });
+
+    it('"LTopBlue"/', () => {
+      renderer({type: 'LTopBlue'});
+      expect(mockPlay).toHaveBeenCalledWith(28, 28);
+    });
+
+    it('"LTopRed"/', () => {
+      renderer({type: 'LTopRed'});
+      expect(mockPlay).toHaveBeenCalledWith(28, 28);
+    });
+
+    it('"O1"/', () => {
+      renderer({type: 'O1'});
+      expect(mockPlay).toHaveBeenCalledWith(28, 28);
+    });
+
+    it('"X1"/', () => {
+      renderer();
+      expect(mockPlay).toHaveBeenCalledWith(26, 26);
+    });
+  });
+
+  describe('triggers the animation if /state === "PLAY"/ and /type ===', () => {
+    it('"LBottomBlue"/', () => {
+      renderer({state: 'PLAY', type: 'LBottomBlue'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 28);
+    });
+
+    it('"LBottomRed"/', () => {
+      renderer({state: 'PLAY', type: 'LBottomRed'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 28);
+    });
+
+    it('"LDiagonalTopLeftBottomRightBlue"/', () => {
+      renderer({state: 'PLAY', type: 'LDiagonalTopLeftBottomRightBlue'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 32);
+    });
+
+    it('"LDiagonalTopLeftBottomRightRed"/', () => {
+      renderer({state: 'PLAY', type: 'LDiagonalTopLeftBottomRightRed'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 32);
+    });
+
+    it('"LMiddleHorBlue"/', () => {
+      renderer({state: 'PLAY', type: 'LMiddleHorBlue'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 28);
+    });
+
+    it('"LMiddleHorRed"/', () => {
+      renderer({state: 'PLAY', type: 'LMiddleHorRed'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 28);
+    });
+
+    it('"LTopBlue"/', () => {
+      renderer({state: 'PLAY', type: 'LTopBlue'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 28);
+    });
+
+    it('"O1"/', () => {
+      renderer({state: 'PLAY', type: 'O1'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 28);
+    });
+
+    it('"X1"/', () => {
+      renderer({state: 'PLAY'});
+      expect(mockPlay).toHaveBeenCalledWith(2, 26);
     });
   });
 

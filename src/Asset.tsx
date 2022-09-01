@@ -5,11 +5,13 @@ import {ThemeContext} from './Theme.context';
 
 type props = {
   disabled?: boolean;
-  padding?: keyof Theming.SpacingTheme;
+  margin?: keyof Theming.SpacingTheme;
   state?: 'EMPTY' | 'PLAY' | 'VISIBLE';
   type?:
     | 'LBottomBlue'
     | 'LBottomRed'
+    | 'LDiagonalTopLeftBottomRightBlue'
+    | 'LDiagonalTopLeftBottomRightRed'
     | 'LMiddleHorBlue'
     | 'LMiddleHorRed'
     | 'LTopBlue'
@@ -24,6 +26,8 @@ type props = {
 const ANIMATION_LAST_FRAME = {
   LBottomBlue: 28,
   LBottomRed: 28,
+  LDiagonalTopLeftBottomRightBlue: 32,
+  LDiagonalTopLeftBottomRightRed: 32,
   LMiddleHorBlue: 28,
   LMiddleHorRed: 28,
   LTopBlue: 28,
@@ -34,7 +38,7 @@ const ANIMATION_LAST_FRAME = {
 
 const Asset: React.FC<props> = ({
   disabled = false,
-  padding,
+  margin,
   state,
   type = 'X1',
 }) => {
@@ -42,16 +46,14 @@ const Asset: React.FC<props> = ({
 
   const {theme} = React.useContext(ThemeContext);
   const stylesProps = React.useMemo(
-    () => stylesAsset({disabled, padding}),
-    [disabled, padding],
+    () => stylesAsset({disabled, margin}),
+    [disabled, margin],
   );
   const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
 
   React.useEffect(() => {
-    if (state === 'EMPTY') {
-      animationRef.current?.play(0, 0);
-    } else if (state === 'PLAY') {
-      animationRef.current?.play(0, ANIMATION_LAST_FRAME[type]);
+    if (state === 'PLAY') {
+      animationRef.current?.play(2, ANIMATION_LAST_FRAME[type]);
     } else {
       animationRef.current?.play(
         ANIMATION_LAST_FRAME[type],
@@ -59,6 +61,10 @@ const Asset: React.FC<props> = ({
       );
     }
   }, [state, type]);
+
+  if (state === 'EMPTY') {
+    return null;
+  }
 
   if (type === 'LBottomBlue') {
     return (
@@ -78,6 +84,30 @@ const Asset: React.FC<props> = ({
         loop={false}
         ref={animationRef}
         source={require('../assets/jsons/LBottomRed.json')}
+        style={styles.container}
+        testID="asset__container--lottie"
+      />
+    );
+  }
+
+  if (type === 'LDiagonalTopLeftBottomRightBlue') {
+    return (
+      <Lottie
+        loop={false}
+        ref={animationRef}
+        source={require('../assets/jsons/LDiagonalTopLeftBottomRightBlue.json')}
+        style={styles.container}
+        testID="asset__container--lottie"
+      />
+    );
+  }
+
+  if (type === 'LDiagonalTopLeftBottomRightRed') {
+    return (
+      <Lottie
+        loop={false}
+        ref={animationRef}
+        source={require('../assets/jsons/LDiagonalTopLeftBottomRightRed.json')}
         style={styles.container}
         testID="asset__container--lottie"
       />
@@ -158,16 +188,16 @@ const Asset: React.FC<props> = ({
 const stylesAsset =
   ({
     disabled,
-    padding,
+    margin,
   }: {
     disabled: boolean;
-    padding?: keyof Theming.SpacingTheme;
+    margin?: keyof Theming.SpacingTheme;
   }) =>
   (theme: Theming.Theme) =>
     StyleSheet.create<{container: ViewStyle}>({
       container: {
         opacity: disabled ? 0.4 : 1,
-        padding: padding ? theme.spacing[padding] : undefined,
+        margin: margin ? theme.spacing[margin] : undefined,
       },
     });
 
