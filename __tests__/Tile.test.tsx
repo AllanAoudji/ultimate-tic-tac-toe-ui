@@ -1,105 +1,182 @@
-import React from 'react';
 import {fireEvent, render} from '@testing-library/react-native';
+import React from 'react';
+import {GestureResponderEvent} from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
-import {imageSource} from './testUtils';
+import {getDisabled} from './testUtils';
 
 import Tile from '../src/Tile';
 
-const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable';
-const TILE_IMAGE_STATE_TEST_ID = 'tile__image--state';
-const TILE_IMAGE_TEMP_TEST_ID = 'tile__image--temp';
+const mockAsset = jest.fn();
+jest.mock('../src/Asset', () => (props: any) => {
+  const {View} = require('react-native');
+  mockAsset(props);
+  return <View {...props} />;
+});
+
+const renderer = (
+  options: {
+    activePlayer?: TileState.Player1 | TileState.Player2;
+    onPress?:
+      | ((event?: GestureResponderEvent | undefined) => void)
+      | null
+      | undefined;
+    selected?: boolean;
+    state?: TileState;
+    valid?: boolean;
+  } = {},
+) => {
+  const renderTile = render(
+    <Tile
+      activePlayer={options.activePlayer}
+      onPress={options.onPress}
+      selected={options.selected}
+      state={options.state}
+      valid={options.valid}
+    />,
+  );
+
+  const {getByTestId} = renderTile;
+
+  const getContainer = () => getByTestId('tile__container--pressable');
+
+  return {
+    container: {
+      get: {
+        container: getContainer,
+      },
+      press: {
+        container: () => {
+          fireEvent.press(getContainer());
+        },
+      },
+    },
+    render: renderTile,
+  };
+};
 
 describe('<Tile />', () => {
-  const imgSourceO = require(imageSource('O'));
-  const imgSourceX = require(imageSource('X'));
-  let handlePress: jest.Mock;
-
   beforeEach(() => {
-    handlePress = jest.fn();
-  });
-  afterEach(() => {
-    handlePress.mockClear();
+    mockAsset.mockClear();
   });
 
   it('renders a <Pressable />', () => {
-    const {getByTestId} = render(<Tile onPress={handlePress} />);
-    fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
-    expect(handlePress).toHaveBeenCalled();
+    const onPress = jest.fn();
+    const {container} = renderer({onPress});
+    container.press.container();
+    expect(onPress).toHaveBeenCalled();
   });
 
-  it('not calls /onPress/ if /valid === false/', () => {
-    const {getByTestId} = render(<Tile onPress={handlePress} valid={false} />);
-    fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
-    expect(handlePress).not.toHaveBeenCalled();
-  });
-
-  it('not renders an <Image /> if /state === Empty/', () => {
-    const {queryByTestId} = render(<Tile />);
-    expect(queryByTestId(TILE_IMAGE_STATE_TEST_ID)).toBeNull();
-  });
-
-  it('renders an "X" <Image /> if /state === player1/', () => {
-    const {getByTestId} = render(<Tile state={TileState.Player1} />);
-    expect(getByTestId(TILE_IMAGE_STATE_TEST_ID).props.source).toBe(imgSourceX);
-  });
-
-  it('renders an "O" <Image /> if /state === player2/', () => {
-    const {getByTestId} = render(<Tile state={TileState.Player2} />);
-    expect(getByTestId(TILE_IMAGE_STATE_TEST_ID).props.source).toBe(imgSourceO);
-  });
-
-  it('not calls /onPress/ if /state !== Empty/', () => {
-    const {getByTestId} = render(
-      <Tile onPress={handlePress} state={TileState.Player1} />,
+  it('renders an <Asset /> with /margin === "smaller"/', () => {
+    renderer();
+    expect(mockAsset).toHaveBeenCalledWith(
+      expect.objectContaining({
+        margin: 'smaller',
+      }),
     );
-    fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
-    expect(handlePress).not.toHaveBeenCalled();
   });
 
-  it('renders a temporary <Image /> if /selected === true/', () => {
-    const imgSource = require(imageSource('X'));
-    const {getByTestId} = render(
-      <Tile activePlayer={TileState.Player1} selected={true} />,
+  it('renders <Asset /> with /disabled === true/ if /selected === true/', () => {
+    const {container} = renderer({
+      activePlayer: TileState.Player1,
+      selected: true,
+    });
+    container.press.container();
+    expect(mockAsset).toHaveBeenCalledWith(
+      expect.objectContaining({
+        disabled: true,
+        state: 'VISIBLE',
+        type: 'X1',
+      }),
     );
-    fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
-    expect(getByTestId(TILE_IMAGE_TEMP_TEST_ID).props.source).toBe(imgSource);
   });
 
-  it('temporary <Image /> should be based on the /activePlayer/', () => {
-    const imgSource = require(imageSource('O'));
-    const {getByTestId} = render(
-      <Tile activePlayer={TileState.Player2} selected={true} />,
+  it('<Asset /> with /disabled === true/ should be based on the /activePlayer/', () => {
+    const {container} = renderer({
+      activePlayer: TileState.Player2,
+      selected: true,
+    });
+    container.press.container();
+    expect(mockAsset).toHaveBeenCalledWith(
+      expect.objectContaining({
+        disabled: true,
+        state: 'VISIBLE',
+        type: 'O1',
+      }),
     );
-    fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
-    expect(getByTestId(TILE_IMAGE_TEMP_TEST_ID).props.source).toBe(imgSource);
   });
 
-  it('not renders a temporary <Image /> if /selected === false/', () => {
-    const {queryByTestId} = render(<Tile />);
-    expect(queryByTestId(TILE_IMAGE_TEMP_TEST_ID)).toBeNull();
+  it('disables <Tile /> if /disabled === true/', () => {
+    const {container} = renderer({
+      selected: true,
+    });
+    expect(getDisabled(container.get.container())).toBe(true);
   });
 
-  it('not renders temporary <Image /> if /state !== Empty/', () => {
-    const {queryByTestId} = render(
-      <Tile selected={true} state={TileState.Player1} />,
-    );
-    expect(queryByTestId(TILE_IMAGE_TEMP_TEST_ID)).toBeNull();
+  describe('renders <Asset /> with /type === ', () => {
+    it('"X1"/ if /state === player1/', () => {
+      renderer({state: TileState.Player1});
+      expect(mockAsset).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disabled: false,
+          state: 'PLAY',
+          type: 'X1',
+        }),
+      );
+    });
+
+    it('"O1"/ if /state === player2/', () => {
+      renderer({state: TileState.Player2});
+      expect(mockAsset).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disabled: false,
+          state: 'PLAY',
+          type: 'O1',
+        }),
+      );
+    });
   });
 
-  it('not calls /onPress/ if /selected === true/', () => {
-    const {getByTestId} = render(
-      <Tile onPress={handlePress} selected={true} />,
-    );
-    fireEvent.press(getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID));
-    expect(handlePress).not.toHaveBeenCalled();
+  describe('does not renders <Asset /> (/state === "EMPTY"/) if', () => {
+    it('/state === Empty/', () => {
+      renderer({state: TileState.Empty});
+      expect(mockAsset).toHaveBeenCalledWith(
+        expect.objectContaining({
+          state: 'EMPTY',
+        }),
+      );
+    });
+
+    it('/selected === false/', () => {
+      renderer({selected: false});
+      expect(mockAsset).toHaveBeenCalledWith(
+        expect.objectContaining({
+          state: 'EMPTY',
+        }),
+      );
+    });
   });
 
-  it('disables <Tile /> if /disabled === true', () => {
-    const {getByTestId} = render(<Tile disabled={true} />);
-    expect(
-      getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID).props.accessibilityState
-        .disabled,
-    ).toBe(true);
+  describe('does not calls /onPress/ if', () => {
+    it('/selected === true/', () => {
+      const onPress = jest.fn();
+      const {container} = renderer({onPress, selected: true});
+      container.press.container();
+      expect(onPress).not.toHaveBeenCalled();
+    });
+
+    it('/valid === false/', () => {
+      const onPress = jest.fn();
+      const {container} = renderer({onPress, valid: false});
+      container.press.container();
+      expect(onPress).not.toHaveBeenCalled();
+    });
+
+    it('/state !== Empty/', () => {
+      const onPress = jest.fn();
+      const {container} = renderer({onPress, state: TileState.Player1});
+      container.press.container();
+      expect(onPress).not.toHaveBeenCalled();
+    });
   });
 });
