@@ -1,16 +1,82 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
+import {GestureResponderEvent} from 'react-native';
 import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 
-import {imageSource} from './testUtils';
+import {imageSource, getDisabled, getSource} from './testUtils';
 
 import Board from '../src/Board';
 
+const mockAsset = jest.fn();
+jest.mock('../src/Asset', () => (props: any) => {
+  const {View} = require('react-native');
+  mockAsset(props);
+  return <View {...props} />;
+});
+
+const renderer = (
+  options: {
+    disabled?: boolean;
+    history?: number[];
+    gameIsDone?: boolean;
+    mode?: ultimateTicTactToAlgorithm.Mode;
+    onPress?: (
+      index: number,
+    ) =>
+      | ((event?: GestureResponderEvent | undefined) => void)
+      | null
+      | undefined;
+    sectionStates?: ultimateTicTactToAlgorithm.SectionState[];
+    selectedTileIndex?: number | null;
+  } = {},
+) => {
+  const renderBoard = render(
+    <Board
+      disabled={options.disabled}
+      history={options.history}
+      gameIsDone={options.gameIsDone}
+      mode={options.mode}
+      onPress={options.onPress}
+      sectionStates={options.sectionStates}
+      selectedTileIndex={options.selectedTileIndex}
+    />,
+  );
+
+  const {getAllByTestId, getByTestId} = renderBoard;
+
+  const getSectionContainers = () => getAllByTestId('section__container');
+  const getTileContainers = () => getAllByTestId('tile__container--pressable');
+
+  const getBoardImage = () => getByTestId('board__image--grid');
+  const getContainer = () => getByTestId('board__container');
+  const getTileContainer = (index: number) => getTileContainers()[index];
+
+  return {
+    assets: {
+      imageSourceGrid: require(imageSource('boardGrid')),
+    },
+    container: {
+      get: {
+        boardImage: getBoardImage,
+        container: getContainer,
+        sectionContainers: getSectionContainers,
+        tileContainer: getTileContainer,
+        tileContainers: getTileContainers,
+      },
+      press: {
+        tileContainer: (index: number) => {
+          fireEvent.press(getTileContainer(index));
+        },
+      },
+    },
+    renderBoard,
+  };
+};
+
 describe('<Board />', () => {
-  const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable',
-    SECTION_IMAGE_PLAYER_TEST_ID = 'section__image--player';
   beforeEach(() => {
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
+    mockAsset.mockClear();
   });
 
   afterEach(() => {
@@ -18,66 +84,69 @@ describe('<Board />', () => {
   });
 
   it('renders a <Container />', () => {
-    const {queryByTestId} = render(<Board />);
-    expect(queryByTestId('board__container')).toBeTruthy();
+    const {container} = renderer();
+    expect(container.get.container()).not.toBeNull();
   });
 
   it('renders nine <Section />', () => {
-    const {getAllByTestId} = render(<Board />);
-    expect(getAllByTestId('section__container')).toHaveLength(9);
+    const {container} = renderer();
+    expect(container.get.sectionContainers()).toHaveLength(9);
+  });
+
+  it('renders a "grid" <BackgroundImage />', () => {
+    const {assets, container} = renderer();
+    expect(getSource(container.get.boardImage())).toBe(assets.imageSourceGrid);
   });
 
   it('passes onPress to <Section />', () => {
     const onPressReturned = jest.fn();
     const onPress = jest.fn(() => onPressReturned);
-    const {getAllByTestId} = render(<Board onPress={onPress} />);
+    const {container} = renderer({onPress});
     expect(onPress).toHaveBeenCalledTimes(81);
-    fireEvent.press(getAllByTestId('tile__container--pressable')[0]);
+    container.press.tileContainer(0);
     expect(onPressReturned).toHaveBeenCalled();
   });
 
   it('validates sections based on history', () => {
     const onPress = jest.fn();
-    const {getAllByTestId} = render(
-      <Board history={[1]} onPress={() => onPress} />,
-    );
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
+    const {container} = renderer({history: [1], onPress: () => onPress});
+    container.press.tileContainer(0);
     expect(onPress).not.toHaveBeenCalled();
   });
 
   it('passes /activePlayer/ to <Section />', () => {
-    const imgSourceX = require(imageSource('X'));
-    const {getByTestId} = render(<Board selectedTileIndex={0} />);
-    expect(getByTestId('tile__image--temp').props.source).toBe(imgSourceX);
+    renderer({selectedTileIndex: 0});
+    expect(mockAsset).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        disabled: true,
+        type: 'X1',
+      }),
+    );
   });
 
   it('/activePlayer/ is based on /history/', () => {
-    const imgSourceO = require(imageSource('O'));
-    const {getByTestId} = render(<Board history={[1]} selectedTileIndex={0} />);
-    expect(getByTestId('tile__image--temp').props.source).toBe(imgSourceO);
+    renderer({history: [1], selectedTileIndex: 0});
+    expect(mockAsset).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        disabled: true,
+        type: 'O1',
+      }),
+    );
   });
 
   it("sets all <Section />'s /valid/ to false if /gameIsWon === true/", () => {
     const onPress = jest.fn();
-    const {getAllByTestId} = render(
-      <Board gameIsDone={true} onPress={() => onPress} />,
-    );
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[30]);
-    fireEvent.press(getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[55]);
+    const {container} = renderer({gameIsDone: true, onPress: () => onPress});
+    container.press.tileContainer(0);
+    container.press.tileContainer(30);
+    container.press.tileContainer(55);
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it('renders a "grid" <BackgroundImage />', () => {
-    const imageSourceGrid = require(imageSource('boardGrid'));
-    const {getByTestId} = render(<Board />);
-    expect(getByTestId('board__image--grid').props.source).toBe(
-      imageSourceGrid,
-    );
-  });
-
   it('calls /getActiveSection/ with /mode/', () => {
-    render(<Board mode={ultimateTicTactToAlgorithm.Mode.Continue} />);
+    renderer({mode: ultimateTicTactToAlgorithm.Mode.Continue});
     expect(ultimateTicTactToAlgorithm.getActiveSection).toHaveBeenCalledWith(
       expect.anything(),
       ultimateTicTactToAlgorithm.Mode.Continue,
@@ -85,7 +154,7 @@ describe('<Board />', () => {
   });
 
   it('calls /getActiveSection/ with /mode === Normal/ if /mode === undefined/', () => {
-    render(<Board />);
+    renderer();
     expect(ultimateTicTactToAlgorithm.getActiveSection).toHaveBeenCalledWith(
       expect.anything(),
       ultimateTicTactToAlgorithm.Mode.Normal,
@@ -93,27 +162,18 @@ describe('<Board />', () => {
   });
 
   it('disables each <Tile /> if /disabled === true/', () => {
-    const {getAllByTestId} = render(<Board disabled={true} />);
-    expect(
-      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[0].props
-        .accessibilityState.disabled,
-    ).toBe(true);
-    expect(
-      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[1].props
-        .accessibilityState.disabled,
-    ).toBe(true);
-    expect(
-      getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID)[80].props
-        .accessibilityState.disabled,
-    ).toBe(true);
+    const {container} = renderer({disabled: true});
+    expect(getDisabled(container.get.tileContainer(0))).toBe(true);
+    expect(getDisabled(container.get.tileContainer(1))).toBe(true);
+    expect(getDisabled(container.get.tileContainer(80))).toBe(true);
   });
 
   it('passes /mode/ to each <Section />', () => {
-    const {container} = render(
-      <Board mode={ultimateTicTactToAlgorithm.Mode.Normal} />,
-    );
+    const {renderBoard} = renderer({
+      mode: ultimateTicTactToAlgorithm.Mode.Normal,
+    });
     expect(
-      container.findAllByProps({
+      renderBoard.container.findAllByProps({
         mode: ultimateTicTactToAlgorithm.Mode.Normal,
         activePlayer: ultimateTicTactToAlgorithm.TileState.Player1,
       }),
@@ -121,11 +181,11 @@ describe('<Board />', () => {
   });
 
   it('passes the other /mode/ to each <Section />', () => {
-    const {container} = render(
-      <Board mode={ultimateTicTactToAlgorithm.Mode.Continue} />,
-    );
+    const {renderBoard} = renderer({
+      mode: ultimateTicTactToAlgorithm.Mode.Continue,
+    });
     expect(
-      container.findAllByProps({
+      renderBoard.container.findAllByProps({
         mode: ultimateTicTactToAlgorithm.Mode.Continue,
         activePlayer: ultimateTicTactToAlgorithm.TileState.Player1,
       }),
@@ -138,7 +198,7 @@ describe('<Board />', () => {
       ultimateTicTactToAlgorithm.TileState.Player1,
       ultimateTicTactToAlgorithm.WinningLine.LeftColumn,
     ];
-    const {queryByTestId} = render(<Board sectionStates={sectionStates} />);
-    expect(queryByTestId(SECTION_IMAGE_PLAYER_TEST_ID)).not.toBeNull();
+    renderer({sectionStates});
+    expect(mockAsset).toHaveBeenCalledTimes(82);
   });
 });
