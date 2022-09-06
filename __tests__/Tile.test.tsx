@@ -3,15 +3,30 @@ import React from 'react';
 import {GestureResponderEvent} from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
-import {getDisabled} from './testUtils';
+import {
+  getDisabled,
+  getSource,
+  getStyle,
+  imageSource,
+  jsonSource,
+} from './testUtils';
 
 import Tile from '../src/Tile';
+import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
-const mockAsset = jest.fn();
-jest.mock('../src/Asset', () => (props: any) => {
-  const {View} = require('react-native');
-  mockAsset(props);
-  return <View {...props} />;
+const mockLottie = jest.fn();
+jest.mock('lottie-react-native', () => {
+  const {forwardRef, useEffect} = require('react');
+  return forwardRef((props: any, ref: any) => {
+    useEffect(() => {
+      if (ref.current) {
+        ref.current.play = () => {};
+      }
+    }, [ref]);
+    const {View} = require('react-native');
+    mockLottie(props);
+    return <View {...props} ref={ref} />;
+  });
 });
 
 const renderer = (
@@ -36,19 +51,38 @@ const renderer = (
     />,
   );
 
-  const {getByTestId} = renderTile;
+  const {getByTestId, queryByTestId} = renderTile;
 
   const getContainer = () => getByTestId('tile__container--pressable');
+  const getGameAsset = () => getByTestId('gameAsset__container');
+  const getGameAssetImage = () => getByTestId('gameAsset__image');
+
+  const queryGameAssetImage = () => queryByTestId('gameAsset__image');
 
   return {
+    assets: {
+      json: {
+        O1: require(jsonSource('O1')),
+        X1: require(jsonSource('X1')),
+      },
+      image: {
+        O1: require(imageSource('O1')),
+        X1: require(imageSource('X1')),
+      },
+    },
     container: {
       get: {
         container: getContainer,
+        gameAsset: getGameAsset,
+        gameAssetImage: getGameAssetImage,
       },
       press: {
         container: () => {
           fireEvent.press(getContainer());
         },
+      },
+      query: {
+        gameAssetImage: queryGameAssetImage,
       },
     },
     render: renderTile,
@@ -57,7 +91,7 @@ const renderer = (
 
 describe('<Tile />', () => {
   beforeEach(() => {
-    mockAsset.mockClear();
+    mockLottie.mockClear();
   });
 
   it('renders a <Pressable />', () => {
@@ -67,43 +101,35 @@ describe('<Tile />', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('renders an <Asset /> with /margin === "smaller"/', () => {
-    renderer();
-    expect(mockAsset).toHaveBeenCalledWith(
+  it('renders an <Asset /> with /padding === "smaller"/', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.gameAsset())).toEqual(
       expect.objectContaining({
-        margin: 'smaller',
+        padding: DEFAULT_LIGHT_THEME.spacing.smaller,
       }),
     );
   });
 
-  it('renders <Asset /> with /disabled === true/ if /selected === true/', () => {
+  it('renders <Asset /> with /opacity === 0.4/ if /selected === true/', () => {
     const {container} = renderer({
       activePlayer: TileState.Player1,
       selected: true,
     });
     container.press.container();
-    expect(mockAsset).toHaveBeenCalledWith(
+    expect(getStyle(container.get.gameAsset())).toEqual(
       expect.objectContaining({
-        disabled: true,
-        state: 'VISIBLE',
-        type: 'X1',
+        opacity: 0.4,
       }),
     );
   });
 
-  it('<Asset /> with /disabled === true/ should be based on the /activePlayer/', () => {
-    const {container} = renderer({
+  it('<Asset /> with /opacity === 0.4/ should be based on the /activePlayer/', () => {
+    const {assets, container} = renderer({
       activePlayer: TileState.Player2,
       selected: true,
     });
     container.press.container();
-    expect(mockAsset).toHaveBeenCalledWith(
-      expect.objectContaining({
-        disabled: true,
-        state: 'VISIBLE',
-        type: 'O1',
-      }),
-    );
+    expect(getSource(container.get.gameAssetImage())).toEqual(assets.image.O1);
   });
 
   it('disables <Tile /> if /disabled === true/', () => {
@@ -115,23 +141,19 @@ describe('<Tile />', () => {
 
   describe('renders <Asset /> with /type === ', () => {
     it('"X1"/ if /state === player1/', () => {
-      renderer({state: TileState.Player1});
-      expect(mockAsset).toHaveBeenCalledWith(
+      const {assets} = renderer({state: TileState.Player1});
+      expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
-          disabled: false,
-          state: 'PLAY',
-          type: 'X1',
+          source: assets.json.X1,
         }),
       );
     });
 
     it('"O1"/ if /state === player2/', () => {
-      renderer({state: TileState.Player2});
-      expect(mockAsset).toHaveBeenCalledWith(
+      const {assets} = renderer({state: TileState.Player2});
+      expect(mockLottie).toHaveBeenCalledWith(
         expect.objectContaining({
-          disabled: false,
-          state: 'PLAY',
-          type: 'O1',
+          source: assets.json.O1,
         }),
       );
     });
@@ -139,21 +161,15 @@ describe('<Tile />', () => {
 
   describe('does not renders <Asset /> (/state === "EMPTY"/) if', () => {
     it('/state === Empty/', () => {
-      renderer({state: TileState.Empty});
-      expect(mockAsset).toHaveBeenCalledWith(
-        expect.objectContaining({
-          state: 'EMPTY',
-        }),
-      );
+      const {container} = renderer({state: TileState.Empty});
+      expect(mockLottie).not.toHaveBeenCalled();
+      expect(container.query.gameAssetImage()).toBeNull();
     });
 
     it('/selected === false/', () => {
-      renderer({selected: false});
-      expect(mockAsset).toHaveBeenCalledWith(
-        expect.objectContaining({
-          state: 'EMPTY',
-        }),
-      );
+      const {container} = renderer({selected: false});
+      expect(mockLottie).not.toHaveBeenCalled();
+      expect(container.query.gameAssetImage()).toBeNull();
     });
   });
 

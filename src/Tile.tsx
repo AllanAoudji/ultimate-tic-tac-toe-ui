@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
-import Asset from './Asset';
+import GameAsset from './GameAsset';
 
 import {ThemeContext} from './Theme.context';
 
@@ -50,7 +50,7 @@ const Tile: React.FC<Props> = ({
     }
   }, [activePlayer, state]);
   const assetsDisabled = React.useMemo(
-    () => selected && state === TileState.Empty,
+    () => (selected && state === TileState.Empty ? 0.4 : undefined),
     [selected, state],
   );
   const assetsState = React.useMemo(() => {
@@ -69,9 +69,9 @@ const Tile: React.FC<Props> = ({
       onPress={onPress}
       style={styles.container}
       testID="tile__container--pressable">
-      <Asset
-        disabled={assetsDisabled}
-        margin="smaller"
+      <GameAsset
+        opacity={assetsDisabled}
+        padding="smaller"
         state={assetsState}
         type={assetsType}
       />

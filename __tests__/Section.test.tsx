@@ -10,15 +10,23 @@ import {
   WinningLine,
 } from 'ultimate-tic-tac-toe-algorithm';
 
-import {getSource, getStyle, imageSource} from './testUtils';
+import {getSource, getStyle, imageSource, jsonSource} from './testUtils';
 
 import Section from '../src/Section';
 
-const mockAsset = jest.fn();
-jest.mock('../src/Asset', () => (props: any) => {
-  const {View} = require('react-native');
-  mockAsset(props);
-  return <View {...props} />;
+const mockLottie = jest.fn();
+jest.mock('lottie-react-native', () => {
+  const {forwardRef, useEffect} = require('react');
+  return forwardRef((props: any, ref: any) => {
+    useEffect(() => {
+      if (ref.current) {
+        ref.current.play = () => {};
+      }
+    }, [ref]);
+    const {View} = require('react-native');
+    mockLottie(props);
+    return <View {...props} ref={ref} />;
+  });
 });
 
 const renderer = (
@@ -52,12 +60,16 @@ const renderer = (
   const {getAllByTestId, getByTestId, queryAllByTestId, queryByTestId} =
     renderSection;
 
+  const getGameAssetImage = () => getByTestId('gameAsset__image');
+  const getGameAssetImages = () => getAllByTestId('gameAsset__image');
   const getGridImage = () => getByTestId('section__image--grid');
   const getImageLine = () => getByTestId('section__image--line');
   const getInnerContainer = () => getByTestId('section__container--inner');
   const getTiles = () => getAllByTestId('tile__container--pressable');
 
   const queryContainer = () => queryByTestId('section__container');
+  const queryGameAssetImage = () => queryByTestId('gameAsset__image');
+  const queryGameAssetImages = () => queryAllByTestId('gameAsset__images');
   const queryGridImage = () => queryByTestId('section__image--grid');
   const queryImageLine = () => queryByTestId('section__image--line');
   const queryInnerContainer = () => queryByTestId('section__container--inner');
@@ -67,43 +79,67 @@ const renderer = (
     assets: {
       images: {
         grid: require(imageSource('SectionGrid')),
-        imgSourceOBottom: require(imageSource('LinePlayerOBottom')),
-        imgSourceOLeft: require(imageSource('LinePlayerOLeft')),
-        imgSourceOMiddleHorizontal: require(imageSource(
-          'LinePlayerOMiddleHorizontal',
+        LBottomBlue: require(imageSource('LBottomBlue')),
+        LBottomRed: require(imageSource('LBottomRed')),
+        LDiagonalTopLeftBottomRightBlue: require(imageSource(
+          'LDiagonalTopLeftBottomRightBlue',
         )),
-        imgSourceOMiddleVertical: require(imageSource(
-          'LinePlayerOMiddleVertical',
+        LDiagonalTopLeftBottomRightRed: require(imageSource(
+          'LDiagonalTopLeftBottomRightRed',
         )),
-        imgSourceORight: require(imageSource('LinePlayerORight')),
-        imgSourceOTop: require(imageSource('LinePlayerOTop')),
-        imgSourceOTopLeftBottomRight: require(imageSource(
-          'LinePlayerOTopLeftBottomRight',
+        LDiagonalTopRightBottomLeftBlue: require(imageSource(
+          'LDiagonalTopRightBottomLeftBlue',
         )),
-        imgSourceOTopRightBottomLeft: require(imageSource(
-          'LinePlayerOTopRightBottomLeft',
+        LDiagonalTopRightBottomLeftRed: require(imageSource(
+          'LDiagonalTopRightBottomLeftRed',
         )),
-        imgSourceXBottom: require(imageSource('LinePlayerXBottom')),
-        imgSourceXMiddleHorizontal: require(imageSource(
-          'LinePlayerXMiddleHorizontal',
+        LLeftBlue: require(imageSource('LLeftBlue')),
+        LLeftRed: require(imageSource('LLeftRed')),
+        LMiddleHorizontalBlue: require(imageSource('LMiddleHorizontalBlue')),
+        LMiddleHorizontalRed: require(imageSource('LMiddleHorizontalRed')),
+        LMiddleVerticalBlue: require(imageSource('LMiddleVerticalBlue')),
+        LMiddleVerticalRed: require(imageSource('LMiddleVerticalRed')),
+        LRightBlue: require(imageSource('LRightBlue')),
+        LRightRed: require(imageSource('LRightRed')),
+        LTopBlue: require(imageSource('LTopBlue')),
+        LTopRed: require(imageSource('LTopRed')),
+        O1: require(imageSource('O1')),
+        X1: require(imageSource('X1')),
+      },
+      json: {
+        LBottomBlue: require(jsonSource('LBottomBlue')),
+        LBottomRed: require(jsonSource('LBottomRed')),
+        LDiagonalTopLeftBottomRightBlue: require(jsonSource(
+          'LDiagonalTopLeftBottomRightBlue',
         )),
-        imgSourceXTop: require(imageSource('LinePlayerXTop')),
-        imgSourceXLeft: require(imageSource('LinePlayerXLeft')),
-        imgSourceXMiddleVertical: require(imageSource(
-          'LinePlayerXMiddleVertical',
+        LDiagonalTopLeftBottomRightRed: require(jsonSource(
+          'LDiagonalTopLeftBottomRightRed',
         )),
-        imgSourceXRight: require(imageSource('LinePlayerXRight')),
-        imgSourceXTopLeftBottomRight: require(imageSource(
-          'LinePlayerXTopLeftBottomRight',
+        LDiagonalTopRightBottomLeftBlue: require(jsonSource(
+          'LDiagonalTopRightBottomLeftBlue',
         )),
-        imgSourceXTopRightBottomLeft: require(imageSource(
-          'LinePlayerXTopRightBottomLeft',
+        LDiagonalTopRightBottomLeftRed: require(jsonSource(
+          'LDiagonalTopRightBottomLeftRed',
         )),
+        LLeftBlue: require(jsonSource('LLeftBlue')),
+        LLeftRed: require(jsonSource('LLeftRed')),
+        LMiddleHorizontalBlue: require(jsonSource('LMiddleHorizontalBlue')),
+        LMiddleHorizontalRed: require(jsonSource('LMiddleHorizontalRed')),
+        LMiddleVerticalBlue: require(jsonSource('LMiddleVerticalBlue')),
+        LMiddleVerticalRed: require(jsonSource('LMiddleVerticalRed')),
+        LRightBlue: require(jsonSource('LRightBlue')),
+        LRightRed: require(jsonSource('LRightRed')),
+        LTopBlue: require(jsonSource('LTopBlue')),
+        LTopRed: require(jsonSource('LTopRed')),
+        O1: require(jsonSource('O1')),
+        X1: require(jsonSource('X1')),
       },
     },
     container: {
       get: {
         gridImage: getGridImage,
+        gameAssetImage: getGameAssetImage,
+        gameAssetImages: getGameAssetImages,
         imageLine: getImageLine,
         innerContainer: getInnerContainer,
         tile: (index: number) => getTiles()[index],
@@ -116,6 +152,8 @@ const renderer = (
       },
       query: {
         container: queryContainer,
+        gameAssetImage: queryGameAssetImage,
+        gameAssetImages: queryGameAssetImages,
         gridImage: queryGridImage,
         imageLine: queryImageLine,
         innerContainer: queryInnerContainer,
@@ -131,7 +169,7 @@ describe('<Section/>', () => {
 
   beforeEach(() => {
     handlePress = jest.fn();
-    mockAsset.mockClear();
+    mockLottie.mockClear();
   });
 
   afterEach(() => {
@@ -158,17 +196,17 @@ describe('<Section/>', () => {
     const propsTiles = getSections([])[0].tiles;
     propsTiles[0][0].state = TileState.Player1;
     propsTiles[0][1].state = TileState.Player2;
-    renderer({tiles: propsTiles});
-    expect(mockAsset).toHaveBeenNthCalledWith(
+    const {assets} = renderer({tiles: propsTiles});
+    expect(mockLottie).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
-        type: 'X1',
+        source: assets.json.X1,
       }),
     );
-    expect(mockAsset).toHaveBeenNthCalledWith(
+    expect(mockLottie).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
-        type: 'O1',
+        source: assets.json.O1,
       }),
     );
   });
@@ -180,143 +218,129 @@ describe('<Section/>', () => {
     expect(handlePress).toHaveBeenCalledWith(1);
   });
 
-  it("renders tile's <TempImage /> if /selectedTileIndex === tile.index1D/", () => {
-    renderer({selectedTileIndex: 2});
-    expect(mockAsset).toHaveBeenNthCalledWith(
-      3,
-      expect.objectContaining({
-        disabled: true,
-      }),
-    );
+  it("renders <GameAsset />'s <Image /> if /selectedTileIndex === tile.index1D/", () => {
+    const {container} = renderer({selectedTileIndex: 2});
+    expect(container.get.gameAssetImages()).toHaveLength(1);
   });
 
   it('passes /activePlayer/ to <Tile />', () => {
-    renderer({
+    const {assets, container} = renderer({
       activePlayer: TileState.Player2,
       selectedTileIndex: 2,
     });
-    expect(mockAsset).toHaveBeenNthCalledWith(
-      3,
-      expect.objectContaining({
-        disabled: true,
-        type: 'O1',
-      }),
-    );
+    expect(getSource(container.get.gameAssetImage())).toEqual(assets.images.O1);
   });
 
-  it('displays a <PlayerImage /> if the <Section /> is won by a player', () => {
+  it("renders a <GameAsset />'s <Image /> if the <Section /> is won by a player", () => {
     renderer({
       sectionState: [TileState.Player1, WinningLine.BottomRow],
     });
-    expect(mockAsset).toHaveBeenCalledTimes(10);
-    expect(mockAsset).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: 'X1',
-      }),
-    );
+    expect(mockLottie).toHaveBeenCalledTimes(1);
   });
 
   it('do not displays a <PlayerImage /> if the <Section /> is not won', () => {
     renderer();
-    expect(mockAsset).toHaveBeenCalledTimes(9);
+    expect(mockLottie).toHaveBeenCalledTimes(0);
   });
 
   it('<PlayerImage /> should be based on the player who won the section', () => {
-    renderer({
+    const {assets} = renderer({
       sectionState: [TileState.Player2, WinningLine.BottomRow],
     });
-    expect(mockAsset).toHaveBeenCalledTimes(10);
-    expect(mockAsset).toHaveBeenCalledWith(
+    expect(mockLottie).toHaveBeenCalledWith(
       expect.objectContaining({
-        type: 'O1',
+        source: assets.json.O1,
       }),
     );
   });
 
   describe('renders a <LineImage />', () => {
-    const imagesKey = renderer().assets.images;
+    const imagesKey = renderer().assets.json;
     let expectImagePlayerLine =
       (player: TileState.Player1 | TileState.Player2) =>
       (
         line: string,
         winningLine: WinningLine,
-        image: keyof typeof imagesKey,
+        json: keyof typeof imagesKey,
       ) => {
         it(line, () => {
-          const {assets, container} = renderer({
+          const {assets} = renderer({
             mode: Mode.Continue,
             sectionState: [player, winningLine],
           });
-          expect(getSource(container.get.imageLine())).toBe(
-            assets.images[image],
+          expect(mockLottie).toHaveBeenCalledWith(
+            expect.objectContaining({
+              source: assets.json[json],
+            }),
           );
         });
       };
 
     it('if section is won and /mode === Continue/', () => {
-      const {container} = renderer({
+      renderer({
         mode: Mode.Continue,
         sectionState: [TileState.Player1, WinningLine.BottomRow],
       });
-      expect(container.query.imageLine()).not.toBeNull();
+      expect(mockLottie).toHaveBeenCalledTimes(1);
     });
 
     describe('with Player O and', () => {
       const expectImageLine = expectImagePlayerLine(TileState.Player2);
-      expectImageLine('bottom', WinningLine.BottomRow, 'imgSourceOBottom');
-      expectImageLine('left', WinningLine.LeftColumn, 'imgSourceOLeft');
+      expectImageLine('bottom', WinningLine.BottomRow, 'LBottomRed');
+      expectImageLine('left', WinningLine.LeftColumn, 'LLeftRed');
       expectImageLine(
         'middleHoritontal',
         WinningLine.MiddleRow,
-        'imgSourceOMiddleHorizontal',
+        'LMiddleHorizontalRed',
       );
       expectImageLine(
         'middleVertical',
         WinningLine.MiddleColumn,
-        'imgSourceOMiddleVertical',
+        'LMiddleVerticalRed',
       );
-      expectImageLine('right', WinningLine.RightColumn, 'imgSourceORight');
-      expectImageLine('top', WinningLine.TopRow, 'imgSourceOTop');
+      expectImageLine('right', WinningLine.RightColumn, 'LRightRed');
+      expectImageLine('top', WinningLine.TopRow, 'LTopRed');
       expectImageLine(
         'topLeftBottomRight',
         WinningLine.TopLeftBottomRightDiagonal,
-        'imgSourceOTopLeftBottomRight',
+        'LDiagonalTopLeftBottomRightRed',
       );
       expectImageLine(
         'topRightBottomLeft',
         WinningLine.TopRightBottomLeftDiagonal,
-        'imgSourceOTopRightBottomLeft',
+        'LDiagonalTopRightBottomLeftRed',
       );
     });
 
     describe('with Player X and', () => {
       const expectImageLine = expectImagePlayerLine(TileState.Player1);
-      expectImageLine('bottom', WinningLine.BottomRow, 'imgSourceXBottom');
-      expectImageLine('left', WinningLine.LeftColumn, 'imgSourceXLeft');
+      expectImageLine('bottom', WinningLine.BottomRow, 'LBottomBlue');
+      expectImageLine('left', WinningLine.LeftColumn, 'LLeftBlue');
       expectImageLine(
         'middleHoritontal',
         WinningLine.MiddleRow,
-        'imgSourceXMiddleHorizontal',
+        'LMiddleHorizontalBlue',
       );
       expectImageLine(
         'middleVertical',
         WinningLine.MiddleColumn,
-        'imgSourceXMiddleVertical',
+        'LMiddleVerticalBlue',
       );
-      expectImageLine('right', WinningLine.RightColumn, 'imgSourceXRight');
-      expectImageLine('top', WinningLine.TopRow, 'imgSourceXTop');
+      expectImageLine('right', WinningLine.RightColumn, 'LRightBlue');
+      expectImageLine('top', WinningLine.TopRow, 'LTopBlue');
       expectImageLine(
         'topLeftBottomRight',
         WinningLine.TopLeftBottomRightDiagonal,
-        'imgSourceXTopLeftBottomRight',
+        'LDiagonalTopLeftBottomRightBlue',
       );
       expectImageLine(
         'topRightBottomLeft',
         WinningLine.TopRightBottomLeftDiagonal,
-        'imgSourceXTopRightBottomLeft',
+        'LDiagonalTopRightBottomLeftBlue',
       );
     });
   });
+
   describe('sets /opacity: 0.2/ on innerContainer <Container /> if ', () => {
     it('/valid === false/', () => {
       const {container} = renderer({valid: false});
@@ -359,14 +383,6 @@ describe('<Section/>', () => {
       });
       container.press.tile();
       expect(handlePress).toHaveBeenCalled();
-    });
-
-    it('do not renders <PlayerImage />', () => {
-      renderer({
-        mode: Mode.Continue,
-        sectionState: [TileState.Player1, WinningLine.BottomRow],
-      });
-      expect(mockAsset).toHaveBeenCalledTimes(9);
     });
   });
 

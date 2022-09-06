@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  GestureResponderEvent,
-  Image,
-  ImageSourcePropType,
-  ImageStyle,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native';
+import {GestureResponderEvent, useWindowDimensions} from 'react-native';
 import {
   Tile as TileInterface,
   TileState,
@@ -15,15 +8,12 @@ import {
   WinningLine,
   checkIfSectionIsFull,
 } from 'ultimate-tic-tac-toe-algorithm';
-import Asset from './Asset';
+import GameAsset from './GameAsset';
 
 import Container from './Container';
 import {ThemeContext} from './Theme.context';
 import Tile from './Tile';
 
-interface LineImageProps {
-  state: SectionState;
-}
 interface SectionProps {
   activePlayer?: TileState.Player1 | TileState.Player2;
   disabled?: boolean;
@@ -41,89 +31,66 @@ interface WinningImageProps {
   state: SectionState;
 }
 
-const LineImage: React.FC<LineImageProps> = ({state}) => {
-  let source: ImageSourcePropType | undefined;
-  switch (state[1]) {
-    case WinningLine.TopRow:
-      source =
-        state[0] === TileState.Player1
-          ? require('../assets/images/LinePlayerXTop.png')
-          : require('../assets/images/LinePlayerOTop.png');
-      break;
-    case WinningLine.MiddleRow:
-      source =
-        state[0] === TileState.Player1
-          ? require('../assets/images/LinePlayerXMiddleHorizontal.png')
-          : require('../assets/images/LinePlayerOMiddleHorizontal.png');
-      break;
-    case WinningLine.BottomRow:
-      source =
-        state[0] === TileState.Player1
-          ? require('../assets/images/LinePlayerXBottom.png')
-          : require('../assets/images/LinePlayerOBottom.png');
-      break;
-    case WinningLine.LeftColumn:
-      source =
-        state[0] === TileState.Player1
-          ? require('../assets/images/LinePlayerXLeft.png')
-          : require('../assets/images/LinePlayerOLeft.png');
-      break;
-    case WinningLine.MiddleColumn:
-      source =
-        state[0] === TileState.Player1
-          ? require('../assets/images/LinePlayerXMiddleVertical.png')
-          : require('../assets/images/LinePlayerOMiddleVertical.png');
-      break;
-    case WinningLine.RightColumn:
-      source =
-        state[0] === TileState.Player1
-          ? require('../assets/images/LinePlayerXRight.png')
-          : require('../assets/images/LinePlayerORight.png');
-      break;
-    case WinningLine.TopLeftBottomRightDiagonal:
-      source =
-        state[0] === TileState.Player1
-          ? require('../assets/images/LinePlayerXTopLeftBottomRight.png')
-          : require('../assets/images/LinePlayerOTopLeftBottomRight.png');
-      break;
-    case WinningLine.TopRightBottomLeftDiagonal:
-      source =
-        state[0] === TileState.Player1
-          ? require('../assets/images/LinePlayerXTopRightBottomLeft.png')
-          : require('../assets/images/LinePlayerOTopRightBottomLeft.png');
-      break;
-    default:
-      break;
-  }
-  if (source) {
-    return (
-      <Image
-        source={source}
-        style={winnerImageStyles.image}
-        testID="section__image--line"
-      />
-    );
-  }
-  return null;
-};
-
 const WinningImage: React.FC<WinningImageProps> = ({mode, state}) => {
-  const type = React.useMemo(
-    () => (state[0] === TileState.Player1 ? 'X1' : 'O1'),
-    [state],
-  );
+  const type = React.useMemo(() => {
+    if (mode === Mode.Normal) {
+      return state[0] === TileState.Player1 ? 'X1' : 'O1';
+    }
+    switch (state[1]) {
+      case WinningLine.BottomRow:
+        if (state[0] === TileState.Player1) {
+          return 'LBottomBlue';
+        }
+        return 'LBottomRed';
+      case WinningLine.LeftColumn:
+        if (state[0] === TileState.Player1) {
+          return 'LLeftBlue';
+        }
+        return 'LLeftRed';
+      case WinningLine.MiddleColumn:
+        if (state[0] === TileState.Player1) {
+          return 'LMiddleVerticalBlue';
+        }
+        return 'LMiddleVerticalRed';
+      case WinningLine.MiddleRow:
+        if (state[0] === TileState.Player1) {
+          return 'LMiddleHorizontalBlue';
+        }
+        return 'LMiddleHorizontalRed';
+      case WinningLine.RightColumn:
+        if (state[0] === TileState.Player1) {
+          return 'LRightBlue';
+        }
+        return 'LRightRed';
+      case WinningLine.TopLeftBottomRightDiagonal:
+        if (state[0] === TileState.Player1) {
+          return 'LDiagonalTopLeftBottomRightBlue';
+        }
+        return 'LDiagonalTopLeftBottomRightRed';
+      case WinningLine.TopRightBottomLeftDiagonal:
+        if (state[0] === TileState.Player1) {
+          return 'LDiagonalTopRightBottomLeftBlue';
+        }
+        return 'LDiagonalTopRightBottomLeftRed';
+      case WinningLine.TopRow:
+        if (state[0] === TileState.Player1) {
+          return 'LTopBlue';
+        }
+        return 'LTopRed';
+      default:
+        if (state[0] === TileState.Player1) {
+          return 'LBottomBlue';
+        }
+        return 'LBottomRed';
+    }
+  }, [mode, state]);
   return (
     <Container
       height="100%"
-      padding="normal"
       position="absolute"
       width="100%"
       pointerEvents="none">
-      {mode === Mode.Normal ? (
-        <Asset margin="small" type={type} state="PLAY" />
-      ) : (
-        <LineImage state={state} />
-      )}
+      <GameAsset type={type} state="PLAY" />
     </Container>
   );
 };
@@ -161,6 +128,7 @@ const Section: React.FC<SectionProps> = ({
           resizeMode="cover"
           source={require('../assets/images/SectionGrid.png')}
           testID="section__image--grid">
+          {/* Display all 9 tiles of the section */}
           {tiles.map(tilesRow =>
             tilesRow.map(tile => (
               <Tile
@@ -181,17 +149,12 @@ const Section: React.FC<SectionProps> = ({
           )}
         </Container>
       </Container>
+      {/* Display the winning <GameAsset /> */}
       {sectionState[0] !== TileState.Empty && (
         <WinningImage mode={mode} state={sectionState} />
       )}
     </Container>
   );
 };
-
-const winnerImageStyles = StyleSheet.create<{
-  image: ImageStyle;
-}>({
-  image: {flex: 1, width: '100%'},
-});
 
 export default Section;

@@ -3,15 +3,23 @@ import React from 'react';
 import {GestureResponderEvent} from 'react-native';
 import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 
-import {imageSource, getDisabled, getSource} from './testUtils';
+import {imageSource, getDisabled, getSource, jsonSource} from './testUtils';
 
 import Board from '../src/Board';
 
-const mockAsset = jest.fn();
-jest.mock('../src/Asset', () => (props: any) => {
-  const {View} = require('react-native');
-  mockAsset(props);
-  return <View {...props} />;
+const mockLottie = jest.fn();
+jest.mock('lottie-react-native', () => {
+  const {forwardRef, useEffect} = require('react');
+  return forwardRef((props: any, ref: any) => {
+    useEffect(() => {
+      if (ref.current) {
+        ref.current.play = () => {};
+      }
+    }, [ref]);
+    const {View} = require('react-native');
+    mockLottie(props);
+    return <View {...props} ref={ref} />;
+  });
 });
 
 const renderer = (
@@ -49,16 +57,26 @@ const renderer = (
 
   const getBoardImage = () => getByTestId('board__image--grid');
   const getContainer = () => getByTestId('board__container');
+  const getGameAssetImage = () => getByTestId('gameAsset__image');
   const getTileContainer = (index: number) => getTileContainers()[index];
 
   return {
     assets: {
-      imageSourceGrid: require(imageSource('boardGrid')),
+      image: {
+        imageSourceGrid: require(imageSource('boardGrid')),
+        O1: require(imageSource('O1')),
+        X1: require(imageSource('X1')),
+      },
+      json: {
+        O1: require(jsonSource('O1')),
+        X1: require(jsonSource('X1')),
+      },
     },
     container: {
       get: {
         boardImage: getBoardImage,
         container: getContainer,
+        gameAssetImage: getGameAssetImage,
         sectionContainers: getSectionContainers,
         tileContainer: getTileContainer,
         tileContainers: getTileContainers,
@@ -76,7 +94,7 @@ const renderer = (
 describe('<Board />', () => {
   beforeEach(() => {
     jest.spyOn(ultimateTicTactToAlgorithm, 'getActiveSection');
-    mockAsset.mockClear();
+    mockLottie.mockClear();
   });
 
   afterEach(() => {
@@ -95,7 +113,9 @@ describe('<Board />', () => {
 
   it('renders a "grid" <BackgroundImage />', () => {
     const {assets, container} = renderer();
-    expect(getSource(container.get.boardImage())).toBe(assets.imageSourceGrid);
+    expect(getSource(container.get.boardImage())).toBe(
+      assets.image.imageSourceGrid,
+    );
   });
 
   it('passes onPress to <Section />', () => {
@@ -115,25 +135,13 @@ describe('<Board />', () => {
   });
 
   it('passes /activePlayer/ to <Section />', () => {
-    renderer({selectedTileIndex: 0});
-    expect(mockAsset).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({
-        disabled: true,
-        type: 'X1',
-      }),
-    );
+    const {container} = renderer({selectedTileIndex: 0});
+    expect(container.get.gameAssetImage()).not.toBeNull();
   });
 
   it('/activePlayer/ is based on /history/', () => {
-    renderer({history: [1], selectedTileIndex: 0});
-    expect(mockAsset).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({
-        disabled: true,
-        type: 'O1',
-      }),
-    );
+    const {assets, container} = renderer({history: [1], selectedTileIndex: 0});
+    expect(getSource(container.get.gameAssetImage())).toEqual(assets.image.O1);
   });
 
   it("sets all <Section />'s /valid/ to false if /gameIsWon === true/", () => {
@@ -198,7 +206,11 @@ describe('<Board />', () => {
       ultimateTicTactToAlgorithm.TileState.Player1,
       ultimateTicTactToAlgorithm.WinningLine.LeftColumn,
     ];
-    renderer({sectionStates});
-    expect(mockAsset).toHaveBeenCalledTimes(82);
+    const {assets} = renderer({sectionStates});
+    expect(mockLottie).toHaveBeenCalledWith(
+      expect.objectContaining({
+        source: assets.json.X1,
+      }),
+    );
   });
 });
