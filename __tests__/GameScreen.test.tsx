@@ -7,6 +7,7 @@ import {act} from 'react-test-renderer';
 import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 
 import GameScreen from '../src/GameScreen';
+import {spyPlay} from './testUtils';
 
 let mockCallbacks: {[index: string]: (() => void)[]} = {};
 const helperTriggerListeners = (eventName: string) => {
@@ -177,6 +178,21 @@ describe('<GameScreen />', () => {
     act(() => {
       helperTriggerListeners('hardwareBackPress');
     });
+    expect(
+      getAllByTestId('tile__container--pressable')[0].props.accessibilityState
+        .disabled,
+    ).toBe(true);
+    expect(
+      getAllByTestId('surrendButton__container--pressable')[0].props
+        .accessibilityState.disabled,
+    ).toBe(true);
+  });
+
+  it('disables<Game /> if game is won', () => {
+    spyPlay().mockWinner();
+    const {getAllByTestId} = renderer();
+    fireEvent.press(getAllByTestId('tile__container--pressable')[0]);
+    fireEvent.press(getAllByTestId('playButton__container--pressable')[1]);
     expect(
       getAllByTestId('tile__container--pressable')[0].props.accessibilityState
         .disabled,
