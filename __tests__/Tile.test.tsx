@@ -101,8 +101,11 @@ describe('<Tile />', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('renders an <Asset /> with /padding === "smaller"/', () => {
-    const {container} = renderer();
+  it('renders an <GameAsset /> with /padding === "smaller"/', () => {
+    const {container} = renderer({
+      activePlayer: TileState.Player1,
+      selected: true,
+    });
     expect(getStyle(container.get.gameAsset())).toEqual(
       expect.objectContaining({
         padding: DEFAULT_LIGHT_THEME.spacing.smaller,
@@ -110,7 +113,7 @@ describe('<Tile />', () => {
     );
   });
 
-  it('renders <Asset /> with /opacity === 0.4/ if /selected === true/', () => {
+  it('renders <GameAsset /> with /opacity === 0.4/ if /selected === true/', () => {
     const {container} = renderer({
       activePlayer: TileState.Player1,
       selected: true,
