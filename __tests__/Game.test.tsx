@@ -10,6 +10,24 @@ import Game from '../src/Game';
 import {HistoryProvider} from '../src/History.context';
 import * as useGameHistory from '../src/useGameHistory.hook';
 
+jest.mock('lottie-react-native', () => {
+  const {forwardRef, useEffect} = require('react');
+  return forwardRef(({onAnimationFinish, ...props}: any, ref: any) => {
+    useEffect(() => {
+      if (ref.current) {
+        ref.current.play = () => {};
+      }
+    }, [ref]);
+    useEffect(() => {
+      if (onAnimationFinish) {
+        onAnimationFinish();
+      }
+    }, [onAnimationFinish]);
+    const {View} = require('react-native');
+    return <View {...props} ref={ref} />;
+  });
+});
+
 const renderer = (
   options: {
     disabled?: boolean;

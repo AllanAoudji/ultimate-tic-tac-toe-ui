@@ -77,11 +77,16 @@ const Game: React.FC<Props> = ({
   const [winner, setWinner] = React.useState<SectionState>(
     initialAssets.winner,
   );
+  const [visibleModalWinner, setVisibleModalWinner] =
+    React.useState<boolean>(false);
 
   const firstUpdate = React.useRef(true);
 
   const {addGameToHistory} = React.useContext(HistoryContext);
 
+  const onAnimationFinish = React.useCallback(() => {
+    setVisibleModalWinner(true);
+  }, []);
   const onPressBoard = React.useCallback(
     (tileIndex: number) => () => {
       setSelectedTilIndex(tileIndex);
@@ -161,6 +166,7 @@ const Game: React.FC<Props> = ({
       setPlayers(randomizePlayer());
       setSectionStates(initialAssets.sectionStates);
       setSelectedTilIndex(null);
+      setVisibleModalWinner(false);
       setWinner([TileState.Empty, null]);
     }
   }, [history, setGameIsDone]);
@@ -196,6 +202,8 @@ const Game: React.FC<Props> = ({
         sectionStates={sectionStates}
         onPress={onPressBoard}
         selectedTileIndex={selectedTileIndex}
+        onAnimationFinish={onAnimationFinish}
+        winner={winner}
       />
       <PlayerBoard
         activePlayButton={getActivePlayer(history) === players[1]}
@@ -210,6 +218,7 @@ const Game: React.FC<Props> = ({
       <WinningModalWrapper
         onPressNewGame={onPressNewGame}
         onPressQuit={onPressQuit}
+        visible={visibleModalWinner}
         winner={winner[0]}
       />
     </>

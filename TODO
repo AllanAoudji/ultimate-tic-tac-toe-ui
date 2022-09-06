@@ -1,7 +1,6 @@
 OptionButton Component quit game button restart game button save game button
 yarn remove remove "@react-native-community/hooks" package
 
-
 Probleme avec la gestion de l'erreur de fetching de l'history
 Si il y a un probleme, un modal apparait, puis disparait au bout de X secondes
 Ou si l'utilisateur clique dessus
