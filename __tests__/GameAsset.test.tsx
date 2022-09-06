@@ -580,14 +580,9 @@ describe('<Asset />', () => {
     });
 
     describe('"EMPTY"/', () => {
-      it('does not render <Lottie />', () => {
-        renderer({state: 'EMPTY'});
-        expect(mockLottie).not.toHaveBeenCalled();
-      });
-
-      it('does not render <Image />', () => {
+      it('does not renders <Container />', () => {
         const {container} = renderer({state: 'EMPTY'});
-        expect(container.query.image()).toBeNull();
+        expect(container.query.container()).toBeNull();
       });
     });
   });

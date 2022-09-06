@@ -498,6 +498,10 @@ const GameAsset: React.FC<GameAssetProps> = ({
   state = 'PLAY',
   type = 'X1',
 }) => {
+  if (state === 'EMPTY') {
+    return null;
+  }
+
   return (
     <Container
       height="100%"
