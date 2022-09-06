@@ -10,12 +10,17 @@ const mockLottie = jest.fn();
 const mockPlay = jest.fn();
 jest.mock('lottie-react-native', () => {
   const {forwardRef, useEffect} = require('react');
-  return forwardRef((props: any, ref: any) => {
+  return forwardRef(({onAnimationFinish, ...props}: any, ref: any) => {
     useEffect(() => {
       if (ref.current) {
         ref.current.play = mockPlay;
       }
     }, [ref]);
+    useEffect(() => {
+      if (onAnimationFinish) {
+        onAnimationFinish();
+      }
+    }, [onAnimationFinish]);
     const {View} = require('react-native');
     mockLottie(props);
     return <View {...props} ref={ref} />;
@@ -24,6 +29,7 @@ jest.mock('lottie-react-native', () => {
 
 const renderer = (
   options: {
+    onAnimationFinish?: () => void;
     opacity?: 0.1 | 0.2 | 0.4 | 0.8 | 1;
     padding?: keyof Theming.SpacingTheme;
     state?: 'EMPTY' | 'PLAY' | 'VISIBLE';
@@ -50,6 +56,7 @@ const renderer = (
 ) => {
   const renderAsset = render(
     <GameAsset
+      onAnimationFinish={options.onAnimationFinish}
       opacity={options.opacity}
       padding={options.padding}
       state={options.state}
@@ -153,9 +160,9 @@ describe('<Asset />', () => {
     const {container} = renderer();
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
-        flex: 1,
         height: '100%',
         position: 'relative',
+        width: '100%',
       }),
     );
   });
@@ -174,16 +181,26 @@ describe('<Asset />', () => {
     expect(mockLottie).toHaveBeenCalledWith(
       expect.objectContaining({
         style: {
+          height: '100%',
           position: 'absolute',
+          width: '100%',
         },
       }),
     );
   });
 
+  it('passes onAnimationFinish to <Lottie />', () => {
+    const onAnimationFinish = jest.fn();
+    renderer({onAnimationFinish});
+    expect(onAnimationFinish).toHaveBeenCalled();
+  });
+
   it('renders <Image /> with a default style', () => {
     const {container} = renderer({state: 'VISIBLE'});
     expect(getStyle(container.get.image())).toEqual({
+      height: '100%',
       position: 'absolute',
+      width: '100%',
     });
   });
 

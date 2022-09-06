@@ -25,9 +25,11 @@ type Type =
 type State = 'EMPTY' | 'PLAY' | 'VISIBLE';
 
 type AssetProps = {
+  onAnimationFinish?: () => void;
   type: Type;
 };
 type GameAssetProps = {
+  onAnimationFinish?: () => void;
   opacity?: 0.1 | 0.2 | 0.4 | 0.8 | 1;
   padding?: keyof Theming.SpacingTheme;
   state?: State;
@@ -58,8 +60,17 @@ const ANIMATION_LAST_FRAME = {
   X1: 26,
 };
 
-const AssetAnimation: React.FC<AssetProps> = ({type}) => {
+const AssetAnimation: React.FC<AssetProps> = ({onAnimationFinish, type}) => {
   const animationRef = React.useRef<Lottie>(null);
+
+  const handleOnAnimationFinish = React.useCallback(
+    (isCancelled: boolean) => {
+      if (!isCancelled && onAnimationFinish) {
+        onAnimationFinish();
+      }
+    },
+    [onAnimationFinish],
+  );
 
   React.useEffect(() => {
     animationRef.current?.play(2, ANIMATION_LAST_FRAME[type]);
@@ -69,6 +80,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LBottomBlue.json')}
         style={stylesAsset.animation}
@@ -81,6 +93,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LBottomRed.json')}
         style={stylesAsset.animation}
@@ -93,6 +106,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LDiagonalTopLeftBottomRightBlue.json')}
         style={stylesAsset.animation}
@@ -105,6 +119,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LDiagonalTopLeftBottomRightRed.json')}
         style={stylesAsset.animation}
@@ -117,6 +132,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LDiagonalTopRightBottomLeftBlue.json')}
         style={stylesAsset.animation}
@@ -129,6 +145,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LDiagonalTopRightBottomLeftRed.json')}
         style={stylesAsset.animation}
@@ -141,6 +158,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LLeftBlue.json')}
         style={stylesAsset.animation}
@@ -153,6 +171,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LLeftRed.json')}
         style={stylesAsset.animation}
@@ -165,6 +184,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LMiddleHorizontalBlue.json')}
         style={stylesAsset.animation}
@@ -177,6 +197,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LMiddleHorizontalRed.json')}
         style={stylesAsset.animation}
@@ -189,6 +210,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LMiddleVerticalBlue.json')}
         style={stylesAsset.animation}
@@ -201,6 +223,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LMiddleVerticalRed.json')}
         style={stylesAsset.animation}
@@ -213,6 +236,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LRightBlue.json')}
         style={stylesAsset.animation}
@@ -225,6 +249,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LRightRed.json')}
         style={stylesAsset.animation}
@@ -236,7 +261,9 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
   if (type === 'LTopBlue') {
     return (
       <Lottie
+        resizeMode="cover"
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LTopBlue.json')}
         style={stylesAsset.animation}
@@ -249,6 +276,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
     return (
       <Lottie
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/LTopRed.json')}
         style={stylesAsset.animation}
@@ -260,7 +288,9 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
   if (type === 'O1') {
     return (
       <Lottie
+        resizeMode="cover"
         loop={false}
+        onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
         source={require('../assets/jsons/O1.json')}
         style={stylesAsset.animation}
@@ -272,6 +302,7 @@ const AssetAnimation: React.FC<AssetProps> = ({type}) => {
   return (
     <Lottie
       loop={false}
+      onAnimationFinish={handleOnAnimationFinish}
       ref={animationRef}
       source={require('../assets/jsons/X1.json')}
       style={stylesAsset.animation}
@@ -461,6 +492,7 @@ const AssetImage: React.FC<AssetProps> = ({type}) => {
 };
 
 const GameAsset: React.FC<GameAssetProps> = ({
+  onAnimationFinish,
   opacity,
   padding,
   state = 'PLAY',
@@ -471,10 +503,12 @@ const GameAsset: React.FC<GameAssetProps> = ({
       height="100%"
       opacity={opacity}
       padding={padding}
-      width="100%"
       position="relative"
-      testID="gameAsset__container">
-      {state === 'PLAY' && <AssetAnimation type={type} />}
+      testID="gameAsset__container"
+      width="100%">
+      {state === 'PLAY' && (
+        <AssetAnimation onAnimationFinish={onAnimationFinish} type={type} />
+      )}
       {state === 'VISIBLE' && <AssetImage type={type} />}
     </Container>
   );
@@ -485,11 +519,13 @@ const stylesAsset = StyleSheet.create<{
   image: ImageStyle;
 }>({
   animation: {
+    height: '100%',
     position: 'absolute',
+    width: '100%',
   },
   image: {
-    position: 'absolute',
     height: '100%',
+    position: 'absolute',
     width: '100%',
   },
 });
