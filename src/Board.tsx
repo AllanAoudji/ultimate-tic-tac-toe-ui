@@ -113,6 +113,20 @@ const Board: React.FC<Props> = ({
     [history, mode],
   );
 
+  // Call onAnimationFinish if game is done
+  // even if it's a draw or a surrend
+  // without this useEffect
+  // onAnimationFinish is only trigger if a <GameAsset /> is render,
+  // so, only if the game is won with a line.
+  React.useEffect(() => {
+    if (
+      (winner[0] === TileState.Draw || winner[1] === WinningLine.Surrender) &&
+      onAnimationFinish
+    ) {
+      onAnimationFinish();
+    }
+  }, [onAnimationFinish, winner]);
+
   return (
     <Container testID="board__container">
       <Container

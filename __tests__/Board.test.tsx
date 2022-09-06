@@ -266,6 +266,27 @@ describe('<Board />', () => {
     expect(onAnimationFinish).toHaveBeenCalled();
   });
 
+  it('calls onAnimationFinish if /winner[0] === Draw/', () => {
+    const onAnimationFinish = jest.fn();
+    renderer({
+      onAnimationFinish,
+      winner: [ultimateTicTactToAlgorithm.TileState.Draw, null],
+    });
+    expect(onAnimationFinish).toHaveBeenCalled();
+  });
+
+  it('calls onAnimationFinish if /winner[1] === Surrender/', () => {
+    const onAnimationFinish = jest.fn();
+    renderer({
+      onAnimationFinish,
+      winner: [
+        ultimateTicTactToAlgorithm.TileState.Player1,
+        ultimateTicTactToAlgorithm.WinningLine.Surrender,
+      ],
+    });
+    expect(onAnimationFinish).toHaveBeenCalled();
+  });
+
   describe('displays a <GameAsset />', () => {
     describe('if /winner[0] === Player1/ and', () => {
       const player1 = ultimateTicTactToAlgorithm.TileState.Player1;
