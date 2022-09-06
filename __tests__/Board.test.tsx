@@ -10,12 +10,17 @@ import Board from '../src/Board';
 const mockLottie = jest.fn();
 jest.mock('lottie-react-native', () => {
   const {forwardRef, useEffect} = require('react');
-  return forwardRef((props: any, ref: any) => {
+  return forwardRef(({onAnimationFinish, ...props}: any, ref: any) => {
     useEffect(() => {
       if (ref.current) {
         ref.current.play = () => {};
       }
     }, [ref]);
+    useEffect(() => {
+      if (onAnimationFinish) {
+        onAnimationFinish();
+      }
+    }, [onAnimationFinish]);
     const {View} = require('react-native');
     mockLottie(props);
     return <View {...props} ref={ref} />;
@@ -28,6 +33,7 @@ const renderer = (
     history?: number[];
     gameIsDone?: boolean;
     mode?: ultimateTicTactToAlgorithm.Mode;
+    onAnimationFinish?: () => void;
     onPress?: (
       index: number,
     ) =>
@@ -36,6 +42,7 @@ const renderer = (
       | undefined;
     sectionStates?: ultimateTicTactToAlgorithm.SectionState[];
     selectedTileIndex?: number | null;
+    winner?: ultimateTicTactToAlgorithm.SectionState;
   } = {},
 ) => {
   const renderBoard = render(
@@ -44,14 +51,17 @@ const renderer = (
       history={options.history}
       gameIsDone={options.gameIsDone}
       mode={options.mode}
+      onAnimationFinish={options.onAnimationFinish}
       onPress={options.onPress}
       sectionStates={options.sectionStates}
       selectedTileIndex={options.selectedTileIndex}
+      winner={options.winner}
     />,
   );
 
-  const {getAllByTestId, getByTestId} = renderBoard;
+  const {getAllByTestId, getByTestId, queryByTestId} = renderBoard;
 
+  const getGameAsset = () => getByTestId('gameAsset__container');
   const getSectionContainers = () => getAllByTestId('section__container');
   const getTileContainers = () => getAllByTestId('tile__container--pressable');
 
@@ -59,6 +69,8 @@ const renderer = (
   const getContainer = () => getByTestId('board__container');
   const getGameAssetImage = () => getByTestId('gameAsset__image');
   const getTileContainer = (index: number) => getTileContainers()[index];
+
+  const queryGameAsset = () => queryByTestId('gameAsset__container');
 
   return {
     assets: {
@@ -68,6 +80,30 @@ const renderer = (
         X1: require(imageSource('X1')),
       },
       json: {
+        LBottomBlue: require(jsonSource('LBottomBlue')),
+        LBottomRed: require(jsonSource('LBottomRed')),
+        LDiagonalTopLeftBottomRightBlue: require(jsonSource(
+          'LDiagonalTopLeftBottomRightBlue',
+        )),
+        LDiagonalTopLeftBottomRightRed: require(jsonSource(
+          'LDiagonalTopLeftBottomRightRed',
+        )),
+        LDiagonalTopRightBottomLeftBlue: require(jsonSource(
+          'LDiagonalTopRightBottomLeftBlue',
+        )),
+        LDiagonalTopRightBottomLeftRed: require(jsonSource(
+          'LDiagonalTopRightBottomLeftRed',
+        )),
+        LLeftBlue: require(jsonSource('LLeftBlue')),
+        LLeftRed: require(jsonSource('LLeftRed')),
+        LMiddleHorizontalBlue: require(jsonSource('LMiddleHorizontalBlue')),
+        LMiddleHorizontalRed: require(jsonSource('LMiddleHorizontalRed')),
+        LMiddleVerticalBlue: require(jsonSource('LMiddleVerticalBlue')),
+        LMiddleVerticalRed: require(jsonSource('LMiddleVerticalRed')),
+        LRightBlue: require(jsonSource('LRightBlue')),
+        LRightRed: require(jsonSource('LRightRed')),
+        LTopBlue: require(jsonSource('LTopBlue')),
+        LTopRed: require(jsonSource('LTopRed')),
         O1: require(jsonSource('O1')),
         X1: require(jsonSource('X1')),
       },
@@ -76,6 +112,7 @@ const renderer = (
       get: {
         boardImage: getBoardImage,
         container: getContainer,
+        gameAsset: getGameAsset,
         gameAssetImage: getGameAssetImage,
         sectionContainers: getSectionContainers,
         tileContainer: getTileContainer,
@@ -85,6 +122,9 @@ const renderer = (
         tileContainer: (index: number) => {
           fireEvent.press(getTileContainer(index));
         },
+      },
+      query: {
+        gameAsset: queryGameAsset,
       },
     },
     renderBoard,
@@ -212,5 +252,247 @@ describe('<Board />', () => {
         source: assets.json.X1,
       }),
     );
+  });
+
+  it('passes onAnimationFinish to <WinningImage />', () => {
+    const onAnimationFinish = jest.fn();
+    renderer({
+      onAnimationFinish,
+      winner: [
+        ultimateTicTactToAlgorithm.TileState.Player1,
+        ultimateTicTactToAlgorithm.WinningLine.BottomRow,
+      ],
+    });
+    expect(onAnimationFinish).toHaveBeenCalled();
+  });
+
+  describe('displays a <GameAsset />', () => {
+    describe('if /winner[0] === Player1/ and', () => {
+      const player1 = ultimateTicTactToAlgorithm.TileState.Player1;
+
+      it('/winner === BottomRow/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.BottomRow],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LBottomBlue,
+          }),
+        );
+      });
+
+      it('/winner === LeftColum/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.LeftColumn],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LLeftBlue,
+          }),
+        );
+      });
+
+      it('/winner === MiddleColumn/', () => {
+        const {assets} = renderer({
+          winner: [
+            player1,
+            ultimateTicTactToAlgorithm.WinningLine.MiddleColumn,
+          ],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LMiddleVerticalBlue,
+          }),
+        );
+      });
+
+      it('/winner === MiddleRow/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.MiddleRow],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LMiddleHorizontalBlue,
+          }),
+        );
+      });
+
+      it('/winner === RightColumn/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.RightColumn],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LRightBlue,
+          }),
+        );
+      });
+
+      it('/winner === TopLeftBottomRightDiagonal/', () => {
+        const {assets} = renderer({
+          winner: [
+            player1,
+            ultimateTicTactToAlgorithm.WinningLine.TopLeftBottomRightDiagonal,
+          ],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LDiagonalTopLeftBottomRightBlue,
+          }),
+        );
+      });
+
+      it('/winner === TopRightBottomLeftDiagonal/', () => {
+        const {assets} = renderer({
+          winner: [
+            player1,
+            ultimateTicTactToAlgorithm.WinningLine.TopRightBottomLeftDiagonal,
+          ],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LDiagonalTopRightBottomLeftBlue,
+          }),
+        );
+      });
+
+      it('/winner === TopRow/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.TopRow],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LTopBlue,
+          }),
+        );
+      });
+    });
+
+    describe('does not display a <GameAsset /> if', () => {
+      it('/winner[0] === Empty/', () => {
+        const {container} = renderer({
+          winner: [ultimateTicTactToAlgorithm.TileState.Empty, null],
+        });
+        expect(container.query.gameAsset()).toBeNull();
+      });
+
+      it('/winner[1] === Draw/', () => {
+        const {container} = renderer({
+          winner: [ultimateTicTactToAlgorithm.TileState.Draw, null],
+        });
+        expect(container.query.gameAsset()).toBeNull();
+      });
+
+      it('/winner[1] === Surrender/', () => {
+        const {container} = renderer({
+          winner: [
+            ultimateTicTactToAlgorithm.TileState.Player1,
+            ultimateTicTactToAlgorithm.WinningLine.Surrender,
+          ],
+        });
+        expect(container.query.gameAsset()).toBeNull();
+      });
+    });
+
+    describe('if /winner[0] === Player2/ and', () => {
+      const player1 = ultimateTicTactToAlgorithm.TileState.Player2;
+
+      it('/winner === BottomRow/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.BottomRow],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LBottomRed,
+          }),
+        );
+      });
+
+      it('/winner === LeftColum/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.LeftColumn],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LLeftRed,
+          }),
+        );
+      });
+
+      it('/winner === MiddleColumn/', () => {
+        const {assets} = renderer({
+          winner: [
+            player1,
+            ultimateTicTactToAlgorithm.WinningLine.MiddleColumn,
+          ],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LMiddleVerticalRed,
+          }),
+        );
+      });
+
+      it('/winner === MiddleRow/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.MiddleRow],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LMiddleHorizontalRed,
+          }),
+        );
+      });
+
+      it('/winner === RightColumn/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.RightColumn],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LRightRed,
+          }),
+        );
+      });
+
+      it('/winner === TopLeftBottomRightDiagonal/', () => {
+        const {assets} = renderer({
+          winner: [
+            player1,
+            ultimateTicTactToAlgorithm.WinningLine.TopLeftBottomRightDiagonal,
+          ],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LDiagonalTopLeftBottomRightRed,
+          }),
+        );
+      });
+
+      it('/winner === TopRightBottomLeftDiagonal/', () => {
+        const {assets} = renderer({
+          winner: [
+            player1,
+            ultimateTicTactToAlgorithm.WinningLine.TopRightBottomLeftDiagonal,
+          ],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LDiagonalTopRightBottomLeftRed,
+          }),
+        );
+      });
+
+      it('/winner === TopRow/', () => {
+        const {assets} = renderer({
+          winner: [player1, ultimateTicTactToAlgorithm.WinningLine.TopRow],
+        });
+        expect(mockLottie).toHaveBeenCalledWith(
+          expect.objectContaining({
+            source: assets.json.LTopRed,
+          }),
+        );
+      });
+    });
   });
 });
