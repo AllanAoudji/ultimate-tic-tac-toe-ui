@@ -89,6 +89,7 @@ const WinningImage: React.FC<WinningImageProps> = ({mode, state}) => {
       height="100%"
       position="absolute"
       width="100%"
+      padding="smallest"
       pointerEvents="none">
       <GameAsset type={type} state="PLAY" />
     </Container>

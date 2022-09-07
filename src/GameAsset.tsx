@@ -40,22 +40,22 @@ type GameAssetProps = {
 // this object is used in animationRef.current?play()
 // to know how many frames should be used to trigger the animation
 const ANIMATION_LAST_FRAME = {
-  LBottomBlue: 28,
-  LBottomRed: 28,
-  LDiagonalTopLeftBottomRightBlue: 32,
-  LDiagonalTopLeftBottomRightRed: 32,
-  LDiagonalTopRightBottomLeftBlue: 32,
-  LDiagonalTopRightBottomLeftRed: 32,
-  LLeftBlue: 28,
-  LLeftRed: 28,
+  LBottomBlue: 26,
+  LBottomRed: 26,
+  LDiagonalTopLeftBottomRightBlue: 26,
+  LDiagonalTopLeftBottomRightRed: 26,
+  LDiagonalTopRightBottomLeftBlue: 26,
+  LDiagonalTopRightBottomLeftRed: 26,
+  LLeftBlue: 26,
+  LLeftRed: 26,
   LMiddleHorizontalBlue: 26,
   LMiddleHorizontalRed: 26,
   LMiddleVerticalBlue: 26,
   LMiddleVerticalRed: 26,
-  LRightBlue: 32,
-  LRightRed: 32,
-  LTopBlue: 32,
-  LTopRed: 32,
+  LRightBlue: 26,
+  LRightRed: 26,
+  LTopBlue: 26,
+  LTopRed: 26,
   O1: 28,
   X1: 26,
 };
@@ -63,14 +63,26 @@ const ANIMATION_LAST_FRAME = {
 const AssetAnimation: React.FC<AssetProps> = ({onAnimationFinish, type}) => {
   const animationRef = React.useRef<Lottie>(null);
 
-  const handleOnAnimationFinish = React.useCallback(
-    (isCancelled: boolean) => {
-      if (!isCancelled && onAnimationFinish) {
-        onAnimationFinish();
-      }
-    },
-    [onAnimationFinish],
-  );
+  // isCancelled is used to trigger the callback only if the animation finish
+  // the loop. But if an issue appear, onAnimationFinish's prop is never call
+  // So if onAnimationFinish change the state of a props which control a disable state
+  // while an animation is trigger, players can't play, and onAnimationFinish is never called
+  // the app is soft lock.
+
+  // const handleOnAnimationFinish = React.useCallback(
+  //   (isCancelled: boolean) => {
+  //     if (!isCancelled && onAnimationFinish) {
+  //       onAnimationFinish();
+  //     }
+  //   },
+  //   [onAnimationFinish],
+  // );
+
+  const handleOnAnimationFinish = React.useCallback(() => {
+    if (onAnimationFinish) {
+      onAnimationFinish();
+    }
+  }, [onAnimationFinish]);
 
   React.useEffect(() => {
     animationRef.current?.play(2, ANIMATION_LAST_FRAME[type]);
