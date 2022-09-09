@@ -3,7 +3,13 @@ import {mockRandom, resetMockRandom} from 'jest-mock-random';
 import React from 'react';
 import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 
-import {getDisabled, getStyle, spyPlay} from './testUtils';
+import {
+  getDisabled,
+  getSource,
+  getStyle,
+  imageSource,
+  spyPlay,
+} from './testUtils';
 
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 import Game from '../src/Game';
@@ -66,6 +72,8 @@ const renderer = (
   const getBoards = () => getAllByTestId('playerBoard__container');
   const getPlayButtons = () =>
     getAllByTestId('playButton__container--pressable');
+  const getPlayButtonsBackgroundImage = () =>
+    getAllByTestId('playButton__backgroundImage');
   const getSurrendButtons = () =>
     getAllByTestId('surrendButton__container--pressable');
   const getTiles = () => getAllByTestId('tile__container--pressable');
@@ -101,6 +109,10 @@ const renderer = (
   const queryPlayerXText = () => queryByText('player x');
 
   return {
+    assets: {
+      playButtonBackgroundBlue: require(imageSource('button_background_blue')),
+      playButtonBackgroundRed: require(imageSource('button_background_red')),
+    },
     container: {
       get: {
         board: getBoard,
@@ -128,6 +140,7 @@ const renderer = (
       get: {
         board: getBoards,
         playButtons: getPlayButtons,
+        playButtonBackgroundImage: getPlayButtonsBackgroundImage,
         surrendButtons: getSurrendButtons,
         surrendModal: getSurrendModalContainer,
         surrendModalInnerContainer: getSurrendModalInnerContainer,
@@ -148,6 +161,7 @@ const renderer = (
       get: {
         board: () => getBoards()[1],
         playButton: () => getPlayButtons()[1],
+        playButtonBackgroundImage: () => getPlayButtonsBackgroundImage()[1],
         surrendButton: () => getSurrendButtons()[1],
       },
       press: {
@@ -181,6 +195,7 @@ const renderer = (
       get: {
         board: () => getBoards()[0],
         playButton: () => getPlayButtons()[0],
+        playButtonBackgroundImage: () => getPlayButtonsBackgroundImage()[0],
         surrendButton: () => getSurrendButtons()[0],
       },
       press: {
@@ -257,27 +272,18 @@ describe('<Game />', () => {
   });
 
   it('choses player randomly', () => {
-    const {playerBottom} = renderer();
-    expect(getStyle(playerBottom.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
-      }),
+    const {assets, playerBottom} = renderer();
+    expect(getSource(playerBottom.get.playButtonBackgroundImage())).toEqual(
+      assets.playButtonBackgroundBlue,
     );
   });
 
   it('renders the other player with a 50/50 ramdom chance', () => {
-    const {playerBottom, playerTop} = renderer({
+    const {assets, playerTop} = renderer({
       firstPlayer: 'TOP',
     });
-    expect(getStyle(playerBottom.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
-      }),
-    );
-    expect(getStyle(playerTop.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
-      }),
+    expect(getSource(playerTop.get.playButtonBackgroundImage())).toEqual(
+      assets.playButtonBackgroundBlue,
     );
   });
 
@@ -361,17 +367,9 @@ describe('<Game />', () => {
 
   it("deactivates <PlayButton /> of a player if it's not his turn", () => {
     const {playerBottom, playerTop} = renderer();
-    expect(getStyle(playerTop.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
-      }),
-    );
+    expect(getDisabled(playerTop.get.playButton())).toBe(true);
     playerBottom.press.play();
-    expect(getStyle(playerBottom.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
-      }),
-    );
+    expect(getDisabled(playerBottom.get.playButton())).toBe(true);
   });
 
   it('saves game in local storage when it won', () => {
@@ -430,11 +428,11 @@ describe('<Game />', () => {
     });
 
     it('randomize /players/', () => {
-      const {playerBottom, playerTop, setFirstPlayer} = renderer();
+      const {assets, playerBottom, playerTop, setFirstPlayer} = renderer();
       setFirstPlayer('BOTTOM');
       playerBottom.press.newGameAfterSurrend();
-      expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
-        DEFAULT_LIGHT_THEME.color.playerX,
+      expect(getSource(playerTop.get.playButtonBackgroundImage())).toBe(
+        assets.playButtonBackgroundBlue,
       );
     });
 
