@@ -38,6 +38,7 @@ const renderer = (
     marginTop?: keyof Theming.SpacingTheme;
     marginVertical?: keyof Theming.SpacingTheme;
     opacity?: 0.1 | 0.2 | 0.4 | 0.8 | 1;
+    overflow?: 'visible' | 'hidden' | 'scroll';
     padding?: keyof Theming.SpacingTheme;
     paddingBottom?: keyof Theming.SpacingTheme;
     paddingHorizontal?: keyof Theming.SpacingTheme;
@@ -79,6 +80,7 @@ const renderer = (
       marginTop={options.marginTop}
       marginVertical={options.marginVertical}
       opacity={options.opacity}
+      overflow={options.overflow}
       padding={options.padding}
       paddingBottom={options.paddingBottom}
       paddingHorizontal={options.paddingHorizontal}
@@ -226,24 +228,6 @@ describe('<Container />', () => {
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
         borderWidth: 2,
-      }),
-    );
-  });
-
-  it('sets /opacity: undefined/ by default', () => {
-    const {container} = renderer();
-    expect(getStyle(container.get.container())).toEqual(
-      expect.objectContaining({
-        opacity: undefined,
-      }),
-    );
-  });
-
-  it('sets another /opacity/', () => {
-    const {container} = renderer({opacity: 0.2});
-    expect(getStyle(container.get.container())).toEqual(
-      expect.objectContaining({
-        opacity: 0.2,
       }),
     );
   });
@@ -406,6 +390,42 @@ describe('<Container />', () => {
     expect(getStyle(container.get.container())).toEqual(
       expect.objectContaining({
         marginTop: DEFAULT_LIGHT_THEME.spacing.large,
+      }),
+    );
+  });
+
+  it('sets /opacity: undefined/ by default', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        opacity: undefined,
+      }),
+    );
+  });
+
+  it('sets another /opacity/', () => {
+    const {container} = renderer({opacity: 0.2});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        opacity: 0.2,
+      }),
+    );
+  });
+
+  it('sets /overflow: undefined/ by default', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        overflow: undefined,
+      }),
+    );
+  });
+
+  it('sets another /overflow/', () => {
+    const {container} = renderer({overflow: 'hidden'});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        overflow: 'hidden',
       }),
     );
   });

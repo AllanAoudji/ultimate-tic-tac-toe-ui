@@ -15,8 +15,9 @@ type borderRadius = 1 | 2 | 4 | 8 | 16 | 32;
 type borderWidth = 1 | 2 | 4 | 8;
 type flexDirection = 'column' | 'column-reverse' | 'row' | 'row-reverse';
 type flexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
-type size = '25%' | '33%' | '50%' | '66%' | '75%' | '100%' | number;
+type size = '25%' | '33%' | '50%' | '66%' | '75%' | '88%' | '100%' | number;
 type opacity = 0.1 | 0.2 | 0.4 | 0.8 | 1;
+type overflow = 'visible' | 'hidden' | 'scroll';
 type justifyContent =
   | 'center'
   | 'flex-end'
@@ -48,6 +49,7 @@ interface Props {
   marginTop?: keyof Theming.SpacingTheme;
   marginVertical?: keyof Theming.SpacingTheme;
   opacity?: opacity;
+  overflow?: overflow;
   padding?: keyof Theming.SpacingTheme;
   paddingBottom?: keyof Theming.SpacingTheme;
   paddingHorizontal?: keyof Theming.SpacingTheme;
@@ -86,6 +88,7 @@ const Container: React.FC<Props> = ({
   marginTop,
   marginVertical,
   opacity,
+  overflow,
   padding,
   paddingBottom,
   paddingHorizontal,
@@ -126,6 +129,7 @@ const Container: React.FC<Props> = ({
         marginTop,
         marginVertical,
         opacity,
+        overflow,
         padding,
         paddingBottom,
         paddingHorizontal,
@@ -158,6 +162,7 @@ const Container: React.FC<Props> = ({
       marginTop,
       marginVertical,
       opacity,
+      overflow,
       padding,
       paddingBottom,
       paddingHorizontal,
@@ -216,6 +221,7 @@ const stylesContainer =
     marginTop,
     marginVertical,
     opacity,
+    overflow,
     padding,
     paddingBottom,
     paddingHorizontal,
@@ -247,6 +253,7 @@ const stylesContainer =
     marginTop?: keyof Theming.SpacingTheme;
     marginVertical?: keyof Theming.SpacingTheme;
     opacity?: opacity;
+    overflow?: overflow;
     padding?: keyof Theming.SpacingTheme;
     paddingBottom?: keyof Theming.SpacingTheme;
     paddingHorizontal?: keyof Theming.SpacingTheme;
@@ -296,6 +303,7 @@ const stylesContainer =
           ? theme.spacing[marginVertical]
           : undefined,
         opacity,
+        overflow,
         padding: padding ? theme.spacing[padding] : undefined,
         paddingBottom: paddingBottom ? theme.spacing[paddingBottom] : undefined,
         paddingHorizontal: paddingHorizontal
