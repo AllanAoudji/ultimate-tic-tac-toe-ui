@@ -11,10 +11,28 @@ import {
   spyPlay,
 } from './testUtils';
 
-import Game from '../src/Game';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
-import * as useGameHistory from '../src/useGameHistory.hook';
+import Game from '../src/Game';
 import {HistoryProvider} from '../src/History.context';
+import * as useGameHistory from '../src/useGameHistory.hook';
+
+jest.mock('lottie-react-native', () => {
+  const {forwardRef, useEffect} = require('react');
+  return forwardRef(({onAnimationFinish, ...props}: any, ref: any) => {
+    useEffect(() => {
+      if (ref.current) {
+        ref.current.play = () => {};
+      }
+    }, [ref]);
+    useEffect(() => {
+      if (onAnimationFinish) {
+        onAnimationFinish();
+      }
+    }, [onAnimationFinish]);
+    const {View} = require('react-native');
+    return <View {...props} ref={ref} />;
+  });
+});
 
 const renderer = (
   options: {
@@ -45,69 +63,76 @@ const renderer = (
     getAllByTestId,
     getByTestId,
     getByText,
-    queryAllByTestId,
     queryByTestId,
     queryByText,
     rerender,
   } = renderBoard;
 
-  const getBoard = () => getByTestId('board__container');
+  // getAllByTestId
   const getBoards = () => getAllByTestId('playerBoard__container');
-  const getNewGameButton = () => getByText('new game');
   const getPlayButtons = () =>
     getAllByTestId('playButton__container--pressable');
-  const getPlayerOText = () => getByText('player o');
-  const getPlayerXText = () => getByText('player x');
-  const getQuitGameText = () => getByText('quit');
-  const getSectionPlayerImages = () => getAllByTestId('section__image--player');
+  const getPlayButtonsBackgroundImage = () =>
+    getAllByTestId('playButton__backgroundImage');
   const getSurrendButtons = () =>
     getAllByTestId('surrendButton__container--pressable');
+  const getTiles = () => getAllByTestId('tile__container--pressable');
+  const getGameAssetAnimations = () => getAllByTestId('gameAsset__animation');
+
+  // getByTestId
+  const getBoard = () => getByTestId('board__container');
+  const getGameAsset = () => getByTestId('gameAsset__container');
+  const getGameAssetImage = () => getByTestId('gameAsset__image');
+  const getGameAssetAnimation = () => getByTestId('gameAsset__animation');
   const getSurrendModalContainer = () => getByTestId('surrendModal__container');
   const getSurrendModalInnerContainer = () =>
     getByTestId('surrendModal__container--inner');
-  const getTiles = () => getAllByTestId('tile__container--pressable');
-  const getTilesTempImage = () => getByTestId('tile__image--temp');
+
+  // getByText
+  const getNewGameButton = () => getByText('new game');
+  const getPlayerOText = () => getByText('player o');
+  const getPlayerXText = () => getByText('player x');
+  const getQuitGameText = () => getByText('quit');
   const getYesButton = () => getByText('yes');
 
+  // queryByTestId
   const queryBoard = () => queryByTestId('board__container');
+  const queryGameAsset = () => queryByTestId('gameAsset__container');
+  const queryGameAssetAnimation = () => queryByTestId('gameAsset__animation');
+  const queryGameAssetImage = () => queryByTestId('gameAsset__image');
+  const querySurrendModal = () => queryByTestId('surrendModal__container');
+  const queryWinningModal = () => queryByTestId('winningModal__container');
+
+  // queryByText
   const queryItsADrawText = () => queryByText("it's a draw");
   const queryPlayerOText = () => queryByText('player o');
   const queryPlayerXText = () => queryByText('player x');
-  const querySectionPlayerImages = () =>
-    queryAllByTestId('section__image--player');
-  const querySurrendModal = () => queryByTestId('surrendModal__container');
-  const queryTileTempImage = () => queryByTestId('tile__image--temp');
-  const queryTileTempImages = () => queryAllByTestId('tile__image--temp');
-  const queryTileImageState = () => queryAllByTestId('tile__image--state');
-  const queryWinningModal = () => queryByTestId('winningModal__container');
 
   return {
     assets: {
-      images: {
-        playerO: require(imageSource('O')),
-        playerX: require(imageSource('X')),
-      },
+      playButtonBackgroundBlue: require(imageSource('button_background_blue')),
+      playButtonBackgroundRed: require(imageSource('button_background_red')),
     },
     container: {
       get: {
         board: getBoard,
+        gameAsset: getGameAsset,
+        gameAssetAnimation: getGameAssetAnimation,
+        gameAssetAnimations: getGameAssetAnimations,
+        gameAssetImage: getGameAssetImage,
         playerOText: getPlayerOText,
         playerXText: getPlayerXText,
-        sectionImagePlayers: getSectionPlayerImages,
-        tileTempImage: getTilesTempImage,
         tiles: getTiles,
         tile: (index: number) => getTiles()[index],
       },
       query: {
         board: queryBoard,
+        gameAsset: queryGameAsset,
+        gameAssetAnimation: queryGameAssetAnimation,
+        gameAssetImage: queryGameAssetImage,
         itsADrawText: queryItsADrawText,
         playerOText: queryPlayerOText,
         playerXText: queryPlayerXText,
-        sectionImagePlayers: querySectionPlayerImages,
-        tileTempImage: queryTileTempImage,
-        tileTempImages: queryTileTempImages,
-        tileStateImages: queryTileImageState,
-        tileStateImage: () => queryTileImageState()[0],
         winningModal: queryWinningModal,
       },
     },
@@ -115,6 +140,7 @@ const renderer = (
       get: {
         board: getBoards,
         playButtons: getPlayButtons,
+        playButtonBackgroundImage: getPlayButtonsBackgroundImage,
         surrendButtons: getSurrendButtons,
         surrendModal: getSurrendModalContainer,
         surrendModalInnerContainer: getSurrendModalInnerContainer,
@@ -135,6 +161,7 @@ const renderer = (
       get: {
         board: () => getBoards()[1],
         playButton: () => getPlayButtons()[1],
+        playButtonBackgroundImage: () => getPlayButtonsBackgroundImage()[1],
         surrendButton: () => getSurrendButtons()[1],
       },
       press: {
@@ -168,6 +195,7 @@ const renderer = (
       get: {
         board: () => getBoards()[0],
         playButton: () => getPlayButtons()[0],
+        playButtonBackgroundImage: () => getPlayButtonsBackgroundImage()[0],
         surrendButton: () => getSurrendButtons()[0],
       },
       press: {
@@ -204,7 +232,7 @@ const renderer = (
         onPressQuit?: () => {};
       } = {},
     ) => rerender(<Game {...rerenderOptions} />),
-    render: renderBoard,
+    renderBoard,
     setFirstPlayer: (resetFirstPlayer: 'BOTTOM' | 'TOP') => {
       mockRandom(resetFirstPlayer ? 0.4999 : 0.5);
     },
@@ -212,9 +240,6 @@ const renderer = (
 };
 
 describe('<Game />', () => {
-  const NEW_GAME_TEXT = 'new game';
-  const PLAY_TEXT = 'play';
-  const YES_TEXT = 'yes';
   const saveGameMocked = jest.fn();
 
   beforeEach(() => {
@@ -247,31 +272,22 @@ describe('<Game />', () => {
   });
 
   it('choses player randomly', () => {
-    const {playerBottom} = renderer();
-    expect(getStyle(playerBottom.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
-      }),
+    const {assets, playerBottom} = renderer();
+    expect(getSource(playerBottom.get.playButtonBackgroundImage())).toEqual(
+      assets.playButtonBackgroundBlue,
     );
   });
 
   it('renders the other player with a 50/50 ramdom chance', () => {
-    const {playerBottom, playerTop} = renderer({
+    const {assets, playerTop} = renderer({
       firstPlayer: 'TOP',
     });
-    expect(getStyle(playerBottom.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
-      }),
-    );
-    expect(getStyle(playerTop.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
-      }),
+    expect(getSource(playerTop.get.playButtonBackgroundImage())).toEqual(
+      assets.playButtonBackgroundBlue,
     );
   });
 
-  it(`disables each "${PLAY_TEXT}" <Pressable /> on mount`, () => {
+  it('disables each "play" <Pressable /> on mount', () => {
     const {playerBottom, playerTop} = renderer();
     expect(getDisabled(playerTop.get.playButton())).toBe(true);
     expect(getDisabled(playerBottom.get.playButton())).toBe(true);
@@ -283,21 +299,18 @@ describe('<Game />', () => {
   });
 
   it('renders a player1 temp <Image /> when press on a <Tile /> if /history.length === 0/', () => {
-    const {assets, container, players} = renderer();
+    const {container, players} = renderer();
     players.press.tile();
-    expect(container.query.tileTempImage()).not.toBeNull();
-    expect(getSource(container.get.tileTempImage())).toBe(
-      assets.images.playerX,
-    );
+    expect(container.get.gameAssetImage()).not.toBeNull();
   });
 
-  it(`enables player BOTTOM "${PLAY_TEXT}" <Pressable /> if it's the player turn and /selectedTileIndex !== null/`, () => {
+  it('enables player BOTTOM "play" <Pressable /> if it\'s the player turn and /selectedTileIndex !== null/', () => {
     const {playerBottom, players} = renderer();
     players.press.tile();
     expect(getDisabled(playerBottom.get.playButton())).toBe(false);
   });
 
-  it(`enables player TOP "${PLAY_TEXT}" <Pressable /> if its's the player turn and /selectedTileIndex !== null/`, () => {
+  it('enables player TOP "play" <Pressable /> if its\'s the player turn and /selectedTileIndex !== null/', () => {
     const {playerTop, players} = renderer({firstPlayer: 'TOP'});
     players.press.tile();
     expect(getDisabled(playerTop.get.playButton())).toBe(false);
@@ -325,11 +338,11 @@ describe('<Game />', () => {
     );
   });
 
-  it(`resets /selectedTileIndex/ when "${PLAY_TEXT}" <Pressable /> is pressed`, () => {
+  it('resets /selectedTileIndex/ when "play" <Pressable /> is pressed', () => {
     const {container, playerBottom, playerTop} = renderer();
     playerBottom.press.play();
     playerTop.press.playWithoutSelectATile();
-    expect(container.query.tileStateImages()).toHaveLength(1);
+    expect(container.query.gameAssetImage()).toBeNull();
   });
 
   it('closes Player BOTTOM <SurrendModal /> if Player BOTTOM presses a <Tile />', () => {
@@ -348,24 +361,15 @@ describe('<Game />', () => {
 
   it('passes /sectionStates/ to board', () => {
     spyPlay().mockSectionStates();
-    const {container, playerBottom} = renderer();
+    const {playerBottom} = renderer();
     playerBottom.press.play();
-    expect(container.query.sectionImagePlayers()).toHaveLength(9);
   });
 
   it("deactivates <PlayButton /> of a player if it's not his turn", () => {
     const {playerBottom, playerTop} = renderer();
-    expect(getStyle(playerTop.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
-      }),
-    );
+    expect(getDisabled(playerTop.get.playButton())).toBe(true);
     playerBottom.press.play();
-    expect(getStyle(playerBottom.get.playButton())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
-      }),
-    );
+    expect(getDisabled(playerBottom.get.playButton())).toBe(true);
   });
 
   it('saves game in local storage when it won', () => {
@@ -416,7 +420,7 @@ describe('<Game />', () => {
     });
   });
 
-  describe(`if "${NEW_GAME_TEXT}" <Pressable /> is pressed`, () => {
+  describe('if "new game" <Pressable /> is pressed', () => {
     it('resets /winner/', () => {
       const {container, playerBottom} = renderer();
       playerBottom.press.newGameAfterSurrend();
@@ -424,11 +428,11 @@ describe('<Game />', () => {
     });
 
     it('randomize /players/', () => {
-      const {playerBottom, playerTop, setFirstPlayer} = renderer();
+      const {assets, playerBottom, playerTop, setFirstPlayer} = renderer();
       setFirstPlayer('BOTTOM');
       playerBottom.press.newGameAfterSurrend();
-      expect(getStyle(playerTop.get.playButton()).backgroundColor).toBe(
-        DEFAULT_LIGHT_THEME.color.playerX,
+      expect(getSource(playerTop.get.playButtonBackgroundImage())).toBe(
+        assets.playButtonBackgroundBlue,
       );
     });
 
@@ -436,14 +440,14 @@ describe('<Game />', () => {
       const {container, playerBottom} = renderer();
       playerBottom.press.play();
       playerBottom.press.newGameAfterSurrend();
-      expect(container.query.tileStateImages()).toHaveLength(0);
+      expect(container.query.gameAssetAnimation()).toBeNull();
     });
 
     it('resets /selectedTileIndex/', () => {
       const {container, playerBottom, players} = renderer();
       players.press.tile();
       playerBottom.press.newGameAfterSurrend();
-      expect(container.query.tileTempImage()).toBeNull();
+      expect(container.query.gameAssetImage()).toBeNull();
     });
 
     it('resets /sectionStates/', () => {
@@ -451,7 +455,7 @@ describe('<Game />', () => {
       const {container, playerBottom, players} = renderer();
       playerBottom.press.play();
       players.press.winnnigModalNewGame();
-      expect(container.query.sectionImagePlayers()).toHaveLength(0);
+      expect(container.query.gameAssetAnimation()).toBeNull();
     });
   });
 
@@ -484,7 +488,7 @@ describe('<Game />', () => {
       const {container, playerBottom, players} = renderer();
       playerBottom.press.play();
       players.press.tile();
-      expect(container.query.tileTempImage()).toBeNull();
+      expect(container.query.gameAssetImage()).toBeNull();
     });
   });
 
@@ -562,7 +566,7 @@ describe('<Game />', () => {
       const {container, players, playerBottom} = renderer();
       playerBottom.press.play();
       players.press.tile();
-      expect(container.query.tileTempImage()).toBeNull();
+      expect(container.query.gameAssetImage()).toBeNull();
     });
   });
 
@@ -589,7 +593,7 @@ describe('<Game />', () => {
       expect(setGameIsDone).toHaveBeenCalledWith(true);
     });
 
-    it(`when ${YES_TEXT} <Pressable /> is press`, () => {
+    it('when "yes" <Pressable /> is press', () => {
       const setGameIsDone = jest.fn();
       const {playerBottom} = renderer({setGameIsDone});
       playerBottom.press.surrendGame();
@@ -598,22 +602,18 @@ describe('<Game />', () => {
   });
 
   describe('pushes /selectedTileIndex/ on /history/ when press on', () => {
-    it(`BOTTOM player "${PLAY_TEXT}" <Pressable />`, () => {
-      const {assets, container, playerBottom} = renderer();
+    it('BOTTOM player "play" <Pressable />', () => {
+      const {container, playerBottom} = renderer();
       playerBottom.press.play();
-      expect(getSource(container.query.tileStateImage())).toBe(
-        assets.images.playerX,
-      );
+      expect(container.get.gameAssetAnimation()).not.toBeNull();
     });
 
-    it(`TOP player "${PLAY_TEXT}" <Pressable />`, () => {
-      const {assets, container, playerTop} = renderer({
+    it('TOP player "play" <Pressable />', () => {
+      const {container, playerTop} = renderer({
         firstPlayer: 'TOP',
       });
       playerTop.press.play();
-      expect(getSource(container.query.tileStateImage())).toBe(
-        assets.images.playerX,
-      );
+      expect(container.get.gameAssetAnimation()).not.toBeNull();
     });
   });
 });

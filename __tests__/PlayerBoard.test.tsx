@@ -4,7 +4,7 @@ import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import PlayerBoard from '../src/PlayerBoard';
-import {getDisabled, getStyle} from './testUtils';
+import {getDisabled, getSource, getStyle, imageSource} from './testUtils';
 
 describe('<PlayerBoard />', () => {
   const renderer = (
@@ -44,6 +44,10 @@ describe('<PlayerBoard />', () => {
     const getPlayButton = () => getByText('play');
     const getPlayButtonContainer = () =>
       getByTestId('playButton__container--pressable');
+    const getPlayButtonBackgroundImage = () =>
+      getByTestId('playButton__backgroundImage');
+    const getPlayButtonBackgroundImageContainer = () =>
+      getByTestId('playButton__backgroundImage--container');
     const getSurrendButton = () =>
       getByTestId('surrendButton__container--pressable');
     const getSurrendModalText = () => getByText('Surrend?');
@@ -54,18 +58,31 @@ describe('<PlayerBoard />', () => {
     const queryPlayButton = () => queryByText('play');
     const queryPlayButtonContainer = () =>
       queryByTestId('playButton__container--pressable');
+    const queryPlayButtonBackgroundImage = () =>
+      queryByTestId('playButton__backgroundImage');
+    const queryPlayButtonBackgroundImageContainer = () =>
+      queryByTestId('playButton__backgroundImage--container');
     const querySurrendButton = () =>
       queryByTestId('surrendButton__container--pressable');
     const querySurrendModalText = () => queryByText('Surrend?');
     const queryYesButton = () => queryByText('yes');
 
     return {
+      assets: {
+        playButtonBackgroundBlue: require(imageSource(
+          'button_background_blue',
+        )),
+        playButtonBackgroundRed: require(imageSource('button_background_red')),
+      },
       container: {
         get: {
           container: getContainer,
           no: getNoButton,
           playButton: getPlayButton,
           playButtonContainer: getPlayButtonContainer,
+          playButtonBackgroundImage: getPlayButtonBackgroundImage,
+          playButtonBackgroundImageContainer:
+            getPlayButtonBackgroundImageContainer,
           surrendButton: getSurrendButton,
           surrendModalText: getSurrendModalText,
           yesButton: getYesButton,
@@ -89,6 +106,9 @@ describe('<PlayerBoard />', () => {
           no: queryNoButton,
           playButton: queryPlayButton,
           playButtonContainer: queryPlayButtonContainer,
+          playButtonBackgroundImage: queryPlayButtonBackgroundImage,
+          playButtonBackgroundImageContainer:
+            queryPlayButtonBackgroundImageContainer,
           surrendButton: querySurrendButton,
           surrendModalText: querySurrendModalText,
           yesButton: queryYesButton,
@@ -192,7 +212,9 @@ describe('<PlayerBoard />', () => {
   describe('sets <PlayButton />', () => {
     it('/opacity: 0.4/ if /disabledPlayButton === true/', () => {
       const {container} = renderer({disabledPlayButton: true});
-      expect(getStyle(container.get.playButtonContainer())).toEqual(
+      expect(
+        getStyle(container.get.playButtonBackgroundImageContainer()),
+      ).toEqual(
         expect.objectContaining({
           opacity: 0.4,
         }),
@@ -201,18 +223,21 @@ describe('<PlayerBoard />', () => {
 
     it('/opacity: undefined/ if /disabledPlayButton === false || undefined/', () => {
       const {container} = renderer();
-      expect(getStyle(container.get.playButtonContainer())).toEqual(
+      expect(
+        getStyle(container.get.playButtonBackgroundImageContainer()),
+      ).toEqual(
         expect.objectContaining({
           opacity: undefined,
         }),
       );
     });
 
-    it(`/opacity: 0.4; backgroundColor: ${DEFAULT_LIGHT_THEME.color.grey}/ if /activePlayButton === false/`, () => {
+    it('/opacity: 0.4/ if /activePlayButton === false/', () => {
       const {container} = renderer({activePlayButton: false});
-      expect(getStyle(container.get.playButtonContainer())).toEqual(
+      expect(
+        getStyle(container.get.playButtonBackgroundImageContainer()),
+      ).toEqual(
         expect.objectContaining({
-          backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
           opacity: 0.4,
         }),
       );
@@ -220,9 +245,10 @@ describe('<PlayerBoard />', () => {
 
     it('/opacity: 1/ if /activePlayButton === true || undefined/', () => {
       const {container} = renderer({activePlayButton: true});
-      expect(getStyle(container.get.playButtonContainer())).toEqual(
+      expect(
+        getStyle(container.get.playButtonBackgroundImageContainer()),
+      ).toEqual(
         expect.objectContaining({
-          backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
           opacity: undefined,
         }),
       );
@@ -261,11 +287,9 @@ describe('<PlayerBoard />', () => {
 
   describe('passes /player/ to', () => {
     it('<PlayButton />', () => {
-      const {container} = renderer({player: TileState.Player2});
-      expect(getStyle(container.get.playButtonContainer())).toEqual(
-        expect.objectContaining({
-          backgroundColor: DEFAULT_LIGHT_THEME.color.playerO,
-        }),
+      const {assets, container} = renderer({player: TileState.Player2});
+      expect(getSource(container.get.playButtonBackgroundImage())).toBe(
+        assets.playButtonBackgroundRed,
       );
     });
 
