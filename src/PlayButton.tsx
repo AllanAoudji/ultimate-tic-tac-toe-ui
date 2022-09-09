@@ -2,81 +2,90 @@ import React from 'react';
 import {
   GestureResponderEvent,
   Pressable,
+  PressableStateCallbackType,
   StyleSheet,
   ViewStyle,
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import Container from './Container';
 
-import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 
-interface Props {
+interface PlayButtonProps {
   active?: boolean;
   disabled?: boolean;
   onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
   player?: TileState.Player1 | TileState.Player2;
 }
+interface TitleProps {
+  player: TileState.Player1 | TileState.Player2;
+}
 
-const PlayButton: React.FC<Props> = ({
+const Title: React.FC<TitleProps> = ({player}) => {
+  const color = React.useMemo<keyof Theming.ColorTheme>(
+    () => (player === TileState.Player1 ? 'onPlayerX' : 'onPlayerO'),
+    [player],
+  );
+  return (
+    <Typography color={color} fontSize="largest" textTransform="uppercase">
+      play
+    </Typography>
+  );
+};
+
+const PlayButton: React.FC<PlayButtonProps> = ({
   active = true,
   disabled = false,
   onPress = () => {},
   player = TileState.Player1,
 }) => {
-  const {theme} = React.useContext(ThemeContext);
-  const color = React.useMemo<keyof Theming.ColorTheme>(
-    () => (player === TileState.Player1 ? 'onPlayerX' : 'onPlayerO'),
-    [player],
+  const pressedAwarenessStyle = React.useCallback(
+    ({pressed}: PressableStateCallbackType) => [
+      styles.container,
+      {opacity: pressed ? 0.8 : undefined},
+    ],
+    [],
   );
-
-  const stylesProps = React.useMemo(
-    () => playerButtonStyles({active, disabled, player}),
-    [active, disabled, player],
-  );
-  const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
 
   return (
     <Pressable
       disabled={disabled || !active}
       onPress={onPress}
-      style={styles.container}
+      style={pressedAwarenessStyle}
       testID="playButton__container--pressable">
-      <Typography color={color} textTransform="uppercase">
-        play
-      </Typography>
+      <Container borderRadius={8} overflow="hidden" width="88%">
+        <Container
+          alignItems="center"
+          opacity={!active || disabled ? 0.4 : undefined}
+          paddingVertical="smallest"
+          testID="playButton__backgroundImage--container"
+          width="100%">
+          {player === TileState.Player1 ? (
+            <Container
+              resizeMode="stretch"
+              source={require('../assets/images/button_background_blue.png')}
+              testID="playButton__backgroundImage">
+              <Title player={player} />
+            </Container>
+          ) : (
+            <Container
+              resizeMode="stretch"
+              source={require('../assets/images/button_background_red.png')}
+              testID="playButton__backgroundImage">
+              <Title player={player} />
+            </Container>
+          )}
+        </Container>
+      </Container>
     </Pressable>
   );
 };
 
-const playerButtonStyles =
-  ({
-    active,
-    disabled,
-    player,
-  }: {
-    active: boolean;
-    disabled: boolean;
-    player: TileState.Player1 | TileState.Player2;
-  }) =>
-  (theme: Theming.Theme) => {
-    let backgroundColor;
-    if (player === TileState.Player1) {
-      backgroundColor = theme.color.playerX;
-    }
-    if (player === TileState.Player2) {
-      backgroundColor = theme.color.playerO;
-    }
-
-    return StyleSheet.create<{container: ViewStyle}>({
-      container: {
-        alignItems: 'center',
-        backgroundColor: active ? backgroundColor : theme.color.grey,
-        borderRadius: 6,
-        justifyContent: 'center',
-        opacity: !active || disabled ? 0.4 : undefined,
-        padding: theme.spacing.normal,
-      },
-    });
-  };
+const styles = StyleSheet.create<{container: ViewStyle}>({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default PlayButton;

@@ -4,7 +4,7 @@ import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 
 import PlayButton from '../src/PlayButton';
-import {getStyle} from './testUtils';
+import {getSource, getStyle, imageSource} from './testUtils';
 
 describe('<PlayButton />', () => {
   const renderer = (
@@ -27,16 +27,32 @@ describe('<PlayButton />', () => {
     const {getByTestId, getByText, queryByTestId, queryByText} =
       renderPlayButton;
 
-    const getContainer = () => getByTestId('playButton__container--pressable');
-    const getPlayText = () => getByText('play');
+    const BACKGROUND_IMAGE = 'playButton__backgroundImage';
+    const BACKGROUND_IMAGE_CONTAINER = 'playButton__backgroundImage--container';
+    const CONTAINER_PRESSABLE = 'playButton__container--pressable';
+    const PLAY_TEXT = 'play';
 
-    const queryContainer = () =>
-      queryByTestId('playButton__container--pressable');
-    const queryPlayText = () => queryByText('play');
+    const getBackgroundImage = () => getByTestId(BACKGROUND_IMAGE);
+    const getBackgroundImageContainer = () =>
+      getByTestId(BACKGROUND_IMAGE_CONTAINER);
+    const getContainer = () => getByTestId(CONTAINER_PRESSABLE);
+    const getPlayText = () => getByText(PLAY_TEXT);
+
+    const queryBackgroundImage = () => queryByTestId(BACKGROUND_IMAGE);
+    const queryBackgroundImageContainer = () =>
+      queryByTestId(BACKGROUND_IMAGE_CONTAINER);
+    const queryContainer = () => queryByTestId(CONTAINER_PRESSABLE);
+    const queryPlayText = () => queryByText(PLAY_TEXT);
 
     return {
+      assets: {
+        backgroundBlue: require(imageSource('button_background_blue')),
+        backgroundRed: require(imageSource('button_background_red')),
+      },
       container: {
         get: {
+          backgroundImage: getBackgroundImage,
+          backgroundImageContainer: getBackgroundImageContainer,
           container: getContainer,
           playText: getPlayText,
         },
@@ -46,6 +62,8 @@ describe('<PlayButton />', () => {
           },
         },
         query: {
+          backgroundImage: queryBackgroundImage,
+          backgroundImageContainer: queryBackgroundImageContainer,
           container: queryContainer,
           playText: queryPlayText,
         },
@@ -82,12 +100,17 @@ describe('<PlayButton />', () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerX}/ if /player === Player1/`, () => {
-    const {container} = renderer();
-    expect(getStyle(container.get.container())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.playerX,
-      }),
+  it('display background_blue if /player === Player1/', () => {
+    const {assets, container} = renderer();
+    expect(getSource(container.get.backgroundImage())).toBe(
+      assets.backgroundBlue,
+    );
+  });
+
+  it('display background_red if /player === Player2/', () => {
+    const {assets, container} = renderer({player: TileState.Player2});
+    expect(getSource(container.get.backgroundImage())).toBe(
+      assets.backgroundRed,
     );
   });
 
@@ -96,15 +119,6 @@ describe('<PlayButton />', () => {
     expect(getStyle(container.get.playText())).toEqual(
       expect.objectContaining({
         color: DEFAULT_LIGHT_THEME.color.onPlayerX,
-      }),
-    );
-  });
-
-  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.playerO}/ if /player === Player2/`, () => {
-    const {container} = renderer({player: TileState.Player2});
-    expect(getStyle(container.get.container())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.playerO,
       }),
     );
   });
@@ -124,36 +138,38 @@ describe('<PlayButton />', () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it(`sets /backgroundColor: ${DEFAULT_LIGHT_THEME.color.grey}/ if /active === false/`, () => {
-    const {container} = renderer({active: false});
+  it('sets pressable /opacity: undefined/ by default', () => {
+    const {container} = renderer();
     expect(getStyle(container.get.container())).toEqual(
-      expect.objectContaining({
-        backgroundColor: DEFAULT_LIGHT_THEME.color.grey,
-      }),
+      expect.arrayContaining([
+        expect.objectContaining({
+          opacity: undefined,
+        }),
+      ]),
     );
   });
 
-  it('sets /opacity: undefined/ by default', () => {
+  it('sets imageBackground--container /opacity: undefined/ by default', () => {
     const {container} = renderer();
-    expect(getStyle(container.get.container())).toEqual(
+    expect(getStyle(container.get.backgroundImageContainer())).toEqual(
       expect.objectContaining({
         opacity: undefined,
       }),
     );
   });
 
-  it('sets /opacity: 0.4/ if /active === false/', () => {
+  it('sets imageBackground--container /opacity: 0.4/ if /active === false/', () => {
     const {container} = renderer({active: false});
-    expect(getStyle(container.get.container())).toEqual(
+    expect(getStyle(container.get.backgroundImageContainer())).toEqual(
       expect.objectContaining({
         opacity: 0.4,
       }),
     );
   });
 
-  it('sets /opacity: 0.4/ if /disabled === true/', () => {
+  it('sets imageBackground--container /opacity: 0.4/ if /disabled === true/', () => {
     const {container} = renderer({disabled: true});
-    expect(getStyle(container.get.container())).toEqual(
+    expect(getStyle(container.get.backgroundImageContainer())).toEqual(
       expect.objectContaining({
         opacity: 0.4,
       }),
