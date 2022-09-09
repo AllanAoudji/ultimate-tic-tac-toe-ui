@@ -212,7 +212,7 @@ describe('<Asset />', () => {
           source: assets.json.LBottomBlue,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LBottomRed"/', () => {
@@ -222,7 +222,7 @@ describe('<Asset />', () => {
           source: assets.json.LBottomRed,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LDiagonalTopLeftBottomRightBlue"/', () => {
@@ -232,7 +232,7 @@ describe('<Asset />', () => {
           source: assets.json.LDiagonalTopLeftBottomRightBlue,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LDiagonalTopLeftBottomRightRed"/', () => {
@@ -242,7 +242,7 @@ describe('<Asset />', () => {
           source: assets.json.LDiagonalTopLeftBottomRightRed,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LDiagonalTopRightBottomLeftBlue"/', () => {
@@ -252,7 +252,7 @@ describe('<Asset />', () => {
           source: assets.json.LDiagonalTopRightBottomLeftBlue,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LDiagonalTopRightBottomLeftRed"/', () => {
@@ -262,7 +262,7 @@ describe('<Asset />', () => {
           source: assets.json.LDiagonalTopRightBottomLeftRed,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LLeftBlue"/', () => {
@@ -272,7 +272,7 @@ describe('<Asset />', () => {
           source: assets.json.LLeftBlue,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LLeftRed"/', () => {
@@ -282,7 +282,7 @@ describe('<Asset />', () => {
           source: assets.json.LLeftRed,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LMiddleHorizontalBlue"/', () => {
@@ -292,7 +292,7 @@ describe('<Asset />', () => {
           source: assets.json.LMiddleHorizontalBlue,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LMiddleHorizontalRed"/', () => {
@@ -302,7 +302,7 @@ describe('<Asset />', () => {
           source: assets.json.LMiddleHorizontalRed,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LMiddleVerticalBlue"/', () => {
@@ -312,7 +312,7 @@ describe('<Asset />', () => {
           source: assets.json.LMiddleVerticalBlue,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LMiddleVerticalRed"/', () => {
@@ -322,7 +322,7 @@ describe('<Asset />', () => {
           source: assets.json.LMiddleVerticalRed,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LRightBlue"/', () => {
@@ -332,7 +332,7 @@ describe('<Asset />', () => {
           source: assets.json.LRightBlue,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LRightRed"/', () => {
@@ -342,7 +342,7 @@ describe('<Asset />', () => {
           source: assets.json.LRightRed,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LTopBlue"/', () => {
@@ -352,7 +352,7 @@ describe('<Asset />', () => {
           source: assets.json.LTopBlue,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"LTopRed"/', () => {
@@ -362,7 +362,7 @@ describe('<Asset />', () => {
           source: assets.json.LTopRed,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"O1"/', () => {
@@ -372,7 +372,7 @@ describe('<Asset />', () => {
           source: assets.json.O1,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 28);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
 
     it('"X1"/', () => {
@@ -382,7 +382,7 @@ describe('<Asset />', () => {
           source: assets.json.X1,
         }),
       );
-      expect(mockPlay).toHaveBeenCalledWith(2, 26);
+      expect(mockPlay).toHaveBeenCalledWith(0, 26);
     });
   });
 

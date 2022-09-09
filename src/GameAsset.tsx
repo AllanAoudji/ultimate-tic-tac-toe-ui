@@ -39,26 +39,7 @@ type GameAssetProps = {
 // Each animation have different nums of frames
 // this object is used in animationRef.current?play()
 // to know how many frames should be used to trigger the animation
-const ANIMATION_LAST_FRAME = {
-  LBottomBlue: 26,
-  LBottomRed: 26,
-  LDiagonalTopLeftBottomRightBlue: 26,
-  LDiagonalTopLeftBottomRightRed: 26,
-  LDiagonalTopRightBottomLeftBlue: 26,
-  LDiagonalTopRightBottomLeftRed: 26,
-  LLeftBlue: 26,
-  LLeftRed: 26,
-  LMiddleHorizontalBlue: 26,
-  LMiddleHorizontalRed: 26,
-  LMiddleVerticalBlue: 26,
-  LMiddleVerticalRed: 26,
-  LRightBlue: 26,
-  LRightRed: 26,
-  LTopBlue: 26,
-  LTopRed: 26,
-  O1: 28,
-  X1: 26,
-};
+const ANIMATION_LAST_FRAME = 26;
 
 const AssetAnimation: React.FC<AssetProps> = ({onAnimationFinish, type}) => {
   const animationRef = React.useRef<Lottie>(null);
@@ -85,7 +66,7 @@ const AssetAnimation: React.FC<AssetProps> = ({onAnimationFinish, type}) => {
   }, [onAnimationFinish]);
 
   React.useEffect(() => {
-    animationRef.current?.play(2, ANIMATION_LAST_FRAME[type]);
+    animationRef.current?.play(0, ANIMATION_LAST_FRAME);
   }, [type]);
 
   if (type === 'LBottomBlue') {
