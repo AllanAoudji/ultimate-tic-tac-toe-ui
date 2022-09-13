@@ -1,13 +1,14 @@
 import React from 'react';
 import {
   GestureResponderEvent,
+  Image,
   Pressable,
   StyleSheet,
   ViewStyle,
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
+import Container from './Container';
 
-import SurrendIcon from './SurrendIcon';
 import {ThemeContext} from './Theme.context';
 
 interface Props {
@@ -18,15 +19,18 @@ interface Props {
 
 const SurrendButton: React.FC<Props> = ({
   disabled,
-  onPress = () => {},
+  onPress,
   player = TileState.Player1,
 }) => {
   const {theme} = React.useContext(ThemeContext);
-  const stylesProps = React.useMemo(
-    () => surrendButtonStyles({player}),
-    [player],
-  );
-  const styles = React.useMemo(() => stylesProps(theme), [stylesProps, theme]);
+  const styles = React.useMemo(() => surrendButtonStyles(theme), [theme]);
+
+  const opacity = React.useMemo(() => {
+    if (!onPress || disabled) {
+      return 0.4;
+    }
+    return undefined;
+  }, [onPress, disabled]);
 
   return (
     <Pressable
@@ -34,26 +38,32 @@ const SurrendButton: React.FC<Props> = ({
       onPress={onPress}
       style={styles.container}
       testID="surrendButton__container--pressable">
-      <SurrendIcon player={player} />
+      <Container opacity={opacity} testID="surrendButton__container--inner">
+        {player === TileState.Player1 ? (
+          <Image
+            source={require('../assets/images/surrend_button_blue.png')}
+            testID="surrendButton__image"
+          />
+        ) : (
+          <Image
+            source={require('../assets/images/surrend_button_red.png')}
+            testID="surrendButton__image"
+          />
+        )}
+      </Container>
     </Pressable>
   );
 };
 
-const surrendButtonStyles =
-  ({player}: {player: TileState.Player1 | TileState.Player2}) =>
-  (theme: Theming.Theme) =>
-    StyleSheet.create<{container: ViewStyle}>({
-      container: {
-        alignItems: 'center',
-        borderColor:
-          player === TileState.Player2
-            ? theme.color.playerO
-            : theme.color.playerX,
-        borderWidth: 4,
-        borderRadius: 50,
-        justifyContent: 'center',
-        padding: theme.spacing.normal,
-      },
-    });
+const surrendButtonStyles = (theme: Theming.Theme) =>
+  StyleSheet.create<{container: ViewStyle}>({
+    container: {
+      alignItems: 'center',
+      height: 50,
+      justifyContent: 'center',
+      padding: theme.spacing.normal,
+      width: 50,
+    },
+  });
 
 export default SurrendButton;
