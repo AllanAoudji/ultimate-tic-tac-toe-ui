@@ -36,43 +36,68 @@ describe('<PlayerBoard />', () => {
       />,
     );
 
+    const PLAY_TEXT = 'play';
+    const PLAY_BUTTON_CONTAINER_TEST_ID = 'playButton__container--pressable';
+    const PLAY_BUTTON_BACKGROUND_IMAGE_TEST_ID = 'playButton__backgroundImage';
+    const PLAY_BUTTON_BACKGROUND_IMAGE_CONTAINER_TEST_ID =
+      'playButton__backgroundImage--container';
+    const PLAYER_BOARD_CONTAINER_TEST_ID = 'playerBoard__container';
+    const NO_TEXT = 'no';
+    const SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID =
+      'surrendButton__container--pressable';
+    const SURREND_BUTTON_CONTAINER_IMAGE_TEST_ID = 'surrendButton__image';
+    const SURREND_TEXT = 'Surrend?';
+    const YES_TEXT = 'yes';
+
     const {getByTestId, getByText, queryByTestId, queryByText} =
       renderPlayerBoard;
 
-    const getContainer = () => getByTestId('playerBoard__container');
-    const getNoButton = () => getByText('no');
-    const getPlayButton = () => getByText('play');
+    // GET
+    const getContainer = () => getByTestId(PLAYER_BOARD_CONTAINER_TEST_ID);
+    const getNoButton = () => getByText(NO_TEXT);
+    const getPlayButton = () => getByText(PLAY_TEXT);
     const getPlayButtonContainer = () =>
-      getByTestId('playButton__container--pressable');
+      getByTestId(PLAY_BUTTON_CONTAINER_TEST_ID);
     const getPlayButtonBackgroundImage = () =>
-      getByTestId('playButton__backgroundImage');
+      getByTestId(PLAY_BUTTON_BACKGROUND_IMAGE_TEST_ID);
     const getPlayButtonBackgroundImageContainer = () =>
-      getByTestId('playButton__backgroundImage--container');
-    const getSurrendButton = () =>
-      getByTestId('surrendButton__container--pressable');
-    const getSurrendModalText = () => getByText('Surrend?');
-    const getYesButton = () => getByText('yes');
+      getByTestId(PLAY_BUTTON_BACKGROUND_IMAGE_CONTAINER_TEST_ID);
+    const getSurrendButtonContainerPressable = () =>
+      getByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID);
+    const getSurrendButtonImage = () =>
+      getByTestId(SURREND_BUTTON_CONTAINER_IMAGE_TEST_ID);
+    const getSurrendModalText = () => getByText(SURREND_TEXT);
+    const getYesButton = () => getByText(YES_TEXT);
 
-    const queryContainer = () => queryByTestId('playerBoard__container');
-    const queryNoButton = () => queryByText('no');
-    const queryPlayButton = () => queryByText('play');
+    // QUERY
+    const queryContainer = () => queryByTestId(PLAYER_BOARD_CONTAINER_TEST_ID);
+    const queryNoButton = () => queryByText(NO_TEXT);
+    const queryPlayButton = () => queryByText(PLAY_TEXT);
     const queryPlayButtonContainer = () =>
-      queryByTestId('playButton__container--pressable');
+      queryByTestId(PLAY_BUTTON_CONTAINER_TEST_ID);
     const queryPlayButtonBackgroundImage = () =>
-      queryByTestId('playButton__backgroundImage');
+      queryByTestId(PLAY_BUTTON_BACKGROUND_IMAGE_TEST_ID);
     const queryPlayButtonBackgroundImageContainer = () =>
-      queryByTestId('playButton__backgroundImage--container');
-    const querySurrendButton = () =>
-      queryByTestId('surrendButton__container--pressable');
-    const querySurrendModalText = () => queryByText('Surrend?');
-    const queryYesButton = () => queryByText('yes');
+      queryByTestId(PLAY_BUTTON_BACKGROUND_IMAGE_CONTAINER_TEST_ID);
+    const querySurrendButtonContainerPressable = () =>
+      queryByTestId(SURREND_BUTTON_CONTAINER_PRESSABLE_TEST_ID);
+    const querySurrendButtonImage = () =>
+      queryByTestId(SURREND_BUTTON_CONTAINER_IMAGE_TEST_ID);
+    const querySurrendModalText = () => queryByText(SURREND_TEXT);
+    const queryYesButton = () => queryByText(YES_TEXT);
 
     return {
       assets: {
-        playButtonBackgroundBlue: require(imageSource(
-          'button_background_blue',
-        )),
-        playButtonBackgroundRed: require(imageSource('button_background_red')),
+        image: {
+          playButtonBackgroundBlue: require(imageSource(
+            'button_background_blue',
+          )),
+          playButtonBackgroundRed: require(imageSource(
+            'button_background_red',
+          )),
+          surrendButtonBlue: require(imageSource('surrend_button_blue')),
+          surrendButtonRed: require(imageSource('surrend_button_red')),
+        },
       },
       container: {
         get: {
@@ -83,7 +108,8 @@ describe('<PlayerBoard />', () => {
           playButtonBackgroundImage: getPlayButtonBackgroundImage,
           playButtonBackgroundImageContainer:
             getPlayButtonBackgroundImageContainer,
-          surrendButton: getSurrendButton,
+          surrendButtonContainerPressable: getSurrendButtonContainerPressable,
+          surrendButtonImage: getSurrendButtonImage,
           surrendModalText: getSurrendModalText,
           yesButton: getYesButton,
         },
@@ -95,7 +121,7 @@ describe('<PlayerBoard />', () => {
             fireEvent.press(getPlayButton());
           },
           surrendButton: () => {
-            fireEvent.press(getSurrendButton());
+            fireEvent.press(getSurrendButtonContainerPressable());
           },
           yesButton: () => {
             fireEvent.press(getYesButton());
@@ -109,7 +135,8 @@ describe('<PlayerBoard />', () => {
           playButtonBackgroundImage: queryPlayButtonBackgroundImage,
           playButtonBackgroundImageContainer:
             queryPlayButtonBackgroundImageContainer,
-          surrendButton: querySurrendButton,
+          surrendButtonContainerPressable: querySurrendButtonContainerPressable,
+          surrendButtonImage: querySurrendButtonImage,
           surrendModalText: querySurrendModalText,
           yesButton: queryYesButton,
         },
@@ -140,7 +167,7 @@ describe('<PlayerBoard />', () => {
 
   it('renders a <SurrendButton />', () => {
     const {container} = renderer();
-    expect(container.query.surrendButton()).not.toBeNull();
+    expect(container.get.surrendButtonContainerPressable()).not.toBeNull();
   });
 
   it('renders <SurrendModal /> if /visibleModal === true/', () => {
@@ -281,7 +308,9 @@ describe('<PlayerBoard />', () => {
 
     it('/disabledSurrendButton === true/', () => {
       const {container} = renderer({disabledSurrendButton: true});
-      expect(getDisabled(container.get.surrendButton())).toBe(true);
+      expect(getDisabled(container.get.surrendButtonContainerPressable())).toBe(
+        true,
+      );
     });
   });
 
@@ -289,17 +318,15 @@ describe('<PlayerBoard />', () => {
     it('<PlayButton />', () => {
       const {assets, container} = renderer({player: TileState.Player2});
       expect(getSource(container.get.playButtonBackgroundImage())).toBe(
-        assets.playButtonBackgroundRed,
+        assets.image.playButtonBackgroundRed,
       );
     });
 
     it('<SurrendButton />', () => {
-      const {container} = renderer({player: TileState.Player2});
-      expect(
-        container.get
-          .surrendButton()
-          .findAllByProps({fill: DEFAULT_LIGHT_THEME.color.playerO}),
-      ).toHaveLength(1);
+      const {assets, container} = renderer({player: TileState.Player2});
+      expect(getSource(container.get.surrendButtonImage())).toEqual(
+        assets.image.surrendButtonRed,
+      );
     });
 
     it('<SurrendModalWrapper />', () => {
