@@ -67,10 +67,12 @@ const renderer = (
   const {getByTestId, queryByTestId} = renderAsset;
 
   const getContainer = () => getByTestId('gameAsset__container');
-  const getImage = () => getByTestId('gameAsset__image');
+  const getImagePlay = () => getByTestId('gameAsset__image--play');
+  const getImageVisible = () => getByTestId('gameAsset__image--visible');
 
   const queryContainer = () => queryByTestId('gameAsset__container');
-  const queryImage = () => queryByTestId('gameAsset__image');
+  const queryImagePlay = () => queryByTestId('gameAsset__image--play');
+  const queryImageVisible = () => queryByTestId('gameAsset__image--visible');
 
   return {
     assets: {
@@ -134,11 +136,13 @@ const renderer = (
     container: {
       get: {
         container: getContainer,
-        image: getImage,
+        imagePlay: getImagePlay,
+        imageVisible: getImageVisible,
       },
       query: {
         container: queryContainer,
-        image: queryImage,
+        imagePlay: queryImagePlay,
+        imageVisible: queryImageVisible,
       },
     },
     render: renderAsset,
@@ -193,15 +197,6 @@ describe('<Asset />', () => {
     const onAnimationFinish = jest.fn();
     renderer({onAnimationFinish});
     expect(onAnimationFinish).toHaveBeenCalled();
-  });
-
-  it('renders <Image /> with a default style', () => {
-    const {container} = renderer({state: 'VISIBLE'});
-    expect(getStyle(container.get.image())).toEqual({
-      height: '100%',
-      position: 'absolute',
-      width: '100%',
-    });
   });
 
   describe('renders with /source === ', () => {
@@ -392,7 +387,7 @@ describe('<Asset />', () => {
         type: 'LBottomBlue',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LBottomBlue,
       );
     });
@@ -402,7 +397,9 @@ describe('<Asset />', () => {
         type: 'LBottomRed',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.LBottomRed);
+      expect(getSource(container.get.imageVisible())).toEqual(
+        assets.image.LBottomRed,
+      );
     });
 
     it('"LDiagonalTopLeftBottomRightBlue"/', () => {
@@ -410,7 +407,7 @@ describe('<Asset />', () => {
         type: 'LDiagonalTopLeftBottomRightBlue',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LDiagonalTopLeftBottomRightBlue,
       );
     });
@@ -420,7 +417,7 @@ describe('<Asset />', () => {
         type: 'LDiagonalTopLeftBottomRightRed',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LDiagonalTopLeftBottomRightRed,
       );
     });
@@ -430,7 +427,7 @@ describe('<Asset />', () => {
         type: 'LDiagonalTopRightBottomLeftBlue',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LDiagonalTopRightBottomLeftBlue,
       );
     });
@@ -440,7 +437,7 @@ describe('<Asset />', () => {
         type: 'LDiagonalTopRightBottomLeftRed',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LDiagonalTopRightBottomLeftRed,
       );
     });
@@ -450,7 +447,9 @@ describe('<Asset />', () => {
         type: 'LLeftBlue',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.LLeftBlue);
+      expect(getSource(container.get.imageVisible())).toEqual(
+        assets.image.LLeftBlue,
+      );
     });
 
     it('"LLeftRed"/', () => {
@@ -458,7 +457,9 @@ describe('<Asset />', () => {
         type: 'LLeftRed',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.LLeftRed);
+      expect(getSource(container.get.imageVisible())).toEqual(
+        assets.image.LLeftRed,
+      );
     });
 
     it('"LMiddleHorizontalBlue"/', () => {
@@ -466,7 +467,7 @@ describe('<Asset />', () => {
         type: 'LMiddleHorizontalBlue',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LMiddleHorizontalBlue,
       );
     });
@@ -476,7 +477,7 @@ describe('<Asset />', () => {
         type: 'LMiddleHorizontalRed',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LMiddleHorizontalRed,
       );
     });
@@ -486,7 +487,7 @@ describe('<Asset />', () => {
         type: 'LMiddleVerticalBlue',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LMiddleVerticalBlue,
       );
     });
@@ -496,7 +497,7 @@ describe('<Asset />', () => {
         type: 'LMiddleVerticalRed',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(
+      expect(getSource(container.get.imageVisible())).toEqual(
         assets.image.LMiddleVerticalRed,
       );
     });
@@ -506,7 +507,9 @@ describe('<Asset />', () => {
         type: 'LRightBlue',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.LRightBlue);
+      expect(getSource(container.get.imageVisible())).toEqual(
+        assets.image.LRightBlue,
+      );
     });
 
     it('"LRightRed"/', () => {
@@ -514,7 +517,9 @@ describe('<Asset />', () => {
         type: 'LRightRed',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.LRightRed);
+      expect(getSource(container.get.imageVisible())).toEqual(
+        assets.image.LRightRed,
+      );
     });
 
     it('"LTopBlue"/', () => {
@@ -522,7 +527,9 @@ describe('<Asset />', () => {
         type: 'LTopBlue',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.LTopBlue);
+      expect(getSource(container.get.imageVisible())).toEqual(
+        assets.image.LTopBlue,
+      );
     });
 
     it('"LTopRed"/', () => {
@@ -530,7 +537,9 @@ describe('<Asset />', () => {
         type: 'LTopRed',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.LTopRed);
+      expect(getSource(container.get.imageVisible())).toEqual(
+        assets.image.LTopRed,
+      );
     });
 
     it('"O1"/', () => {
@@ -538,7 +547,7 @@ describe('<Asset />', () => {
         type: 'O1',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.O1);
+      expect(getSource(container.get.imageVisible())).toEqual(assets.image.O1);
     });
 
     it('"X1"/', () => {
@@ -546,7 +555,7 @@ describe('<Asset />', () => {
         type: 'X1',
         state: 'VISIBLE',
       });
-      expect(getSource(container.get.image())).toEqual(assets.image.X1);
+      expect(getSource(container.get.imageVisible())).toEqual(assets.image.X1);
     });
   });
 
@@ -561,9 +570,18 @@ describe('<Asset />', () => {
         );
       });
 
-      it('does not render <Image />', () => {
+      it('renders an image at the end of the animation', () => {
         const {container} = renderer();
-        expect(container.query.image()).toBeNull();
+        expect(container.query.imagePlay()).not.toBeNull();
+      });
+
+      it('renders a different source based on /type/', () => {
+        const {assets, container} = renderer({
+          type: 'LDiagonalTopRightBottomLeftRed',
+        });
+        expect(getSource(container.get.imagePlay())).toEqual(
+          assets.image.LDiagonalTopRightBottomLeftRed,
+        );
       });
     });
 
@@ -575,7 +593,7 @@ describe('<Asset />', () => {
 
       it('renders an <Image />', () => {
         const {container} = renderer({state: 'VISIBLE'});
-        expect(container.get.image()).not.toBeNull();
+        expect(container.get.imageVisible()).not.toBeNull();
       });
     });
 
@@ -627,8 +645,3 @@ describe('<Asset />', () => {
     });
   });
 });
-
-// TODO:
-// test <Image />
-// Test all Assets
-// test default style (position/flex/etc.)

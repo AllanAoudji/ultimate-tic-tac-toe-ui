@@ -1,7 +1,47 @@
 import React from 'react';
 import Lottie from 'lottie-react-native';
-import {Image, ImageStyle, StyleSheet, ViewStyle} from 'react-native';
+import FastImage, {ImageStyle} from 'react-native-fast-image';
+import {StyleSheet, ViewStyle} from 'react-native';
+
 import Container from './Container';
+
+import JSON_L_BOTTOM_RED from '../assets/jsons/LBottomRed.json';
+import JSON_L_BOTTOM_BLUE from '../assets/jsons/LBottomBlue.json';
+import JSON_L_DIAGNOAL_TOP_LEFT_BOTTOM_RIGHT_BLUE from '../assets/jsons/LDiagonalTopLeftBottomRightBlue.json';
+import JSON_L_DIAGNOAL_TOP_LEFT_BOTTOM_RIGHT_RED from '../assets/jsons/LDiagonalTopLeftBottomRightRed.json';
+import JSON_L_DIAGONAL_TOP_RIGHT_BOTTOM_LEFT_BLUE from '../assets/jsons/LDiagonalTopRightBottomLeftBlue.json';
+import JSON_L_DIAGONAL_TOP_RIGHT_BOTTOM_LEFT_RED from '../assets/jsons/LDiagonalTopRightBottomLeftRed.json';
+import JSON_L_LEFT_BLUE from '../assets/jsons/LLeftBlue.json';
+import JSON_L_LEFT_RED from '../assets/jsons/LLeftRed.json';
+import JSON_L_MIDDLE_HORIZONAL_BLUE from '../assets/jsons/LMiddleHorizontalBlue.json';
+import JSON_L_MIDDLE_HORIZONAL_RED from '../assets/jsons/LMiddleHorizontalRed.json';
+import JSON_L_MIDDLE_VERTICAL_BLUE from '../assets/jsons/LMiddleVerticalBlue.json';
+import JSON_L_MIDDLE_VERTICAL_RED from '../assets/jsons/LMiddleVerticalRed.json';
+import JSON_L_RIGHT_BLUE from '../assets/jsons/LRightBlue.json';
+import JSON_L_RIGHT_RED from '../assets/jsons/LRightRed.json';
+import JSON_L_TOP_BLUE from '../assets/jsons/LTopBlue.json';
+import JSON_L_TOP_RED from '../assets/jsons/LTopRed.json';
+import JSON_O_1 from '../assets/jsons/O1.json';
+import JSON_X_1 from '../assets/jsons/X1.json';
+
+import IMAGE_L_BOTTOM_BLUE from '../assets/images/LBottomBlue.png';
+import IMAGE_L_BOTTOM_RED from '../assets/images/LBottomRed.png';
+import IMAGE_L_DIAGNOAL_TOP_LEFT_BOTTOM_RIGHT_BLUE from '../assets/images/LDiagonalTopLeftBottomRightBlue.png';
+import IMAGE_L_DIAGNOAL_TOP_LEFT_BOTTOM_RIGHT_RED from '../assets/images/LDiagonalTopLeftBottomRightRed.png';
+import IMAGE_L_DIAGONAL_TOP_RIGHT_BOTTOM_LEFT_BLUE from '../assets/images/LDiagonalTopRightBottomLeftBlue.png';
+import IMAGE_L_DIAGONAL_TOP_RIGHT_BOTTOM_LEFT_RED from '../assets/images/LDiagonalTopRightBottomLeftRed.png';
+import IMAGE_L_LEFT_BLUE from '../assets/images/LLeftBlue.png';
+import IMAGE_L_LEFT_RED from '../assets/images/LLeftRed.png';
+import IMAGE_L_MIDDLE_HORIZONAL_BLUE from '../assets/images/LMiddleHorizontalBlue.png';
+import IMAGE_L_MIDDLE_HORIZONAL_RED from '../assets/images/LMiddleHorizontalRed.png';
+import IMAGE_L_MIDDLE_VERTICAL_BLUE from '../assets/images/LMiddleVerticalBlue.png';
+import IMAGE_L_MIDDLE_VERTICAL_RED from '../assets/images/LMiddleVerticalRed.png';
+import IMAGE_L_RIGHT_BLUE from '../assets/images/LRightBlue.png';
+import IMAGE_L_RIGHT_RED from '../assets/images/LRightRed.png';
+import IMAGE_L_TOP_BLUE from '../assets/images/LTopBlue.png';
+import IMAGE_L_TOP_RED from '../assets/images/LTopRed.png';
+import IMAGE_O_1 from '../assets/images/O1.png';
+import IMAGE_X_1 from '../assets/images/X1.png';
 
 type Type =
   | 'LBottomBlue'
@@ -26,6 +66,8 @@ type State = 'EMPTY' | 'PLAY' | 'VISIBLE';
 
 type AssetProps = {
   onAnimationFinish?: () => void;
+  setAnimationFinish?: React.Dispatch<React.SetStateAction<boolean>>;
+  testID?: string;
   type: Type;
 };
 type GameAssetProps = {
@@ -36,453 +78,137 @@ type GameAssetProps = {
   type?: Type;
 };
 
-// Each animation have different nums of frames
-// this object is used in animationRef.current?play()
-// to know how many frames should be used to trigger the animation
 const ANIMATION_LAST_FRAME = 26;
 
-const AssetAnimation: React.FC<AssetProps> = ({onAnimationFinish, type}) => {
-  const animationRef = React.useRef<Lottie>(null);
+const AssetAnimation: React.FC<AssetProps> = React.memo(
+  ({onAnimationFinish, setAnimationFinish, type}) => {
+    const animationRef = React.useRef<Lottie>(null);
 
-  // isCancelled is used to trigger the callback only if the animation finish
-  // the loop. But if an issue appear, onAnimationFinish's prop is never call
-  // So if onAnimationFinish change the state of a props which control a disable state
-  // while an animation is trigger, players can't play, and onAnimationFinish is never called
-  // the app is soft lock.
+    const source = React.useMemo(() => {
+      switch (type) {
+        case 'LBottomBlue':
+        default:
+          return JSON_L_BOTTOM_BLUE;
+        case 'LBottomRed':
+          return JSON_L_BOTTOM_RED;
+        case 'LDiagonalTopLeftBottomRightBlue':
+          return JSON_L_DIAGNOAL_TOP_LEFT_BOTTOM_RIGHT_BLUE;
+        case 'LDiagonalTopLeftBottomRightRed':
+          return JSON_L_DIAGNOAL_TOP_LEFT_BOTTOM_RIGHT_RED;
+        case 'LDiagonalTopRightBottomLeftBlue':
+          return JSON_L_DIAGONAL_TOP_RIGHT_BOTTOM_LEFT_BLUE;
+        case 'LDiagonalTopRightBottomLeftRed':
+          return JSON_L_DIAGONAL_TOP_RIGHT_BOTTOM_LEFT_RED;
+        case 'LLeftBlue':
+          return JSON_L_LEFT_BLUE;
+        case 'LLeftRed':
+          return JSON_L_LEFT_RED;
+        case 'LMiddleHorizontalBlue':
+          return JSON_L_MIDDLE_HORIZONAL_BLUE;
+        case 'LMiddleHorizontalRed':
+          return JSON_L_MIDDLE_HORIZONAL_RED;
+        case 'LMiddleVerticalBlue':
+          return JSON_L_MIDDLE_VERTICAL_BLUE;
+        case 'LMiddleVerticalRed':
+          return JSON_L_MIDDLE_VERTICAL_RED;
+        case 'LRightBlue':
+          return JSON_L_RIGHT_BLUE;
+        case 'LRightRed':
+          return JSON_L_RIGHT_RED;
+        case 'LTopBlue':
+          return JSON_L_TOP_BLUE;
+        case 'LTopRed':
+          return JSON_L_TOP_RED;
+        case 'O1':
+          return JSON_O_1;
+        case 'X1':
+          return JSON_X_1;
+      }
+    }, [type]);
 
-  // const handleOnAnimationFinish = React.useCallback(
-  //   (isCancelled: boolean) => {
-  //     if (!isCancelled && onAnimationFinish) {
-  //       onAnimationFinish();
-  //     }
-  //   },
-  //   [onAnimationFinish],
-  // );
+    const handleOnAnimationFinish = React.useCallback(
+      (isCanceled: boolean) => {
+        if (onAnimationFinish) {
+          onAnimationFinish();
+        }
+        if (!isCanceled && setAnimationFinish) {
+          setAnimationFinish(true);
+        }
+      },
+      [onAnimationFinish, setAnimationFinish],
+    );
 
-  const handleOnAnimationFinish = React.useCallback(() => {
-    if (onAnimationFinish) {
-      onAnimationFinish();
-    }
-  }, [onAnimationFinish]);
+    React.useEffect(() => {
+      animationRef.current?.play(0, ANIMATION_LAST_FRAME);
+    }, [type]);
 
-  React.useEffect(() => {
-    animationRef.current?.play(0, ANIMATION_LAST_FRAME);
-  }, [type]);
-
-  if (type === 'LBottomBlue') {
     return (
       <Lottie
         loop={false}
         onAnimationFinish={handleOnAnimationFinish}
         ref={animationRef}
-        source={require('../assets/jsons/LBottomBlue.json')}
+        source={source}
         style={stylesAsset.animation}
         testID="gameAsset__animation"
       />
     );
-  }
+  },
+);
 
-  if (type === 'LBottomRed') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LBottomRed.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
+const AssetImage: React.FC<AssetProps> = React.memo(
+  ({testID = 'gameAsset__image', type}) => {
+    const source = React.useMemo(() => {
+      switch (type) {
+        case 'LBottomBlue':
+        default:
+          return IMAGE_L_BOTTOM_BLUE;
+        case 'LBottomRed':
+          return IMAGE_L_BOTTOM_RED;
+        case 'LDiagonalTopLeftBottomRightBlue':
+          return IMAGE_L_DIAGNOAL_TOP_LEFT_BOTTOM_RIGHT_BLUE;
+        case 'LDiagonalTopLeftBottomRightRed':
+          return IMAGE_L_DIAGNOAL_TOP_LEFT_BOTTOM_RIGHT_RED;
+        case 'LDiagonalTopRightBottomLeftBlue':
+          return IMAGE_L_DIAGONAL_TOP_RIGHT_BOTTOM_LEFT_BLUE;
+        case 'LDiagonalTopRightBottomLeftRed':
+          return IMAGE_L_DIAGONAL_TOP_RIGHT_BOTTOM_LEFT_RED;
+        case 'LLeftBlue':
+          return IMAGE_L_LEFT_BLUE;
+        case 'LLeftRed':
+          return IMAGE_L_LEFT_RED;
+        case 'LMiddleHorizontalBlue':
+          return IMAGE_L_MIDDLE_HORIZONAL_BLUE;
+        case 'LMiddleHorizontalRed':
+          return IMAGE_L_MIDDLE_HORIZONAL_RED;
+        case 'LMiddleVerticalBlue':
+          return IMAGE_L_MIDDLE_VERTICAL_BLUE;
+        case 'LMiddleVerticalRed':
+          return IMAGE_L_MIDDLE_VERTICAL_RED;
+        case 'LRightBlue':
+          return IMAGE_L_RIGHT_BLUE;
+        case 'LRightRed':
+          return IMAGE_L_RIGHT_RED;
+        case 'LTopBlue':
+          return IMAGE_L_TOP_BLUE;
+        case 'LTopRed':
+          return IMAGE_L_TOP_RED;
+        case 'O1':
+          return IMAGE_O_1;
+        case 'X1':
+          return IMAGE_X_1;
+      }
+    }, [type]);
 
-  if (type === 'LDiagonalTopLeftBottomRightBlue') {
     return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LDiagonalTopLeftBottomRightBlue.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LDiagonalTopLeftBottomRightRed') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LDiagonalTopLeftBottomRightRed.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LDiagonalTopRightBottomLeftBlue') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LDiagonalTopRightBottomLeftBlue.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LDiagonalTopRightBottomLeftRed') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LDiagonalTopRightBottomLeftRed.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LLeftBlue') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LLeftBlue.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LLeftRed') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LLeftRed.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LMiddleHorizontalBlue') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LMiddleHorizontalBlue.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LMiddleHorizontalRed') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LMiddleHorizontalRed.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LMiddleVerticalBlue') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LMiddleVerticalBlue.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LMiddleVerticalRed') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LMiddleVerticalRed.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LRightBlue') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LRightBlue.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LRightRed') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LRightRed.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LTopBlue') {
-    return (
-      <Lottie
+      <FastImage
         resizeMode="cover"
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LTopBlue.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'LTopRed') {
-    return (
-      <Lottie
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/LTopRed.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  if (type === 'O1') {
-    return (
-      <Lottie
-        resizeMode="cover"
-        loop={false}
-        onAnimationFinish={handleOnAnimationFinish}
-        ref={animationRef}
-        source={require('../assets/jsons/O1.json')}
-        style={stylesAsset.animation}
-        testID="gameAsset__animation"
-      />
-    );
-  }
-
-  return (
-    <Lottie
-      loop={false}
-      onAnimationFinish={handleOnAnimationFinish}
-      ref={animationRef}
-      source={require('../assets/jsons/X1.json')}
-      style={stylesAsset.animation}
-      testID="gameAsset__animation"
-    />
-  );
-};
-
-const AssetImage: React.FC<AssetProps> = ({type}) => {
-  if (type === 'LBottomBlue') {
-    return (
-      <Image
-        source={require('../assets/images/LBottomBlue.png')}
+        source={source}
         style={stylesAsset.image}
-        testID="gameAsset__image"
+        testID={testID}
       />
     );
-  }
-
-  if (type === 'LBottomRed') {
-    return (
-      <Image
-        source={require('../assets/images/LBottomRed.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LDiagonalTopLeftBottomRightBlue') {
-    return (
-      <Image
-        source={require('../assets/images/LDiagonalTopLeftBottomRightBlue.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LDiagonalTopLeftBottomRightRed') {
-    return (
-      <Image
-        source={require('../assets/images/LDiagonalTopLeftBottomRightRed.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LDiagonalTopRightBottomLeftBlue') {
-    return (
-      <Image
-        source={require('../assets/images/LDiagonalTopRightBottomLeftBlue.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LDiagonalTopRightBottomLeftRed') {
-    return (
-      <Image
-        source={require('../assets/images/LDiagonalTopRightBottomLeftRed.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LLeftBlue') {
-    return (
-      <Image
-        source={require('../assets/images/LLeftBlue.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LLeftRed') {
-    return (
-      <Image
-        source={require('../assets/images/LLeftRed.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LMiddleHorizontalBlue') {
-    return (
-      <Image
-        source={require('../assets/images/LMiddleHorizontalBlue.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LMiddleHorizontalRed') {
-    return (
-      <Image
-        source={require('../assets/images/LMiddleHorizontalRed.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LMiddleVerticalBlue') {
-    return (
-      <Image
-        source={require('../assets/images/LMiddleVerticalBlue.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LMiddleVerticalRed') {
-    return (
-      <Image
-        source={require('../assets/images/LMiddleVerticalRed.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LRightBlue') {
-    return (
-      <Image
-        source={require('../assets/images/LRightBlue.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LRightRed') {
-    return (
-      <Image
-        source={require('../assets/images/LRightRed.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LTopBlue') {
-    return (
-      <Image
-        source={require('../assets/images/LTopBlue.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'LTopRed') {
-    return (
-      <Image
-        source={require('../assets/images/LTopRed.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  if (type === 'O1') {
-    return (
-      <Image
-        source={require('../assets/images/O1.png')}
-        style={stylesAsset.image}
-        testID="gameAsset__image"
-      />
-    );
-  }
-
-  return (
-    <Image
-      source={require('../assets/images/X1.png')}
-      style={stylesAsset.image}
-      testID="gameAsset__image"
-    />
-  );
-};
+  },
+);
 
 const GameAsset: React.FC<GameAssetProps> = ({
   onAnimationFinish,
@@ -491,8 +217,30 @@ const GameAsset: React.FC<GameAssetProps> = ({
   state = 'PLAY',
   type = 'X1',
 }) => {
+  const [animationFinish, setAnimationFinish] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (state === 'EMPTY') {
+      setAnimationFinish(false);
+    }
+  }, [state]);
+
   if (state === 'EMPTY') {
     return null;
+  }
+
+  if (state === 'VISIBLE') {
+    return (
+      <Container
+        height="100%"
+        opacity={opacity}
+        padding={padding}
+        position="relative"
+        testID="gameAsset__container"
+        width="100%">
+        <AssetImage testID="gameAsset__image--visible" type={type} />
+      </Container>
+    );
   }
 
   return (
@@ -503,10 +251,15 @@ const GameAsset: React.FC<GameAssetProps> = ({
       position="relative"
       testID="gameAsset__container"
       width="100%">
-      {state === 'PLAY' && (
-        <AssetAnimation onAnimationFinish={onAnimationFinish} type={type} />
+      {state === 'PLAY' && !animationFinish ? (
+        <AssetAnimation
+          onAnimationFinish={onAnimationFinish}
+          setAnimationFinish={setAnimationFinish}
+          type={type}
+        />
+      ) : (
+        <AssetImage testID="gameAsset__image--play" type={type} />
       )}
-      {state === 'VISIBLE' && <AssetImage type={type} />}
     </Container>
   );
 };
@@ -527,4 +280,4 @@ const stylesAsset = StyleSheet.create<{
   },
 });
 
-export default GameAsset;
+export default React.memo(GameAsset);
