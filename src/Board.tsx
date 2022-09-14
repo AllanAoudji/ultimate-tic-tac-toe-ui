@@ -159,4 +159,4 @@ const Board: React.FC<Props> = ({
   );
 };
 
-export default Board;
+export default React.memo(Board);

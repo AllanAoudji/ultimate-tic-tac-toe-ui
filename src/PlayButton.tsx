@@ -7,9 +7,13 @@ import {
   ViewStyle,
 } from 'react-native';
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
-import Container from './Container';
 
+import Container from './Container';
+import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
+
+import BLUE_SOURCE from '../assets/images/button_background_blue.png';
+import RED_SOURCE from '../assets/images/button_background_red.png';
 
 interface PlayButtonProps {
   active?: boolean;
@@ -39,13 +43,28 @@ const PlayButton: React.FC<PlayButtonProps> = ({
   onPress = () => {},
   player = TileState.Player1,
 }) => {
+  //////////////////////
+  //// styling      ////
+  //////////////////////
+  const {theme} = React.useContext(ThemeContext);
+  const styles = React.useMemo(() => playButtonStyles(theme), [theme]);
   const pressedAwarenessStyle = React.useCallback(
     ({pressed}: PressableStateCallbackType) => [
       styles.container,
       {opacity: pressed ? 0.8 : undefined},
     ],
-    [],
+    [styles],
   );
+
+  const source = React.useMemo(() => {
+    switch (player) {
+      case TileState.Player1:
+      default:
+        return BLUE_SOURCE;
+      case TileState.Player2:
+        return RED_SOURCE;
+    }
+  }, [player]);
 
   return (
     <Pressable
@@ -53,39 +72,30 @@ const PlayButton: React.FC<PlayButtonProps> = ({
       onPress={onPress}
       style={pressedAwarenessStyle}
       testID="playButton__container--pressable">
-      <Container borderRadius={8} overflow="hidden" width="88%">
+      <Container borderRadius={8} overflow="hidden">
         <Container
-          alignItems="center"
           opacity={!active || disabled ? 0.4 : undefined}
-          paddingVertical="smallest"
-          testID="playButton__backgroundImage--container"
-          width="100%">
-          {player === TileState.Player1 ? (
-            <Container
-              resizeMode="stretch"
-              source={require('../assets/images/button_background_blue.png')}
-              testID="playButton__backgroundImage">
-              <Title player={player} />
-            </Container>
-          ) : (
-            <Container
-              resizeMode="stretch"
-              source={require('../assets/images/button_background_red.png')}
-              testID="playButton__backgroundImage">
-              <Title player={player} />
-            </Container>
-          )}
+          testID="playButton__backgroundImage--container">
+          <Container
+            alignItems="center"
+            justifyContent="center"
+            paddingVertical="smallest"
+            source={source}
+            testID="playButton__backgroundImage">
+            <Title player={player} />
+          </Container>
         </Container>
       </Container>
     </Pressable>
   );
 };
 
-const styles = StyleSheet.create<{container: ViewStyle}>({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const playButtonStyles = (theme: Theming.Theme) =>
+  StyleSheet.create<{container: ViewStyle}>({
+    container: {
+      alignItems: 'stretch',
+      paddingHorizontal: theme.spacing.largest,
+    },
+  });
 
-export default PlayButton;
+export default React.memo(PlayButton);

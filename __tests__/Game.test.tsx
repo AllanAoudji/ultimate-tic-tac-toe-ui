@@ -77,13 +77,13 @@ const renderer = (
   const getSurrendButtons = () =>
     getAllByTestId('surrendButton__container--pressable');
   const getTiles = () => getAllByTestId('tile__container--pressable');
-  const getGameAssetAnimations = () => getAllByTestId('gameAsset__animation');
 
   // getByTestId
   const getBoard = () => getByTestId('board__container');
   const getGameAsset = () => getByTestId('gameAsset__container');
-  const getGameAssetImage = () => getByTestId('gameAsset__image');
-  const getGameAssetAnimation = () => getByTestId('gameAsset__animation');
+  const getGameAssetImagePlay = () => getByTestId('gameAsset__image--play');
+  const getGameAssetImageVisible = () =>
+    getByTestId('gameAsset__image--visible');
   const getSurrendModalContainer = () => getByTestId('surrendModal__container');
   const getSurrendModalInnerContainer = () =>
     getByTestId('surrendModal__container--inner');
@@ -98,8 +98,10 @@ const renderer = (
   // queryByTestId
   const queryBoard = () => queryByTestId('board__container');
   const queryGameAsset = () => queryByTestId('gameAsset__container');
-  const queryGameAssetAnimation = () => queryByTestId('gameAsset__animation');
-  const queryGameAssetImage = () => queryByTestId('gameAsset__image');
+  const queryGameAssetImagePlay = () =>
+    queryByTestId('gameAsset__image--visible');
+  const queryGameAssetImageVisible = () =>
+    queryByTestId('gameAsset__image--visible');
   const querySurrendModal = () => queryByTestId('surrendModal__container');
   const queryWinningModal = () => queryByTestId('winningModal__container');
 
@@ -117,9 +119,8 @@ const renderer = (
       get: {
         board: getBoard,
         gameAsset: getGameAsset,
-        gameAssetAnimation: getGameAssetAnimation,
-        gameAssetAnimations: getGameAssetAnimations,
-        gameAssetImage: getGameAssetImage,
+        gameAssetImagePlay: getGameAssetImagePlay,
+        gameAssetImageVisible: getGameAssetImageVisible,
         playerOText: getPlayerOText,
         playerXText: getPlayerXText,
         tiles: getTiles,
@@ -128,8 +129,8 @@ const renderer = (
       query: {
         board: queryBoard,
         gameAsset: queryGameAsset,
-        gameAssetAnimation: queryGameAssetAnimation,
-        gameAssetImage: queryGameAssetImage,
+        gameAssetImagePlay: queryGameAssetImagePlay,
+        gameAssetImageVisible: queryGameAssetImageVisible,
         itsADrawText: queryItsADrawText,
         playerOText: queryPlayerOText,
         playerXText: queryPlayerXText,
@@ -301,7 +302,7 @@ describe('<Game />', () => {
   it('renders a player1 temp <Image /> when press on a <Tile /> if /history.length === 0/', () => {
     const {container, players} = renderer();
     players.press.tile();
-    expect(container.get.gameAssetImage()).not.toBeNull();
+    expect(container.get.gameAssetImageVisible()).not.toBeNull();
   });
 
   it('enables player BOTTOM "play" <Pressable /> if it\'s the player turn and /selectedTileIndex !== null/', () => {
@@ -342,7 +343,7 @@ describe('<Game />', () => {
     const {container, playerBottom, playerTop} = renderer();
     playerBottom.press.play();
     playerTop.press.playWithoutSelectATile();
-    expect(container.query.gameAssetImage()).toBeNull();
+    expect(container.query.gameAssetImageVisible()).toBeNull();
   });
 
   it('closes Player BOTTOM <SurrendModal /> if Player BOTTOM presses a <Tile />', () => {
@@ -440,14 +441,14 @@ describe('<Game />', () => {
       const {container, playerBottom} = renderer();
       playerBottom.press.play();
       playerBottom.press.newGameAfterSurrend();
-      expect(container.query.gameAssetAnimation()).toBeNull();
+      expect(container.query.gameAsset()).toBeNull();
     });
 
     it('resets /selectedTileIndex/', () => {
       const {container, playerBottom, players} = renderer();
       players.press.tile();
       playerBottom.press.newGameAfterSurrend();
-      expect(container.query.gameAssetImage()).toBeNull();
+      expect(container.query.gameAssetImageVisible()).toBeNull();
     });
 
     it('resets /sectionStates/', () => {
@@ -455,7 +456,7 @@ describe('<Game />', () => {
       const {container, playerBottom, players} = renderer();
       playerBottom.press.play();
       players.press.winnnigModalNewGame();
-      expect(container.query.gameAssetAnimation()).toBeNull();
+      expect(container.query.gameAsset()).toBeNull();
     });
   });
 
@@ -488,7 +489,7 @@ describe('<Game />', () => {
       const {container, playerBottom, players} = renderer();
       playerBottom.press.play();
       players.press.tile();
-      expect(container.query.gameAssetImage()).toBeNull();
+      expect(container.query.gameAssetImageVisible()).toBeNull();
     });
   });
 
@@ -566,7 +567,7 @@ describe('<Game />', () => {
       const {container, players, playerBottom} = renderer();
       playerBottom.press.play();
       players.press.tile();
-      expect(container.query.gameAssetImage()).toBeNull();
+      expect(container.query.gameAssetImageVisible()).toBeNull();
     });
   });
 
@@ -605,7 +606,7 @@ describe('<Game />', () => {
     it('BOTTOM player "play" <Pressable />', () => {
       const {container, playerBottom} = renderer();
       playerBottom.press.play();
-      expect(container.get.gameAssetAnimation()).not.toBeNull();
+      expect(container.get.gameAssetImagePlay()).not.toBeNull();
     });
 
     it('TOP player "play" <Pressable />', () => {
@@ -613,7 +614,7 @@ describe('<Game />', () => {
         firstPlayer: 'TOP',
       });
       playerTop.press.play();
-      expect(container.get.gameAssetAnimation()).not.toBeNull();
+      expect(container.get.gameAssetImagePlay()).not.toBeNull();
     });
   });
 });

@@ -57,23 +57,34 @@ const renderer = (
     />,
   );
 
+  const GAME_ASSETS_IMAGE_VISIBLE_TEST_ID = 'gameAsset__image--visible';
+  const SECTION_CONTAINER_TEST_ID = 'section__container';
+  const SECTION_IMAGE_GRID_TEST_ID = 'section__image--grid';
+  const SECTION__CONTAINER__INNER_TEST_ID = 'section__container--inner';
+  const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable';
+
   const {getAllByTestId, getByTestId, queryAllByTestId, queryByTestId} =
     renderSection;
 
-  const getGameAssetImage = () => getByTestId('gameAsset__image');
-  const getGameAssetImages = () => getAllByTestId('gameAsset__image');
-  const getGridImage = () => getByTestId('section__image--grid');
-  const getImageLine = () => getByTestId('section__image--line');
-  const getInnerContainer = () => getByTestId('section__container--inner');
-  const getTiles = () => getAllByTestId('tile__container--pressable');
+  const getContainer = () => getByTestId(SECTION_CONTAINER_TEST_ID);
+  const getGameAssetImageVisible = () =>
+    getByTestId(GAME_ASSETS_IMAGE_VISIBLE_TEST_ID);
+  const getGameAssetImagesVisible = () =>
+    getAllByTestId(GAME_ASSETS_IMAGE_VISIBLE_TEST_ID);
+  const getGridImage = () => getByTestId(SECTION_IMAGE_GRID_TEST_ID);
+  const getInnerContainer = () =>
+    getByTestId(SECTION__CONTAINER__INNER_TEST_ID);
+  const getTiles = () => getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID);
 
-  const queryContainer = () => queryByTestId('section__container');
-  const queryGameAssetImage = () => queryByTestId('gameAsset__image');
-  const queryGameAssetImages = () => queryAllByTestId('gameAsset__images');
-  const queryGridImage = () => queryByTestId('section__image--grid');
-  const queryImageLine = () => queryByTestId('section__image--line');
-  const queryInnerContainer = () => queryByTestId('section__container--inner');
-  const queryTiles = () => queryAllByTestId('tile__container--pressable');
+  const queryContainer = () => queryByTestId(SECTION_CONTAINER_TEST_ID);
+  const queryGameAssetImageVisible = () =>
+    queryByTestId(GAME_ASSETS_IMAGE_VISIBLE_TEST_ID);
+  const queryGameAssetImagesVisible = () =>
+    queryAllByTestId(GAME_ASSETS_IMAGE_VISIBLE_TEST_ID);
+  const queryGridImage = () => queryByTestId(SECTION_IMAGE_GRID_TEST_ID);
+  const queryInnerContainer = () =>
+    queryByTestId(SECTION__CONTAINER__INNER_TEST_ID);
+  const queryTiles = () => queryAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID);
 
   return {
     assets: {
@@ -137,10 +148,10 @@ const renderer = (
     },
     container: {
       get: {
+        container: getContainer,
         gridImage: getGridImage,
-        gameAssetImage: getGameAssetImage,
-        gameAssetImages: getGameAssetImages,
-        imageLine: getImageLine,
+        gameAssetImageVisible: getGameAssetImageVisible,
+        gameAssetImagesVisible: getGameAssetImagesVisible,
         innerContainer: getInnerContainer,
         tile: (index: number) => getTiles()[index],
         tiles: getTiles,
@@ -152,10 +163,9 @@ const renderer = (
       },
       query: {
         container: queryContainer,
-        gameAssetImage: queryGameAssetImage,
-        gameAssetImages: queryGameAssetImages,
+        gameAssetImageVisible: queryGameAssetImageVisible,
+        gameAssetImagesVisible: queryGameAssetImagesVisible,
         gridImage: queryGridImage,
-        imageLine: queryImageLine,
         innerContainer: queryInnerContainer,
         tiles: queryTiles,
       },
@@ -220,7 +230,7 @@ describe('<Section/>', () => {
 
   it("renders <GameAsset />'s <Image /> if /selectedTileIndex === tile.index1D/", () => {
     const {container} = renderer({selectedTileIndex: 2});
-    expect(container.get.gameAssetImages()).toHaveLength(1);
+    expect(container.get.gameAssetImagesVisible()).toHaveLength(1);
   });
 
   it('passes /activePlayer/ to <Tile />', () => {
@@ -228,7 +238,9 @@ describe('<Section/>', () => {
       activePlayer: TileState.Player2,
       selectedTileIndex: 2,
     });
-    expect(getSource(container.get.gameAssetImage())).toEqual(assets.images.O1);
+    expect(getSource(container.get.gameAssetImageVisible())).toEqual(
+      assets.images.O1,
+    );
   });
 
   it("renders a <GameAsset />'s <Image /> if the <Section /> is won by a player", () => {
