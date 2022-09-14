@@ -225,4 +225,4 @@ const Game: React.FC<Props> = ({
   );
 };
 
-export default Game;
+export default React.memo(Game);
