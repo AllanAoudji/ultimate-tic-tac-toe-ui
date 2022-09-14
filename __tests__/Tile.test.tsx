@@ -51,13 +51,19 @@ const renderer = (
     />,
   );
 
+  const GAME_ASSET_CONTAINER_TEST_ID = 'gameAsset__container';
+  const GAME_ASSET_IMAGE_VISIBLE_TEST_ID = 'gameAsset__image--visible';
+  const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable';
+
   const {getByTestId, queryByTestId} = renderTile;
 
-  const getContainer = () => getByTestId('tile__container--pressable');
-  const getGameAsset = () => getByTestId('gameAsset__container');
-  const getGameAssetImage = () => getByTestId('gameAsset__image');
+  const getContainer = () => getByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID);
+  const getGameAsset = () => getByTestId(GAME_ASSET_CONTAINER_TEST_ID);
+  const getGameAssetImageVisible = () =>
+    getByTestId(GAME_ASSET_IMAGE_VISIBLE_TEST_ID);
 
-  const queryGameAssetImage = () => queryByTestId('gameAsset__image');
+  const queryGameAssetImageVisible = () =>
+    queryByTestId(GAME_ASSET_IMAGE_VISIBLE_TEST_ID);
 
   return {
     assets: {
@@ -74,7 +80,7 @@ const renderer = (
       get: {
         container: getContainer,
         gameAsset: getGameAsset,
-        gameAssetImage: getGameAssetImage,
+        gameAssetImageVisible: getGameAssetImageVisible,
       },
       press: {
         container: () => {
@@ -82,7 +88,7 @@ const renderer = (
         },
       },
       query: {
-        gameAssetImage: queryGameAssetImage,
+        gameAssetImageVisible: queryGameAssetImageVisible,
       },
     },
     render: renderTile,
@@ -132,7 +138,9 @@ describe('<Tile />', () => {
       selected: true,
     });
     container.press.container();
-    expect(getSource(container.get.gameAssetImage())).toEqual(assets.image.O1);
+    expect(getSource(container.get.gameAssetImageVisible())).toEqual(
+      assets.image.O1,
+    );
   });
 
   it('disables <Tile /> if /disabled === true/', () => {
@@ -166,13 +174,13 @@ describe('<Tile />', () => {
     it('/state === Empty/', () => {
       const {container} = renderer({state: TileState.Empty});
       expect(mockLottie).not.toHaveBeenCalled();
-      expect(container.query.gameAssetImage()).toBeNull();
+      expect(container.query.gameAssetImageVisible()).toBeNull();
     });
 
     it('/selected === false/', () => {
       const {container} = renderer({selected: false});
       expect(mockLottie).not.toHaveBeenCalled();
-      expect(container.query.gameAssetImage()).toBeNull();
+      expect(container.query.gameAssetImageVisible()).toBeNull();
     });
   });
 
