@@ -105,13 +105,26 @@ describe('<SurrendButton />', () => {
   it('sets <Container /> style to be a square', () => {
     const {container} = renderer();
     expect(getStyle(container.get.containerPressable())).toEqual(
-      expect.objectContaining({
-        alignItems: 'center',
-        height: 50,
-        justifyContent: 'center',
-        padding: DEFAULT_DARK_THEME.spacing.normal,
-        width: 50,
-      }),
+      expect.arrayContaining([
+        expect.objectContaining({
+          alignItems: 'center',
+          height: 45,
+          justifyContent: 'center',
+          padding: DEFAULT_DARK_THEME.spacing.normal,
+          width: 45,
+        }),
+      ]),
+    );
+  });
+
+  it('sets <Container /> /opacity === undefined/ by default', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.containerPressable())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          opacity: undefined,
+        }),
+      ]),
     );
   });
 
