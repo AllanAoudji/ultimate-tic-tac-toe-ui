@@ -59,18 +59,30 @@ const renderer = (
     />,
   );
 
+  const BOARD_CONTAINER_TEST_ID = 'board__container';
+  const BOARD_IMAGE_GRID_TEST_ID = 'board__image--grid';
+  const GAME_ASSET_CONTAINER_TEST_ID = 'gameAsset__container';
+  const GAME_ASSET_IMAGE_PLAY_TEST_ID = 'gameAsset__image--play';
+  const GAME_ASSET_IMAGE_VISIBLE_TEST_ID = 'gameAsset__image--visible';
+  const SECTION_CONTAINER_TEST_ID = 'section__container';
+  const TILE_CONTAINER_PRESSABLE_TEST_ID = 'tile__container--pressable';
+
   const {getAllByTestId, getByTestId, queryByTestId} = renderBoard;
 
-  const getGameAsset = () => getByTestId('gameAsset__container');
-  const getSectionContainers = () => getAllByTestId('section__container');
-  const getTileContainers = () => getAllByTestId('tile__container--pressable');
+  const getContainer = () => getByTestId(BOARD_CONTAINER_TEST_ID);
+  const getBoardImage = () => getByTestId(BOARD_IMAGE_GRID_TEST_ID);
+  const getGameAsset = () => getByTestId(GAME_ASSET_CONTAINER_TEST_ID);
+  const getGameAssetImagePlay = () =>
+    getByTestId(GAME_ASSET_IMAGE_PLAY_TEST_ID);
+  const getGameAssetImageVisible = () =>
+    getByTestId(GAME_ASSET_IMAGE_VISIBLE_TEST_ID);
+  const getSectionContainers = () => getAllByTestId(SECTION_CONTAINER_TEST_ID);
+  const getTileContainers = () =>
+    getAllByTestId(TILE_CONTAINER_PRESSABLE_TEST_ID);
 
-  const getBoardImage = () => getByTestId('board__image--grid');
-  const getContainer = () => getByTestId('board__container');
-  const getGameAssetImage = () => getByTestId('gameAsset__image');
   const getTileContainer = (index: number) => getTileContainers()[index];
 
-  const queryGameAsset = () => queryByTestId('gameAsset__container');
+  const queryGameAsset = () => queryByTestId(GAME_ASSET_CONTAINER_TEST_ID);
 
   return {
     assets: {
@@ -113,7 +125,8 @@ const renderer = (
         boardImage: getBoardImage,
         container: getContainer,
         gameAsset: getGameAsset,
-        gameAssetImage: getGameAssetImage,
+        gameAssetImageVisible: getGameAssetImageVisible,
+        gameAssetImagePlay: getGameAssetImagePlay,
         sectionContainers: getSectionContainers,
         tileContainer: getTileContainer,
         tileContainers: getTileContainers,
@@ -176,12 +189,14 @@ describe('<Board />', () => {
 
   it('passes /activePlayer/ to <Section />', () => {
     const {container} = renderer({selectedTileIndex: 0});
-    expect(container.get.gameAssetImage()).not.toBeNull();
+    expect(container.get.gameAssetImageVisible()).not.toBeNull();
   });
 
   it('/activePlayer/ is based on /history/', () => {
     const {assets, container} = renderer({history: [1], selectedTileIndex: 0});
-    expect(getSource(container.get.gameAssetImage())).toEqual(assets.image.O1);
+    expect(getSource(container.get.gameAssetImageVisible())).toEqual(
+      assets.image.O1,
+    );
   });
 
   it("sets all <Section />'s /valid/ to false if /gameIsWon === true/", () => {
