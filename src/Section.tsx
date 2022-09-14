@@ -31,70 +31,72 @@ interface WinningImageProps {
   state: SectionState;
 }
 
-const WinningImage: React.FC<WinningImageProps> = ({mode, state}) => {
-  const type = React.useMemo(() => {
-    if (mode === Mode.Normal) {
-      return state[0] === TileState.Player1 ? 'X1' : 'O1';
-    }
-    switch (state[1]) {
-      case WinningLine.BottomRow:
-        if (state[0] === TileState.Player1) {
-          return 'LBottomBlue';
-        }
-        return 'LBottomRed';
-      case WinningLine.LeftColumn:
-        if (state[0] === TileState.Player1) {
-          return 'LLeftBlue';
-        }
-        return 'LLeftRed';
-      case WinningLine.MiddleColumn:
-        if (state[0] === TileState.Player1) {
-          return 'LMiddleVerticalBlue';
-        }
-        return 'LMiddleVerticalRed';
-      case WinningLine.MiddleRow:
-        if (state[0] === TileState.Player1) {
-          return 'LMiddleHorizontalBlue';
-        }
-        return 'LMiddleHorizontalRed';
-      case WinningLine.RightColumn:
-        if (state[0] === TileState.Player1) {
-          return 'LRightBlue';
-        }
-        return 'LRightRed';
-      case WinningLine.TopLeftBottomRightDiagonal:
-        if (state[0] === TileState.Player1) {
-          return 'LDiagonalTopLeftBottomRightBlue';
-        }
-        return 'LDiagonalTopLeftBottomRightRed';
-      case WinningLine.TopRightBottomLeftDiagonal:
-        if (state[0] === TileState.Player1) {
-          return 'LDiagonalTopRightBottomLeftBlue';
-        }
-        return 'LDiagonalTopRightBottomLeftRed';
-      case WinningLine.TopRow:
-        if (state[0] === TileState.Player1) {
-          return 'LTopBlue';
-        }
-        return 'LTopRed';
-      default:
-        if (state[0] === TileState.Player1) {
-          return 'LBottomBlue';
-        }
-        return 'LBottomRed';
-    }
-  }, [mode, state]);
+const WinningImage: React.FC<WinningImageProps> = React.memo(
+  ({mode, state}) => {
+    const type = React.useMemo(() => {
+      if (mode === Mode.Normal) {
+        return state[0] === TileState.Player1 ? 'X1' : 'O1';
+      }
+      switch (state[1]) {
+        case WinningLine.BottomRow:
+          if (state[0] === TileState.Player1) {
+            return 'LBottomBlue';
+          }
+          return 'LBottomRed';
+        case WinningLine.LeftColumn:
+          if (state[0] === TileState.Player1) {
+            return 'LLeftBlue';
+          }
+          return 'LLeftRed';
+        case WinningLine.MiddleColumn:
+          if (state[0] === TileState.Player1) {
+            return 'LMiddleVerticalBlue';
+          }
+          return 'LMiddleVerticalRed';
+        case WinningLine.MiddleRow:
+          if (state[0] === TileState.Player1) {
+            return 'LMiddleHorizontalBlue';
+          }
+          return 'LMiddleHorizontalRed';
+        case WinningLine.RightColumn:
+          if (state[0] === TileState.Player1) {
+            return 'LRightBlue';
+          }
+          return 'LRightRed';
+        case WinningLine.TopLeftBottomRightDiagonal:
+          if (state[0] === TileState.Player1) {
+            return 'LDiagonalTopLeftBottomRightBlue';
+          }
+          return 'LDiagonalTopLeftBottomRightRed';
+        case WinningLine.TopRightBottomLeftDiagonal:
+          if (state[0] === TileState.Player1) {
+            return 'LDiagonalTopRightBottomLeftBlue';
+          }
+          return 'LDiagonalTopRightBottomLeftRed';
+        case WinningLine.TopRow:
+          if (state[0] === TileState.Player1) {
+            return 'LTopBlue';
+          }
+          return 'LTopRed';
+        default:
+          if (state[0] === TileState.Player1) {
+            return 'LBottomBlue';
+          }
+          return 'LBottomRed';
+      }
+    }, [mode, state]);
 
-  return (
-    <Container
-      height="100%"
-      position="absolute"
-      width="100%"
-      pointerEvents="none">
-      <GameAsset type={type} state="PLAY" />
-    </Container>
-  );
-};
+    return (
+      <Container
+        height="100%"
+        position="absolute"
+        width="100%"
+        pointerEvents="none">
+        <GameAsset type={type} state="PLAY" />
+      </Container>
+    );
+  },
+);
 
 const Section: React.FC<SectionProps> = ({
   activePlayer = TileState.Player1,
@@ -158,4 +160,4 @@ const Section: React.FC<SectionProps> = ({
   );
 };
 
-export default Section;
+export default React.memo(Section);
