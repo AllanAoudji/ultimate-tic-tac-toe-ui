@@ -81,4 +81,4 @@ const PlayerBoard: React.FC<Props> = ({
   );
 };
 
-export default PlayerBoard;
+export default React.memo(PlayerBoard);
