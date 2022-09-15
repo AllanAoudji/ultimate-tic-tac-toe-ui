@@ -28,7 +28,6 @@ const QuitGameModal: React.FC<Props> = ({
       alignItems="center"
       height="100%"
       justifyContent="center"
-      position="absolute"
       testID="quitGameModal__container"
       width="100%">
       <Pressable
