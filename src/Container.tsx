@@ -31,6 +31,7 @@ type rotate = '0deg' | '90deg' | '180deg' | '270deg';
 
 interface Props {
   alignItems?: FlexAlignType;
+  aspectRatio?: number;
   backgroundColor?: keyof Theming.ColorTheme;
   borderColor?: keyof Theming.ColorTheme;
   borderRadius?: borderRadius;
@@ -70,6 +71,7 @@ interface Props {
 
 const Container: React.FC<Props> = ({
   alignItems,
+  aspectRatio,
   backgroundColor,
   borderColor,
   borderRadius,
@@ -112,6 +114,7 @@ const Container: React.FC<Props> = ({
     () =>
       stylesContainer({
         alignItems,
+        aspectRatio,
         backgroundColor,
         borderColor,
         borderRadius,
@@ -145,6 +148,7 @@ const Container: React.FC<Props> = ({
       }),
     [
       alignItems,
+      aspectRatio,
       backgroundColor,
       borderColor,
       borderRadius,
@@ -204,6 +208,7 @@ const Container: React.FC<Props> = ({
 const stylesContainer =
   ({
     alignItems,
+    aspectRatio,
     backgroundColor,
     borderColor,
     borderRadius,
@@ -236,6 +241,7 @@ const stylesContainer =
     width,
   }: {
     alignItems?: FlexAlignType;
+    aspectRatio?: number;
     backgroundColor?: keyof Theming.ColorTheme;
     borderColor?: keyof Theming.ColorTheme;
     borderRadius?: borderRadius;
@@ -279,6 +285,7 @@ const stylesContainer =
     return StyleSheet.create<{container: ViewStyle}>({
       container: {
         alignItems,
+        aspectRatio,
         backgroundColor: backgroundColor
           ? theme.color[backgroundColor]
           : undefined,
