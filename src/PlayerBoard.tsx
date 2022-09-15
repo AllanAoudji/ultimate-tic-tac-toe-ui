@@ -50,20 +50,22 @@ const PlayerBoard: React.FC<Props> = ({
   return (
     <Container
       height={(height - width) / 2}
-      justifyContent="space-between"
+      justifyContent="center"
+      paddingBottom="large"
       paddingHorizontal="large"
-      paddingVertical="largest"
       rotate={position === 'TOP' ? '180deg' : '0deg'}
       testID="playerBoard__container">
-      <Container testID="playerBoard__container--opacity">
+      <Container
+        alignItems="flex-end"
+        flexDirection="row"
+        justifyContent="space-between"
+        testID="playerBoard__container--opacity">
         <PlayButton
           active={activePlayButton}
           disabled={disabledPlayButton || visibleModal}
           onPress={onPressPlay}
           player={player}
         />
-      </Container>
-      <Container alignItems="flex-end">
         <SurrendButton
           disabled={disabledSurrendButton || visibleModal}
           onPress={onPressSurrend}
