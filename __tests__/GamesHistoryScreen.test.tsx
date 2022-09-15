@@ -4,8 +4,19 @@ import React from 'react';
 import {TileState, WinningLine} from 'ultimate-tic-tac-toe-algorithm';
 import {v4 as uuidv4} from 'uuid';
 
+import MockFetchingErrorModal from '../src/FetchingErrorModal';
 import GamesHistoryScreen from '../src/GamesHistoryScreen';
 import {HistoryProvider} from '../src/History.context';
+
+jest.mock('../src/FetchingErrorModalWrapper', () => ({
+  __esModule: true,
+  default: ({visible, error, ...props}: {visible: boolean; error: string}) => {
+    if (visible) {
+      return <MockFetchingErrorModal text={error} {...props} />;
+    }
+    return null;
+  },
+}));
 
 const renderer = () => {
   const renderGame = render(<GamesHistoryScreen />, {wrapper: HistoryProvider});
@@ -141,15 +152,6 @@ describe('<GamesHistoryScreen />', () => {
       container.query.fetchingErrorModal(),
     );
     expect(fetchingErrorModal).toBeNull();
-  });
-
-  it('closes <FetchingErrorModal /> when press on <FetchErrorModal />', async () => {
-    (AsyncStorage.getItem as jest.Mock).mockImplementationOnce(() =>
-      Promise.reject('fail'),
-    );
-    const {container} = renderer();
-    await waitFor(() => container.press.fetchingErrorModal());
-    expect(container.query.fetchingErrorModal()).toBeNull();
   });
 
   it('closes <FetchingErrorModal /> when press on the "try again?" <Pressable />', async () => {
