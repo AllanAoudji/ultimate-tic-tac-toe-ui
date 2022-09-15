@@ -255,6 +255,11 @@ describe('<Section/>', () => {
     expect(mockLottie).toHaveBeenCalledTimes(0);
   });
 
+  it('do not displays a <PlayerImage /> if the <Section /> is full', () => {
+    renderer({sectionState: [TileState.Draw, null]});
+    expect(mockLottie).toHaveBeenCalledTimes(0);
+  });
+
   it('<PlayerImage /> should be based on the player who won the section', () => {
     const {assets} = renderer({
       sectionState: [TileState.Player2, WinningLine.BottomRow],

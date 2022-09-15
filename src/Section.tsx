@@ -35,8 +35,16 @@ const WinningImage: React.FC<WinningImageProps> = React.memo(
   ({mode, state}) => {
     const type = React.useMemo(() => {
       if (mode === Mode.Normal) {
-        return state[0] === TileState.Player1 ? 'X1' : 'O1';
+        switch (state[0]) {
+          case TileState.Player1:
+            return 'X1';
+          case TileState.Player2:
+            return 'O1';
+          default:
+            return null;
+        }
       }
+
       switch (state[1]) {
         case WinningLine.BottomRow:
           if (state[0] === TileState.Player1) {
@@ -79,12 +87,13 @@ const WinningImage: React.FC<WinningImageProps> = React.memo(
           }
           return 'LTopRed';
         default:
-          if (state[0] === TileState.Player1) {
-            return 'LBottomBlue';
-          }
-          return 'LBottomRed';
+          return null;
       }
     }, [mode, state]);
+
+    if (!type) {
+      return null;
+    }
 
     return (
       <Container
@@ -153,7 +162,7 @@ const Section: React.FC<SectionProps> = ({
         </Container>
       </Container>
       {/* Display the winning <GameAsset /> */}
-      {sectionState[0] !== TileState.Empty && (
+      {sectionState[1] !== null && (
         <WinningImage mode={mode} state={sectionState} />
       )}
     </Container>
