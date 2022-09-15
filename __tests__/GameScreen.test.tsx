@@ -6,13 +6,25 @@ import {BackHandler} from 'react-native';
 import {act} from 'react-test-renderer';
 import * as ultimateTicTactToAlgorithm from 'ultimate-tic-tac-toe-algorithm';
 
-import GameScreen from '../src/GameScreen';
 import {spyPlay} from './testUtils';
+
+import GameScreen from '../src/GameScreen';
+import MockQuitGameModal from '../src/QuitGameModal';
 
 let mockCallbacks: {[index: string]: (() => void)[]} = {};
 const helperTriggerListeners = (eventName: string) => {
   (mockCallbacks[eventName] || []).forEach(callback => callback());
 };
+
+jest.mock('../src/QuitGameModalWrapper', () => ({
+  __esModule: true,
+  default: ({visible, ...props}: {visible: boolean}) => {
+    if (visible) {
+      return <MockQuitGameModal {...props} />;
+    }
+    return null;
+  },
+}));
 
 describe('<GameScreen />', () => {
   const actualNav = jest.requireActual('@react-navigation/native'),
