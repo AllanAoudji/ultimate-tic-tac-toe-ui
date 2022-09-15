@@ -25,6 +25,7 @@ const WinningModalWrapper: React.FC<Props> = ({
 
   const animatedStyle = React.useMemo<Animated.WithAnimatedObject<ViewStyle>>(
     () => ({
+      height: '100%',
       opacity: fadeAnim.current,
       position: 'absolute',
       transform: [
@@ -35,6 +36,7 @@ const WinningModalWrapper: React.FC<Props> = ({
           }),
         },
       ],
+      width: '100%',
     }),
     [],
   );

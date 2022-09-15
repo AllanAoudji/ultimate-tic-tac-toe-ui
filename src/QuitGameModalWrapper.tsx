@@ -22,6 +22,7 @@ const QuitGameModalWrapper: React.FC<Props> = ({
 
   const animatedStyle = React.useMemo<Animated.WithAnimatedObject<ViewStyle>>(
     () => ({
+      height: '100%',
       opacity: fadeAnim.current,
       position: 'absolute',
       transform: [
@@ -32,6 +33,7 @@ const QuitGameModalWrapper: React.FC<Props> = ({
           }),
         },
       ],
+      width: '100%',
     }),
     [],
   );
@@ -39,7 +41,7 @@ const QuitGameModalWrapper: React.FC<Props> = ({
   const fadeIn = React.useCallback(() => {
     Animated.timing(fadeAnim.current, {
       toValue: 1,
-      duration: 500,
+      duration: 300,
       useNativeDriver: false,
     }).start();
   }, []);
@@ -47,7 +49,7 @@ const QuitGameModalWrapper: React.FC<Props> = ({
   const fadeOut = React.useCallback(() => {
     Animated.timing(fadeAnim.current, {
       toValue: 0,
-      duration: 500,
+      duration: 300,
       useNativeDriver: false,
     }).start(({finished}) => {
       if (finished) {
