@@ -75,7 +75,6 @@ const WinningModal: React.FC<WinningModalProps> = ({
       backgroundColor="blackTransparent"
       height="100%"
       justifyContent="center"
-      position="absolute"
       testID="winningModal__container"
       width="100%">
       <Container
