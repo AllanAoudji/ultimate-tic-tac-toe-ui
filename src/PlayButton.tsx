@@ -9,7 +9,6 @@ import {
 import {TileState} from 'ultimate-tic-tac-toe-algorithm';
 
 import Container from './Container';
-import {ThemeContext} from './Theme.context';
 import Typography from './Typography';
 
 import BLUE_SOURCE from '../assets/images/button_background_blue.png';
@@ -46,14 +45,12 @@ const PlayButton: React.FC<PlayButtonProps> = ({
   //////////////////////
   //// styling      ////
   //////////////////////
-  const {theme} = React.useContext(ThemeContext);
-  const styles = React.useMemo(() => playButtonStyles(theme), [theme]);
   const pressedAwarenessStyle = React.useCallback(
     ({pressed}: PressableStateCallbackType) => [
-      styles.container,
+      playButtonStyles.container,
       {opacity: pressed ? 0.8 : undefined},
     ],
-    [styles],
+    [],
   );
 
   const source = React.useMemo(() => {
@@ -72,14 +69,14 @@ const PlayButton: React.FC<PlayButtonProps> = ({
       onPress={onPress}
       style={pressedAwarenessStyle}
       testID="playButton__container--pressable">
-      <Container borderRadius={8} overflow="hidden">
+      <Container aspectRatio={3.5} borderRadius={16} overflow="hidden">
         <Container
           opacity={!active || disabled ? 0.4 : undefined}
           testID="playButton__backgroundImage--container">
           <Container
             alignItems="center"
             justifyContent="center"
-            paddingVertical="smallest"
+            height="100%"
             source={source}
             testID="playButton__backgroundImage">
             <Title player={player} />
@@ -90,12 +87,11 @@ const PlayButton: React.FC<PlayButtonProps> = ({
   );
 };
 
-const playButtonStyles = (theme: Theming.Theme) =>
-  StyleSheet.create<{container: ViewStyle}>({
-    container: {
-      alignItems: 'stretch',
-      paddingHorizontal: theme.spacing.largest,
-    },
-  });
+const playButtonStyles = StyleSheet.create<{container: ViewStyle}>({
+  container: {
+    alignItems: 'stretch',
+    width: 175,
+  },
+});
 
 export default React.memo(PlayButton);
