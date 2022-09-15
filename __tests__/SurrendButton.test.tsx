@@ -108,10 +108,10 @@ describe('<SurrendButton />', () => {
       expect.arrayContaining([
         expect.objectContaining({
           alignItems: 'center',
-          height: 45,
+          height: 40,
           justifyContent: 'center',
           padding: DEFAULT_DARK_THEME.spacing.normal,
-          width: 45,
+          width: 40,
         }),
       ]),
     );
