@@ -20,3 +20,8 @@ GamesHistoryScreen => 3 View
 HistoryBoard = add a board, a GameConsole (play/pause timer), a quitButton
 HistoryBoardScreen = screen to display HistoryBoard
 Add a header to GamesHistoryScreen
+
+style modals (bg, button)
+home button
+typography
+logo
