@@ -26,11 +26,9 @@ const QuitGameModal: React.FC<Props> = ({
   return (
     <Container
       alignItems="center"
-      height="100%"
+      flex={1}
       justifyContent="center"
-      position="absolute"
-      testID="quitGameModal__container"
-      width="100%">
+      testID="quitGameModal__container">
       <Pressable
         disabled={disabled}
         onPress={onPressNo}

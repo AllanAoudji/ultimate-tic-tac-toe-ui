@@ -73,11 +73,9 @@ const WinningModal: React.FC<WinningModalProps> = ({
     <Container
       alignItems="center"
       backgroundColor="blackTransparent"
-      height="100%"
+      flex={1}
       justifyContent="center"
-      position="absolute"
-      testID="winningModal__container"
-      width="100%">
+      testID="winningModal__container">
       <Container
         alignItems="center"
         backgroundColor="surface"

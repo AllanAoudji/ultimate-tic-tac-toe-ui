@@ -5,7 +5,7 @@ import {
 } from './DefaultGeneral.theme';
 
 const DEFAULT_LIGHT_COLOR_THEME: Theming.ColorTheme = {
-  background: '#dedede',
+  background: '#ebeac5',
   black: '#000',
   blackTransparent: 'rgba(0,0,0,0.6)',
   grey: 'rgb(163, 163, 163)',

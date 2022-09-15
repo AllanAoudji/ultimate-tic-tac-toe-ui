@@ -14,6 +14,7 @@ import {getSource, getStyle, imageSource} from './testUtils';
 const renderer = (
   options: {
     alignItems?: FlexAlignType;
+    aspectRatio?: number;
     backgroundColor?: keyof Theming.ColorTheme;
     borderColor?: keyof Theming.ColorTheme;
     borderRadius?: 1 | 2 | 4 | 8 | 16 | 32;
@@ -63,6 +64,7 @@ const renderer = (
   const renderContainer = render(
     <Container
       alignItems={options.alignItems}
+      aspectRatio={options.aspectRatio}
       backgroundColor={options.backgroundColor}
       borderColor={options.borderColor}
       borderRadius={options.borderRadius}
@@ -158,6 +160,24 @@ describe('<Container />', () => {
   it('sets a /pointerEvents === undefined/ by default', () => {
     const {container} = renderer();
     expect(container.get.container().props.pointerEvents).toBeUndefined();
+  });
+
+  it('sets /aspectRatio: undefined/ by default', () => {
+    const {container} = renderer();
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        aspectRatio: undefined,
+      }),
+    );
+  });
+
+  it('sets another /aspectRatio/', () => {
+    const {container} = renderer({aspectRatio: 2});
+    expect(getStyle(container.get.container())).toEqual(
+      expect.objectContaining({
+        aspectRatio: 2,
+      }),
+    );
   });
 
   it('sets /backgroundColor: undefined/ by default', () => {

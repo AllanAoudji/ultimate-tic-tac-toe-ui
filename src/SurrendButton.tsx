@@ -21,7 +21,7 @@ interface Props {
   player?: TileState.Player1 | TileState.Player2;
 }
 
-const SIZE = 45;
+const SIZE = 40;
 
 const SurrendButton: React.FC<Props> = ({
   disabled,

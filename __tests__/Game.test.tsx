@@ -14,6 +14,8 @@ import {
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 import Game from '../src/Game';
 import {HistoryProvider} from '../src/History.context';
+import MockSurrendModal from '../src/SurrendModal';
+import MockWinningModal from '../src/WinningModal';
 import * as useGameHistory from '../src/useGameHistory.hook';
 
 jest.mock('lottie-react-native', () => {
@@ -33,6 +35,36 @@ jest.mock('lottie-react-native', () => {
     return <View {...props} ref={ref} />;
   });
 });
+
+jest.mock('../src/SurrendModalWrapper', () => ({
+  __esModule: true,
+  default: ({visible, ...props}: {visible: boolean}) => {
+    if (visible) {
+      return <MockSurrendModal {...props} />;
+    }
+    return null;
+  },
+}));
+
+jest.mock('../src/WinningModalWrapper', () => ({
+  __esModule: true,
+  default: ({
+    visible,
+    winner,
+    ...props
+  }: {
+    visible: boolean;
+    winner:
+      | ultimateTicTactToAlgorithm.TileState.Draw
+      | ultimateTicTactToAlgorithm.TileState.Player1
+      | ultimateTicTactToAlgorithm.TileState.Player2;
+  }) => {
+    if (visible) {
+      return <MockWinningModal winner={winner} {...props} />;
+    }
+    return null;
+  },
+}));
 
 const renderer = (
   options: {
