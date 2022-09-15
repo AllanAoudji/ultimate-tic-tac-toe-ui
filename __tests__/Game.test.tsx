@@ -14,6 +14,7 @@ import {
 import {DEFAULT_LIGHT_THEME} from '../src/DefaultLight.theme';
 import Game from '../src/Game';
 import {HistoryProvider} from '../src/History.context';
+import MockSurrendModal from '../src/SurrendModal';
 import * as useGameHistory from '../src/useGameHistory.hook';
 
 jest.mock('lottie-react-native', () => {
@@ -33,6 +34,16 @@ jest.mock('lottie-react-native', () => {
     return <View {...props} ref={ref} />;
   });
 });
+
+jest.mock('../src/SurrendModalWrapper', () => ({
+  __esModule: true,
+  default: ({visible, ...props}: {visible: boolean}) => {
+    if (visible) {
+      return <MockSurrendModal {...props} />;
+    }
+    return null;
+  },
+}));
 
 const renderer = (
   options: {

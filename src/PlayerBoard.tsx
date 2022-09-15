@@ -34,10 +34,9 @@ const PlayerBoard: React.FC<Props> = ({
 }) => {
   const {width, height} = useWindowDimensions();
 
-  const onPressSurrend = React.useCallback(
-    () => setVisibleModal(true),
-    [setVisibleModal],
-  );
+  const onPressSurrend = React.useCallback(() => {
+    setVisibleModal(true);
+  }, [setVisibleModal]);
   const onPressYes = React.useCallback(() => {
     setVisibleModal(false);
     onSurrend();
