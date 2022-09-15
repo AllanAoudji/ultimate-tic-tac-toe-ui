@@ -47,7 +47,6 @@ const SurrendModal: React.FC<Props> = ({
     <Container
       height={(height - width) / 2}
       padding="largest"
-      position="absolute"
       testID="surrendModal__container"
       width={width}>
       <Container
